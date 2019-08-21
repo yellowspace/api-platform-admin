@@ -4,6 +4,7 @@ import Create from './Create';
 import Edit from './Edit';
 import List from './List';
 import Show from './Show';
+import defaultConfigFactory from './configFactory';
 
 export default (
   resource,
@@ -12,6 +13,7 @@ export default (
   inputFactory,
   parameterFactory,
   listFieldFilter,
+  configFactory = defaultConfigFactory()
 ) => {
   const {
     create = Create,
@@ -22,6 +24,7 @@ export default (
     props,
     show = Show,
   } = resource;
+
   return (
     <Resource
       {...props}
@@ -38,6 +41,7 @@ export default (
         parameterFactory,
         listFieldFilter,
         resource,
+        configFactory
       }}
       show={show}
     />

@@ -38,8 +38,10 @@ export default (field, options) => {
 
   if (null !== field.reference) {
     if (1 === field.maxCardinality) {
+      // if(typeof console === 'object') { console.log('field',field); }
       return (
         <ReferenceField
+          basePath={field.reference.name}
           source={field.name}
           reference={field.reference.name}
           key={field.name}

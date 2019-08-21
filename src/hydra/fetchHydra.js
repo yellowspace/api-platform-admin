@@ -21,6 +21,8 @@ export default (url, options = {}) => {
     requestHeaders.set('Authorization', options.user.token);
   }
 
+  // if(typeof console === 'object') { console.log('fectHydra',options.user); }
+
   return fetchJsonLd(url, {
     ...options,
     headers: requestHeaders,

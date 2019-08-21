@@ -7,10 +7,15 @@ import {
   ShowButton,
   TextField,
 } from 'react-admin';
-import PropTypes from 'prop-types';
+
+import {
+  Datagrid as MVT_Datagrid
+} from '../../common/components/admin-grid';
+
+import PropTypes               from 'prop-types';
 import React from 'react';
-import ListFilter from './ListFilter';
-import {isFieldSortable} from './fieldFactory';
+import ListFilter              from './ListFilter';
+import {isFieldSortable}       from './fieldFactory';
 
 const hasIdentifier = fields => {
   return (
@@ -60,32 +65,70 @@ const List = props => {
       parameters,
       listFieldFilter,
       resource,
+      configFactory
     },
     addIdField = false === hasIdentifier(fields),
   } = resolveProps(props);
 
+  // if(typeof console === 'object') { console.log('LIST props %o configFactory %o',props,configFactory); }
+
   return (
     <BaseList
       {...props}
-      filters={<ListFilter options={{parameterFactory, parameters}} />}>
-      <Datagrid>
-        {addIdField && (
-          <TextField
-            source="id"
-            sortable={isFieldSortable({name: 'id'}, resource)}
-          />
-        )}
-        {fields
-          .filter(field => !listFieldFilter || listFieldFilter(resource, field))
-          .map(field =>
-            fieldFactory(field, {
-              api,
-              resource,
-            }),
+      pagination={<React.Fragment />}
+      filters={<ListFilter options={{parameterFactory, parameters}} />}
+      className="mtv__list"
+      classes={{
+        content:'mtv__list--content',
+        main: 'mtv__list--main',
+        root: 'mtv__list--root'
+      }}
+    >
+      {(configFactory.listOptions.listType === 'mvt') ?
+        <MVT_Datagrid
+            component="div"
+            configFactory={configFactory}
+            paginationComponent={true}
+            toolbar={true}
+            // toolbarComponent={true}
+        >
+          {addIdField && (
+              <TextField
+                  source="id"
+                  sortable={isFieldSortable({name: 'id'}, resource)}
+              />
           )}
-        {hasShow && <ShowButton />}
-        {hasEdit && <EditButton />}
-      </Datagrid>
+          {fields
+              .filter(field => !listFieldFilter || listFieldFilter(resource, field))
+              .map(field =>
+                  fieldFactory(field, {
+                    api,
+                    resource,
+                  }),
+              )}
+          {hasShow && <ShowButton />}
+          {hasEdit && <EditButton />}
+        </MVT_Datagrid>
+       :
+          <Datagrid>
+          {addIdField && (
+            <TextField
+              source="id"
+              sortable={isFieldSortable({name: 'id'}, resource)}
+            />
+          )}
+          {fields
+            .filter(field => !listFieldFilter || listFieldFilter(resource, field))
+            .map(field =>
+              fieldFactory(field, {
+                api,
+                resource,
+              }),
+            )}
+          {hasShow && <ShowButton />}
+          {hasEdit && <EditButton />}
+        </Datagrid>
+      }
     </BaseList>
   );
 };

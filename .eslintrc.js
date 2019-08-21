@@ -23,9 +23,10 @@ module.exports = {
 
   parser: 'babel-eslint',
 
-  plugins: ['import', 'jsx-a11y', 'react', 'prettier'],
+  plugins: ['import', 'jsx-a11y', 'react' ],
+  // plugins: ['import', 'jsx-a11y', 'react', 'prettier'],
 
-  extends: ['prettier', 'prettier/react'],
+  // extends: ['prettier', 'prettier/react'],
 
   env: {
     browser: true,
@@ -223,14 +224,14 @@ module.exports = {
     'jsx-a11y/img-redundant-alt': 'warn',
     'jsx-a11y/no-access-key': 'warn',
 
-    'prettier/prettier': [
-      'error',
-      {
-        singleQuote: true,
-        trailingComma: 'all',
-        bracketSpacing: false,
-        jsxBracketSameLine: true,
-      },
-    ],
+    // 'prettier/prettier': [
+    //   'error',
+    //   {
+    //     singleQuote: true,
+    //     trailingComma: 'all',
+    //     bracketSpacing: false,
+    //     jsxBracketSameLine: true,
+    //   },
+    // ],
   },
 };
