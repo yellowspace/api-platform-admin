@@ -29,6 +29,28 @@ import Create                 from './Create';
 import Edit                   from './Edit';
 import Show                   from './Show';
 
+
+let useStyles = makeStyles(function (theme) {
+	return ({
+		drawerContent: {
+			width: 300
+		},
+		// toolbar: {
+		// 	paddingLeft: theme.spacing(3),
+		// 	paddingRight: theme.spacing(3),
+		// 	[theme.breakpoints.down('xs')]: {
+		// 		paddingLeft: theme.spacing(3),
+		// 	},
+		// 	[theme.breakpoints.up('xs')]: {
+		// 		paddingLeft: theme.spacing(3),
+		// 	},
+		// 	[theme.breakpoints.up('sm')]: {
+		// 		paddingLeft: theme.spacing(3),
+		// 	},
+		// }
+	});
+});
+
 const TagListActions = (
 	{
 		basePath,
@@ -45,10 +67,14 @@ const TagListActions = (
 		...rest
 	} ) => {
 
+	let styles = useStyles();
+
 	// if(typeof console === 'object') { console.log('basePath,rest',basePath,rest); }
 
 	return (
-	   <TopToolbar>
+	   <TopToolbar
+	    className="mtv__list--actiontoolbar"
+	   >
 		   <RefreshButton label={null} />
 		   {filters && React.cloneElement(filters, {
 			   resource,
@@ -77,13 +103,6 @@ const hasIdentifier = fields => {
   );
 };
 
-let useStyles = makeStyles(function (theme) {
-	return ({
-		drawerContent: {
-			width: 300
-		}
-	});
-});
 
 const resolveProps = props => {
   const {options} = props;
@@ -165,7 +184,9 @@ const List = props => {
 					classes={{
 						content:'mtv__list--content',
 						main: 'mtv__list--main',
-						root: 'mtv__list--root'
+						root: 'mtv__list--root',
+						// toolbar:'mtv__list--toolbar',
+						// actions: 'mtv__list--toolbar--actions',
 					}}
 				>
 					 <MVT_Datagrid
