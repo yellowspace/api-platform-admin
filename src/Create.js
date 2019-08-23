@@ -31,6 +31,8 @@ const Create = props => {
     options: {api, fields, inputFactory, resource},
   } = resolveProps(props);
 
+  if(typeof console === 'object') { console.log('CREATE.props',props); }
+
   return (
     <BaseCreate {...props}>
       <SimpleForm>

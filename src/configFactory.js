@@ -2,13 +2,16 @@
 
 
 export default (
-	listOptions = {
-		listType: 'Datagrid'
+	options = {
+		listType  : 'Datagrid',
+		createType: 'page',
+		editType  : 'page',
+		showType  : 'page',
 	},
 	conf = null
 ) => {
 	return {
-		listOptions,
+		options,
 		conf
 	}
 };
