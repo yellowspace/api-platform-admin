@@ -10,7 +10,7 @@ import {
 
 import {
   Datagrid as MVT_Datagrid
-} from '../../common/components/admin-grid';
+} from '../../common/components/react-admin';
 
 import PropTypes               from 'prop-types';
 import React from 'react';
