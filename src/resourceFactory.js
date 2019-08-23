@@ -58,13 +58,13 @@ export default (
             name={name}
             icon={icon}
             options={{
-            api,
-            fieldFactory,
-            inputFactory,
-            parameterFactory,
-            listFieldFilter,
-            resource,
-            configFactory
+                api,
+                fieldFactory,
+                inputFactory,
+                parameterFactory,
+                listFieldFilter,
+                resource,
+                configFactory
             }}
             show={showResource}
         />

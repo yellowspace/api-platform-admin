@@ -6,7 +6,6 @@ import {
 	List as BaseList,
 	ShowButton,
 	TextField,
-	CardActions,
 	TopToolbar,
 	CreateButton,
 	RefreshButton,
@@ -21,7 +20,8 @@ import PropTypes              from 'prop-types';
 import React                  from 'react';
 import ListFilter             from './ListFilter';
 import {isFieldSortable}      from './fieldFactory';
-import { Drawer, makeStyles } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
+import MuiDrawer from '../../common/components/common/MuiDrawer';
 // import { ProjectCreate } from '../../src/scenes/Projects/ProjectCreate';
 import { Route }              from 'react-router-dom';
 import History                from '../../src/admin-containers/History';
@@ -220,7 +220,7 @@ const List = props => {
 					{({ match }) => {
 
 						return (
-							<Drawer
+							<MuiDrawer
 								open={!!match}
 								anchor="right"
 								onClose={handleClose}
@@ -230,7 +230,7 @@ const List = props => {
 									onCancel={handleClose}
 									{...editProps}
 								/>
-							</Drawer>
+							</MuiDrawer>
 						)}}
 				</Route>}
 				{configFactory.options.createType === 'drawer' && <Route
@@ -250,22 +250,24 @@ const List = props => {
 						}
 
 						return (
-							<Drawer
+							<MuiDrawer
 								open={isMatch}
 								anchor="right"
 								onClose={handleClose}
 							>
 								{isMatch ? (
 									<Edit
-										className={styles.drawerContent}
+										// className={styles.drawerContent}
 										id={isMatch ? id : null}
 										onCancel={handleClose}
 										{...editProps}
 									/>
 								) : (
-									 <div className={styles.drawerContent} />
+									 <div
+										 // className={styles.drawerContent}
+									 />
 								 )}
-							</Drawer>
+							</MuiDrawer>
 						);
 					}}
 				</Route>}
@@ -286,7 +288,7 @@ const List = props => {
 						}
 
 						return (
-							<Drawer
+							<MuiDrawer
 								open={isMatch}
 								anchor="right"
 								onClose={handleClose}
@@ -301,7 +303,7 @@ const List = props => {
 								) : (
 									 <div className={styles.drawerContent} />
 								 )}
-							</Drawer>
+							</MuiDrawer>
 						);
 					}}
 				</Route>}
