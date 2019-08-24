@@ -10,16 +10,25 @@ import {
   SelectInput,
   SimpleFormIterator,
   TextInput,
-} from 'react-admin';
-import React from 'react';
+}                            from 'react-admin';
+import React                 from 'react';
 import getReferenceNameField from './getReferenceNameField';
+import { makeStyles }        from '@material-ui/core';
+
+let useStyles = makeStyles(function (theme) {
+  return ({
+    resetIconFix: theme.custom.content.resetIconFix,
+  });
+});
 
 export default (field, options) => {
   const props = {...field.inputProps};
+  let styles = useStyles();
 
   if (field.input) {
     return (
       <field.input
+        fullWidth={true}
         key={field.name}
         options={options}
         source={field.name}
@@ -89,6 +98,7 @@ export default (field, options) => {
     case 'http://www.w3.org/2001/XMLSchema#decimal':
       return (
         <NumberInput
+          fullWidth={true}
           key={field.name}
           source={field.name}
           step="0.1"
@@ -101,9 +111,15 @@ export default (field, options) => {
 
     case 'http://www.w3.org/2001/XMLSchema#date':
     case 'http://www.w3.org/2001/XMLSchema#dateTime':
-      return <DateInput key={field.name} source={field.name} {...props} />;
+      return <DateInput
+          fullWidth={true}
+          key={field.name} source={field.name} {...props}
+      />;
 
     default:
-      return <TextInput key={field.name} source={field.name} {...props} />;
+      return <TextInput
+          fullWidth={true} resettable={true} clearAlwaysVisible={true} className={styles.resetIconFix}
+          key={field.name} source={field.name} {...props}
+      />;
   }
 };
