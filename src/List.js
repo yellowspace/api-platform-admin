@@ -173,6 +173,12 @@ const List = props => {
 			hasShow = true;
 		}
 
+		let listFields = fields;
+		if(configFactory.conf) {
+			listFields = configFactory.conf.getGridColumns(listFields);
+		}
+
+
 		return (
 			<React.Fragment>
 				<BaseList
@@ -191,7 +197,8 @@ const List = props => {
 				>
 					 <MVT_Datagrid
 						 component="div"
-						 configFactory={configFactory}
+						 // configFactory={configFactory}
+						 conf={configFactory.conf}
 						 paginationComponent={true}
 						 toolbar={true}
 						 // toolbarComponent={true}
@@ -202,7 +209,7 @@ const List = props => {
 								 sortable={isFieldSortable({name: 'id'}, resource)}
 							 />
 						 )}
-						 {fields
+						 {listFields
 							 .filter(field => !listFieldFilter || listFieldFilter(resource, field))
 							 .map(field =>
 								 fieldFactory(field, {

@@ -14,6 +14,9 @@ import React from 'react';
 import getReferenceNameField from './getReferenceNameField';
 
 export const isFieldSortable = (field, resource) => {
+  // if(typeof console === 'object') { console.log('isFieldSortable',field, field.isSortable, resource); }
+  if(field.isSortable === true) return true;
+
   return (
     resource.parameters.filter(parameter => parameter.variable === field.name)
       .length > 0 &&
