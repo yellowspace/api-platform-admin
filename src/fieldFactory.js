@@ -9,9 +9,11 @@ import {
   SingleFieldList,
   TextField,
   UrlField,
-} from 'react-admin';
-import React from 'react';
+}                            from 'react-admin';
+import React                 from 'react';
 import getReferenceNameField from './getReferenceNameField';
+// import EmptyComponent        from '../../common/components/common/EmptyComponent';
+import { MVTListField }      from '../../common/components/react-admin';
 
 export const isFieldSortable = (field, resource) => {
   // if(typeof console === 'object') { console.log('isFieldSortable',field, field.isSortable, resource); }
@@ -28,6 +30,26 @@ export const isFieldSortable = (field, resource) => {
 
 export default (field, options) => {
   const props = {...field.fieldProps};
+
+
+  if (field.MVT) {
+    return (
+        <MVTListField
+            key={field.name}
+            options={options}
+            source={field.name}
+            {...props}
+        />
+    );
+  }
+
+  if (field.JSX) {
+    return (
+        React.cloneElement( field.JSX, {key: field.name,options:options,source: field.name,...props} )
+    );
+  }
+
+
   if (field.field) {
     return (
       <field.field
