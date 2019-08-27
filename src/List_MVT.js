@@ -256,6 +256,8 @@ const List_MVT = props => {
 							}
 						}
 
+						if(typeof console === 'object') { console.log('editProps',editProps); }
+
 						return (
 							<MuiDrawer
 								open={isMatch}
