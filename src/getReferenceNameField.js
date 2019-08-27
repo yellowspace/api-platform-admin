@@ -6,7 +6,9 @@
  */
 export default function(reference) {
   const field = reference.fields.find(
-    field => 'http://schema.org/name' === field.id,
+      (field) => {
+        return 'http://schema.org/name' === field.id
+      }
   );
 
   return field ? field.name : 'id';

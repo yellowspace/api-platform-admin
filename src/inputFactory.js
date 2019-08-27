@@ -14,6 +14,9 @@ import {
 import React                 from 'react';
 import getReferenceNameField from './getReferenceNameField';
 import { makeStyles }        from '@material-ui/core';
+import MVTInputField         from '../../common/components/react-admin/form/fields/MVTInputField';
+import MVTReferenceInput         from '../../common/components/react-admin/form/fields/MVTReferenceInput';
+import { isFieldSortable }   from './fieldFactory';
 
 let useStyles = makeStyles(function (theme) {
   return ({
@@ -24,6 +27,21 @@ let useStyles = makeStyles(function (theme) {
 export default (field, options) => {
   const props = {...field.inputProps};
   let styles = useStyles();
+
+
+  if (field.MVTInputField) {
+    return (
+        <MVTInputField
+            fullWidth={true}
+            resettable={props.multiline ? false : true}
+            clearAlwaysVisible={true}
+            className={styles.resetIconFix}
+
+
+            key={field.name} source={field.name} {...props}
+        />
+    );
+  }
 
   if (field.input) {
     return (
@@ -40,18 +58,49 @@ export default (field, options) => {
   if (!props.validate && field.required) props.validate = [required()];
 
   if (null !== field.reference) {
+
+    if(field.MVTReferenceField) {
+
+      let refField = getReferenceNameField(field.reference);
+      if(field.refField) {
+        refField = field.refField;
+      }
+
+      return (
+          <MVTReferenceInput
+              fullWidth={true}
+
+              key={field.name}
+              label={field.name}
+              reference={field.reference}
+              source={field.name}
+              refField={refField}
+              {...props}
+              allowEmpty
+          />
+      );
+    }
+
     if (1 === field.maxCardinality) {
+      // if(typeof console === 'object') { console.log('field',field,field.reference); }
+
+      let refField = getReferenceNameField(field.reference);
+      if(field.refField) {
+        refField = field.refField;
+      }
+
       return (
         <ReferenceInput
-            fullWidth={true}
+          fullWidth={true}
 
           key={field.name}
           label={field.name}
           reference={field.reference.name}
           source={field.name}
           {...props}
-          allowEmpty>
-          <SelectInput optionText={getReferenceNameField(field.reference)} />
+          allowEmpty
+        >
+          <SelectInput optionText={refField} />
         </ReferenceInput>
       );
     }
