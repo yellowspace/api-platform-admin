@@ -25,7 +25,7 @@ export default (
         show = Show,
     } = resource;
 
-    // if(typeof console === 'object') { console.log('configFactory',configFactory); }
+    // if(typeof console === 'object') { console.log('icon',icon); }
 
     let editResource = null;
     if(configFactory.options.editResource) {

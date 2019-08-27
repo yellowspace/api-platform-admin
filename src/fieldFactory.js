@@ -14,6 +14,7 @@ import React                 from 'react';
 import getReferenceNameField from './getReferenceNameField';
 // import EmptyComponent        from '../../common/components/common/EmptyComponent';
 import { MVTListField }      from '../../common/components/react-admin';
+import MVTReferenceField     from '../../common/components/react-admin/form/fields/MVTReferenceField';
 
 export const isFieldSortable = (field, resource) => {
   // if(typeof console === 'object') { console.log('isFieldSortable',field, field.isSortable, resource); }
@@ -32,7 +33,7 @@ export default (field, options) => {
   const props = {...field.fieldProps};
 
 
-  if (field.MVT) {
+  if (field.MVTListField) {
     return (
         <MVTListField
             key={field.name}
@@ -61,7 +62,24 @@ export default (field, options) => {
     );
   }
 
-  if (null !== field.reference) {
+  if (null !== field.reference && field.reference !== undefined) {
+    if(typeof console === 'object') { console.log('fieldFactory.field.reference',field,field.reference); }
+
+    if(field.MVTReferenceField) {
+      return (
+          <MVTReferenceField
+              childSource={getReferenceNameField(field.reference)}
+              basePath={field.reference.name}
+              source={field.name}
+              reference={field.reference.name}
+              key={field.name}
+              sortable={isFieldSortable(field, options.resource)}
+              {...props}
+              allowEmpty
+          />
+      );
+    }
+
     if (1 === field.maxCardinality) {
       // if(typeof console === 'object') { console.log('field',field); }
       return (
