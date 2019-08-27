@@ -25,7 +25,7 @@ import MuiDrawer from '../../common/components/common/MuiDrawer';
 import { Route }              from 'react-router-dom';
 import History                from '../../src/admin-containers/History';
 import Create                 from './Create';
-import Edit                   from './Edit';
+import Edit                   from './Edit_MVT';
 import Show                   from './Show';
 
 

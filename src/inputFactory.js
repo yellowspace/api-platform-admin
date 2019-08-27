@@ -43,6 +43,8 @@ export default (field, options) => {
     if (1 === field.maxCardinality) {
       return (
         <ReferenceInput
+            fullWidth={true}
+
           key={field.name}
           label={field.name}
           reference={field.reference.name}
@@ -56,12 +58,15 @@ export default (field, options) => {
 
     return (
       <ReferenceArrayInput
+          fullWidth={true}
+
         key={field.name}
         label={field.name}
         reference={field.reference.name}
         source={field.name}
         {...props}
-        allowEmpty>
+        allowEmpty
+      >
         <SelectArrayInput optionText={getReferenceNameField(field.reference)} />
       </ReferenceArrayInput>
     );
@@ -118,7 +123,12 @@ export default (field, options) => {
 
     default:
       return <TextInput
-          fullWidth={true} resettable={true} clearAlwaysVisible={true} className={styles.resetIconFix}
+          fullWidth={true}
+          resettable={props.multiline ? false : true}
+          clearAlwaysVisible={true}
+          className={styles.resetIconFix}
+
+
           key={field.name} source={field.name} {...props}
       />;
   }

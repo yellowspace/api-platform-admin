@@ -14,7 +14,7 @@ import React                 from 'react';
 import getReferenceNameField from './getReferenceNameField';
 // import EmptyComponent        from '../../common/components/common/EmptyComponent';
 import { MVTListField }      from '../../common/components/react-admin';
-import MVTReferenceField     from '../../common/components/react-admin/form/fields/MVTReferenceField';
+import MVTReferenceField     from '../../common/components/react-admin/grid/fields/MVTReferenceField';
 
 export const isFieldSortable = (field, resource) => {
   // if(typeof console === 'object') { console.log('isFieldSortable',field, field.isSortable, resource); }
@@ -63,7 +63,7 @@ export default (field, options) => {
   }
 
   if (null !== field.reference && field.reference !== undefined) {
-    if(typeof console === 'object') { console.log('fieldFactory.field.reference',field,field.reference); }
+    // if(typeof console === 'object') { console.log('fieldFactory.field.reference',field,field.reference); }
 
     if(field.MVTReferenceField) {
       return (

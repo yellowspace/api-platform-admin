@@ -4,37 +4,6 @@ import {DisabledInput, Edit as BaseEdit, SimpleForm} from 'react-admin';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {
-  Toolbar,
-  SaveButton,
-  DeleteButton,
-  CloneButton
-} from 'react-admin';
-import { makeStyles } from '@material-ui/core/styles';
-
-const useStyles = makeStyles({
-  toolbar: {
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
-});
-
-const CustomToolbar = props => {
-
-  return (
-    <Toolbar
-        {...props}
-        className="mtv__editor--toolbar"
-        classes={useStyles()}
-    >
-      <SaveButton />
-      <DeleteButton undoable={false} label={null} />
-      <CloneButton undoable="" label={null} />
-    </Toolbar>
-  )
-};
-
-
 const hasIdentifier = fields => {
   return (
     undefined !== fields.find(({id}) => 'http://schema.org/identifier' === id)
@@ -68,39 +37,6 @@ const Edit = props => {
     options: {api, fields, inputFactory, resource},
     addIdInput = false === hasIdentifier(fields),
   } = resolveProps(props);
-
-  if(typeof console === 'object') { console.log('EDIT props',props); }
-
-  let editType = null;
-  if(props.options.configFactory && props.options.configFactory.options && props.options.configFactory.options.editType) {
-    editType = props.options.configFactory.options.editType;
-  }
-
-  if(editType === 'drawer') {
-    return (
-        <BaseEdit
-            {...props}
-            classes={{
-              card:'mtv__editor--card',
-              main: 'mtv__editor--main',
-              root: 'mtv__editor--root',
-              noActions: 'mtv__editor--noActions',
-            }}
-        >
-          <SimpleForm
-              toolbar={<CustomToolbar />}
-          >
-            {addIdInput && <DisabledInput source="id" />}
-            {fields.map(field =>
-                inputFactory(field, {
-                  api,
-                  resource,
-                }),
-            )}
-          </SimpleForm>
-        </BaseEdit>
-    );
-  }
 
   return (
     <BaseEdit
