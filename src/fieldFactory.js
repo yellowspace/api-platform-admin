@@ -9,6 +9,7 @@ import {
   SingleFieldList,
   TextField,
   UrlField,
+  FunctionField
 }                            from 'react-admin';
 import React                 from 'react';
 import getReferenceNameField from './getReferenceNameField';
@@ -33,22 +34,11 @@ export default (field, options) => {
   const props = {...field.fieldProps};
 
 
-  if (field.MVTListField) {
-    return (
-        <MVTListField
-            key={field.name}
-            options={options}
-            source={field.name}
-            {...props}
-        />
-    );
-  }
-
-  if (field.JSX) {
-    return (
-        React.cloneElement( field.JSX, {key: field.name,options:options,source: field.name,...props} )
-    );
-  }
+  // if (field.JSX) {
+  //   return (
+  //       React.cloneElement( field.JSX, {key: field.name,options:options,source: field.name,...props} )
+  //   );
+  // }
 
 
   if (field.field) {
@@ -71,7 +61,8 @@ export default (field, options) => {
               childSource={getReferenceNameField(field.reference)}
               basePath={field.reference.name}
               source={field.name}
-              reference={field.reference.name}
+              reference={field.reference}
+              maxCardinality={field.maxCardinality}
               key={field.name}
               sortable={isFieldSortable(field, options.resource)}
               {...props}
@@ -111,72 +102,95 @@ export default (field, options) => {
     );
   }
 
-  switch (field.id) {
-    case 'http://schema.org/email':
-      return (
-        <EmailField
-          key={field.name}
-          source={field.name}
-          sortable={isFieldSortable(field, options.resource)}
-          {...props}
-        />
-      );
 
-    case 'http://schema.org/url':
-      return (
-        <UrlField
-          key={field.name}
-          source={field.name}
-          sortable={isFieldSortable(field, options.resource)}
-          {...props}
-        />
-      );
-
-    default:
-    // Do nothing
+  if(field.FunctionField) {
+    return (<FunctionField
+        key={field.name}
+        options={options}
+        source={field.name}
+        {...props}
+    />);
   }
 
-  switch (field.range) {
-    case 'http://www.w3.org/2001/XMLSchema#integer':
-    case 'http://www.w3.org/2001/XMLSchema#float':
-      return (
-        <NumberField
-          key={field.name}
-          source={field.name}
-          sortable={isFieldSortable(field, options.resource)}
-          {...props}
-        />
-      );
 
-    case 'http://www.w3.org/2001/XMLSchema#date':
-    case 'http://www.w3.org/2001/XMLSchema#dateTime':
-      return (
-        <DateField
+  return (
+      <MVTListField
           key={field.name}
+          options={options}
           source={field.name}
+          schemaId={field.id}
+          schemaRange={field.range}
           sortable={isFieldSortable(field, options.resource)}
           {...props}
-        />
-      );
-
-    case 'http://www.w3.org/2001/XMLSchema#boolean':
-      return (
-        <BooleanField
-          key={field.name}
-          source={field.name}
-          sortable={isFieldSortable(field, options.resource)}
-          {...props}
-        />
-      );
-
-    default:
-      return (
-        <TextField
-          key={field.name}
-          source={field.name}
-          sortable={isFieldSortable(field, options.resource)}
-          {...props}
-        />
-      );
-  }
+      />
+  );
+  //
+  // switch (field.id) {
+  //   case 'http://schema.org/email':
+  //     return (
+  //       <EmailField
+  //         key={field.name}
+  //         source={field.name}
+  //         sortable={isFieldSortable(field, options.resource)}
+  //         {...props}
+  //       />
+  //     );
+  //
+  //   case 'http://schema.org/url':
+  //     return (
+  //       <UrlField
+  //         key={field.name}
+  //         source={field.name}
+  //         sortable={isFieldSortable(field, options.resource)}
+  //         {...props}
+  //       />
+  //     );
+  //
+  //   default:
+  //   // Do nothing
+  // }
+  //
+  // switch (field.range) {
+  //   case 'http://www.w3.org/2001/XMLSchema#integer':
+  //   case 'http://www.w3.org/2001/XMLSchema#float':
+  //     return (
+  //       <NumberField
+  //         key={field.name}
+  //         source={field.name}
+  //         sortable={isFieldSortable(field, options.resource)}
+  //         {...props}
+  //       />
+  //     );
+  //
+  //   case 'http://www.w3.org/2001/XMLSchema#date':
+  //   case 'http://www.w3.org/2001/XMLSchema#dateTime':
+  //     return (
+  //       <DateField
+  //         key={field.name}
+  //         source={field.name}
+  //         sortable={isFieldSortable(field, options.resource)}
+  //         {...props}
+  //       />
+  //     );
+  //
+  //   case 'http://www.w3.org/2001/XMLSchema#boolean':
+  //     return (
+  //       <BooleanField
+  //         key={field.name}
+  //         source={field.name}
+  //         sortable={isFieldSortable(field, options.resource)}
+  //         {...props}
+  //       />
+  //     );
+  //
+  //   default:
+  //     return (
+  //       <TextField
+  //         key={field.name}
+  //         source={field.name}
+  //         sortable={isFieldSortable(field, options.resource)}
+  //         {...props}
+  //       />
+  //     );
+  // }
 };

@@ -8,7 +8,8 @@ import {
 	TopToolbar,
 	CreateButton,
 	RefreshButton,
-	ExportButton
+	ExportButton,
+	Responsive
 } from 'react-admin';
 
 import {
@@ -160,165 +161,190 @@ const List_MVT = props => {
 	} = resolveProps(props);
 
   // if(typeof console === 'object') { console.log('LIST props %o configFactory %o',props,configFactory); }
+	let confDefaults = {};
 
-	if(configFactory.options.listType === 'mvt') {
-		const { perPage, ...editProps} = props;
+	const getFilter = () => {
+		// filter=Component
+		// filters={<PostFilter />} // <-- always on
+		// filterDefaultValues={{ is_published: true }}
+		// confDefaults.filter = <TextInput label="Search" source="q" alwaysOn />;
+	};
 
-		if(configFactory.options.createType === 'drawer') {
-			hasEdit = true;
+	const getSort = () => {
+		// confDefaults.sort={ field: 'title', order: 'DESC' };
+
+		const { conf } = configFactory;
+
+		if(conf && typeof conf.getGridSorting === 'function') {
+			let sort = conf.getGridSorting(conf);
+			if(sort) {
+				confDefaults.sort = sort;
+			}
 		}
+	};
 
-		if(configFactory.options.showType === 'drawer') {
-			hasShow = true;
-		}
+	getFilter();
+	getSort();
 
-		let listFields = fields;
-		if(configFactory.conf) {
-			listFields = configFactory.conf.getGridColumns(listFields);
-		}
+	const { perPage, ...editProps} = props;
 
-		addIdField = false;
+	if(configFactory.options.createType === 'drawer') {
+		hasEdit = true;
+	}
 
-		return (
-			<React.Fragment>
-				<BaseList
-					{...props}
-					pagination={<React.Fragment />}
-					actions={<TagListActions />}
-					filters={<ListFilter options={{parameterFactory, parameters}} />}
-					className="mtv__list"
-					classes={{
-						content:'mtv__list--content',
-						main: 'mtv__list--main',
-						root: 'mtv__list--root',
-						// toolbar:'mtv__list--toolbar',
-						// actions: 'mtv__list--toolbar--actions',
-					}}
+	if(configFactory.options.showType === 'drawer') {
+		hasShow = true;
+	}
+
+	let listFields = fields;
+	if(configFactory.conf) {
+		listFields = configFactory.conf.getGridColumns(listFields);
+	}
+
+	addIdField = false;
+
+	// if(typeof console === 'object') { console.log('confDefaults',confDefaults); }
+
+	return (
+		<React.Fragment>
+			<BaseList
+				{...props}
+				{...confDefaults}
+				pagination={<React.Fragment />}
+				actions={<TagListActions />}
+				filters={<ListFilter options={{parameterFactory, parameters}} />}
+				className="mtv__list"
+				classes={{
+					content:'mtv__list--content',
+					main: 'mtv__list--main',
+					root: 'mtv__list--root',
+					// toolbar:'mtv__list--toolbar',
+					// actions: 'mtv__list--toolbar--actions',
+				}}
+			>
+				<MVT_Datagrid
+					component="div"
+					// configFactory={configFactory}
+					conf={configFactory.conf}
+					paginationComponent={true}
+					toolbar={true}
+					// toolbarComponent={true}
 				>
-					 <MVT_Datagrid
-						 component="div"
-						 // configFactory={configFactory}
-						 conf={configFactory.conf}
-						 paginationComponent={true}
-						 toolbar={true}
-						 // toolbarComponent={true}
-					 >
-						 {addIdField && (
-							 <TextField
-								 source="id"
-								 sortable={isFieldSortable({name: 'id'}, resource)}
-							 />
-						 )}
-						 {listFields
-							 .filter(field => !listFieldFilter || listFieldFilter(resource, field))
-							 .map(field =>
-								 fieldFactory(field, {
-									 api,
-									 resource,
-								 }),
-							 )}
-						 {hasShow && <ShowButton label={null} width={80} />}
-						 {hasEdit && <EditButton label={null} width={80} />}
-					 </MVT_Datagrid>
-				</BaseList>
-				{configFactory.options.createType === 'drawer' &&<Route
-					path={props.basePath + '/create'}
-				>
-					{({ match }) => {
+					{addIdField && (
+						<TextField
+							source="id"
+							sortable={isFieldSortable({name: 'id'}, resource)}
+						/>
+					)}
+					{listFields
+						.filter(field => !listFieldFilter || listFieldFilter(resource, field))
+						.map(field =>
+							fieldFactory(field, {
+								api,
+								resource,
+							}),
+						)}
+					{hasShow && <ShowButton label={null} width={80} />}
+					{hasEdit && <EditButton label={null} width={80} />}
+				</MVT_Datagrid>
+			</BaseList>
+			{configFactory.options.createType === 'drawer' &&<Route
+				path={props.basePath + '/create'}
+			>
+				{({ match }) => {
 
-						return (
-							<MuiDrawer
-								open={!!match}
-								anchor="right"
-								onClose={handleClose}
-							>
-								<Create
-									className={styles.drawerContent}
+					return (
+						<MuiDrawer
+							open={!!match}
+							anchor="right"
+							onClose={handleClose}
+						>
+							<Create
+								className={styles.drawerContent}
+								onCancel={handleClose}
+								{...editProps}
+							/>
+						</MuiDrawer>
+					)}}
+			</Route>}
+			{configFactory.options.createType === 'drawer' && <Route
+				path={props.basePath + '/:id'}
+			>
+				{({ match }) => {
+
+					const isMatch = match && match.params && match.params.id !== 'create' ? true : false;
+					// if(isMatch && typeof console === 'object') { console.log('EDIT ROUTE match,isMatch',decodeURIComponent(match.params.id),encodeURIComponent(match.params.id),match,isMatch); }
+
+					let id = null;
+					if(isMatch) {
+						id = match.params.id;
+						if(typeof id === 'string') {
+							id = decodeURIComponent(id);
+						}
+					}
+
+					// if(typeof console === 'object') { console.log('editProps',editProps); }
+
+					return (
+						<MuiDrawer
+							open={isMatch}
+							anchor="right"
+							onClose={handleClose}
+						>
+							{isMatch ? (
+								<Edit
+									// className={styles.drawerContent}
+									id={isMatch ? id : null}
 									onCancel={handleClose}
 									{...editProps}
 								/>
-							</MuiDrawer>
-						)}}
-				</Route>}
-				{configFactory.options.createType === 'drawer' && <Route
-					path={props.basePath + '/:id'}
-				>
-					{({ match }) => {
+							) : (
+								 <div
+									 // className={styles.drawerContent}
+								 />
+							 )}
+						</MuiDrawer>
+					);
+				}}
+			</Route>}
+			{configFactory.options.showType === 'drawer' && <Route
+				path={props.basePath + '/:id/show'}
+			>
+				{({ match }) => {
 
-						const isMatch = match && match.params && match.params.id !== 'create' ? true : false;
-						// if(isMatch && typeof console === 'object') { console.log('EDIT ROUTE match,isMatch',decodeURIComponent(match.params.id),encodeURIComponent(match.params.id),match,isMatch); }
+					const isMatch = match && match.params && match.params.id !== 'create' ? true : false;
+					// if(isMatch && typeof console === 'object') { console.log('EDIT ROUTE match,isMatch',decodeURIComponent(match.params.id),encodeURIComponent(match.params.id),match,isMatch); }
 
-						let id = null;
-						if(isMatch) {
-							id = match.params.id;
-							if(typeof id === 'string') {
-								id = decodeURIComponent(id);
-							}
+					let id = null;
+					if(isMatch) {
+						id = match.params.id;
+						if(typeof id === 'string') {
+							id = decodeURIComponent(id);
 						}
+					}
 
-						if(typeof console === 'object') { console.log('editProps',editProps); }
-
-						return (
-							<MuiDrawer
-								open={isMatch}
-								anchor="right"
-								onClose={handleClose}
-							>
-								{isMatch ? (
-									<Edit
-										// className={styles.drawerContent}
-										id={isMatch ? id : null}
-										onCancel={handleClose}
-										{...editProps}
-									/>
-								) : (
-									 <div
-										 // className={styles.drawerContent}
-									 />
-								 )}
-							</MuiDrawer>
-						);
-					}}
-				</Route>}
-				{configFactory.options.showType === 'drawer' && <Route
-					path={props.basePath + '/:id/show'}
-				>
-					{({ match }) => {
-
-						const isMatch = match && match.params && match.params.id !== 'create' ? true : false;
-						// if(isMatch && typeof console === 'object') { console.log('EDIT ROUTE match,isMatch',decodeURIComponent(match.params.id),encodeURIComponent(match.params.id),match,isMatch); }
-
-						let id = null;
-						if(isMatch) {
-							id = match.params.id;
-							if(typeof id === 'string') {
-								id = decodeURIComponent(id);
-							}
-						}
-
-						return (
-							<MuiDrawer
-								open={isMatch}
-								anchor="right"
-								onClose={handleClose}
-							>
-								{isMatch ? (
-									<Show
-										className={styles.drawerContent}
-										id={isMatch ? id : null}
-										onCancel={handleClose}
-										{...editProps}
-									/>
-								) : (
-									 <div className={styles.drawerContent} />
-								 )}
-							</MuiDrawer>
-						);
-					}}
-				</Route>}
-			</React.Fragment>
-		);
-	}
+					return (
+						<MuiDrawer
+							open={isMatch}
+							anchor="right"
+							onClose={handleClose}
+						>
+							{isMatch ? (
+								<Show
+									className={styles.drawerContent}
+									id={isMatch ? id : null}
+									onCancel={handleClose}
+									{...editProps}
+								/>
+							) : (
+								 <div className={styles.drawerContent} />
+							 )}
+						</MuiDrawer>
+					);
+				}}
+			</Route>}
+		</React.Fragment>
+	);
 };
 
 List_MVT.defaultProps = {
