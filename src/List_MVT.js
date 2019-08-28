@@ -211,7 +211,7 @@ const List_MVT = props => {
 	useEffect(() => {
 		getFilterValues();
 		getSort();
-		console.log('ComponentDidMount: sort,filter,filterDefaultValue',sort,filter,filterDefaultValues);
+		// console.log('ComponentDidMount: sort,filter,filterDefaultValue',sort,filter,filterDefaultValues);
 	},[]);
 
 	const { perPage, ...editProps} = props;

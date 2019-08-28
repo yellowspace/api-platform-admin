@@ -93,10 +93,12 @@ const Edit_MVT = props => {
 
 
   let editields = fields;
+  let validateForm = () => {};
+
   if(configFactory.conf) {
     editields = configFactory.conf.getFormFields(editields);
+    validateForm = configFactory.conf.validateForm;
   }
-
 
   return (
       <BaseEdit
@@ -110,6 +112,7 @@ const Edit_MVT = props => {
       >
         <SimpleForm
             toolbar={<CustomToolbar />}
+            validate={validateForm}
         >
           {addIdInput && <DisabledInput source="id" />}
           {addIdInput && <TextInput type="hidden" source="id" label={null} />}
