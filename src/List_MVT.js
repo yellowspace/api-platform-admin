@@ -16,17 +16,17 @@ import {
   Datagrid as MVT_Datagrid
 } from '../../common/components/react-admin';
 
-import PropTypes              from 'prop-types';
-import React                  from 'react';
-import ListFilter             from './ListFilter';
-import {isFieldSortable}      from './fieldFactory';
-import { makeStyles } from '@material-ui/core';
-import MuiDrawer from '../../common/components/common/MuiDrawer';
+import PropTypes                      from 'prop-types';
+import React, { useEffect, useState } from 'react';
+import ListFilter                     from './ListFilter';
+import {isFieldSortable}              from './fieldFactory';
+import { makeStyles }                 from '@material-ui/core';
+import MuiDrawer                      from '../../common/components/common/MuiDrawer';
 // import { ProjectCreate } from '../../src/scenes/Projects/ProjectCreate';
-import { Route }              from 'react-router-dom';
-import History                from '../../src/admin-containers/History';
-import Create                 from './Create';
-import Edit                   from './Edit_MVT';
+import { Route }                      from 'react-router-dom';
+import History                        from '../../src/admin-containers/History';
+import Create                         from './Create';
+import Edit                           from './Edit_MVT';
 import Show                   from './Show';
 
 
@@ -160,14 +160,37 @@ const List_MVT = props => {
 		addIdField = false === hasIdentifier(fields),
 	} = resolveProps(props);
 
-  // if(typeof console === 'object') { console.log('LIST props %o configFactory %o',props,configFactory); }
+	  // if(typeof console === 'object') { console.log('LIST props %o configFactory %o',props,configFactory); }
 	let confDefaults = {};
 
-	const getFilter = () => {
+	const [sort, setSort] = useState({});
+	const [filter, setFilter] = useState(null);
+	const [filterDefaultValues, setFilterDefaultValues] = useState(null);
+
+	const getFilterValues = () => {
 		// filter=Component
 		// filters={<PostFilter />} // <-- always on
 		// filterDefaultValues={{ is_published: true }}
 		// confDefaults.filter = <TextInput label="Search" source="q" alwaysOn />;
+		const { conf } = configFactory;
+
+		if(conf && typeof conf.getGridPermanentFilter === 'function') {
+			let filter = conf.getGridPermanentFilter(null);
+			let filterDefaultValues = conf.getGridFilterDefaults(null);
+
+			if(filter) {
+				setFilter(filter);
+			}
+
+			if(filterDefaultValues) {
+				setFilterDefaultValues(filterDefaultValues);
+			}
+
+			//filters={<PostFilter />} filterDefaultValues={{ is_published: true }}
+			// if(sort) {
+			// 	confDefaults.sort = sort;
+			// }
+		}
 	};
 
 	const getSort = () => {
@@ -178,13 +201,18 @@ const List_MVT = props => {
 		if(conf && typeof conf.getGridSorting === 'function') {
 			let sort = conf.getGridSorting(conf);
 			if(sort) {
-				confDefaults.sort = sort;
+				// confDefaults.sort = sort;
+				setSort(sort);
 			}
 		}
 	};
 
-	getFilter();
-	getSort();
+
+	useEffect(() => {
+		getFilterValues();
+		getSort();
+		console.log('ComponentDidMount: sort,filter,filterDefaultValue',sort,filter,filterDefaultValues);
+	},[]);
 
 	const { perPage, ...editProps} = props;
 
@@ -203,16 +231,18 @@ const List_MVT = props => {
 
 	addIdField = false;
 
-	// if(typeof console === 'object') { console.log('confDefaults',confDefaults); }
 
 	return (
 		<React.Fragment>
 			<BaseList
 				{...props}
 				{...confDefaults}
+				sort={sort}
+				filter={filter}
+				filterDefaultValues={filterDefaultValues}
 				pagination={<React.Fragment />}
 				actions={<TagListActions />}
-				filters={<ListFilter options={{parameterFactory, parameters}} />}
+				filters={<ListFilter options={{parameterFactory, parameters, configFactory}} />}
 				className="mtv__list"
 				classes={{
 					content:'mtv__list--content',

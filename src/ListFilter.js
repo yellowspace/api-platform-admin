@@ -3,18 +3,21 @@ import React from 'react';
 
 const resolveProps = props => {
   const {options} = props;
-  const {parameterFactory, parameters} = options;
+  const {parameterFactory, parameters, configFactory} = options;
   return {
     ...props,
     parameterFactory: parameterFactory,
     parameters: parameters,
+    conf: configFactory.conf
   };
 };
 
 const ListFilter = props => {
-  const {parameters, parameterFactory} = resolveProps(props);
+  const {parameters, parameterFactory, conf} = resolveProps(props);
 
   const parameterAlwaysOn = parameters.length < 8;
+
+  // if(typeof console === 'object') { console.log('ListFilter.parameters, parameterFactory, conf',parameters, typeof conf.getGridFilter); }
 
   return (
     <Filter {...props}>
@@ -24,6 +27,13 @@ const ListFilter = props => {
             alwaysOn: parameterAlwaysOn,
           }),
         )}
+      {conf && typeof conf.getGridFilter === 'function' &&
+       conf.getGridFilter().map(parameter =>
+             parameterFactory(parameter, {
+               alwaysOn: parameterAlwaysOn,
+             }),
+         )
+      }
     </Filter>
   );
 };
