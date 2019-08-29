@@ -8,7 +8,7 @@ const resolveProps = props => {
     ...props,
     parameterFactory: parameterFactory,
     parameters: parameters,
-    conf: configFactory.conf
+    conf: configFactory ? configFactory.conf : null
   };
 };
 
