@@ -1,6 +1,6 @@
 import Api from '@api-platform/api-doc-parser/lib/Api';
 import Resource from '@api-platform/api-doc-parser/lib/Resource';
-import {DisabledInput, Edit as BaseEdit, SimpleForm} from 'react-admin';
+import {TextInput, Edit as BaseEdit, SimpleForm} from 'react-admin';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -43,7 +43,7 @@ const Edit = props => {
         {...props}
     >
       <SimpleForm>
-        {addIdInput && <DisabledInput source="id" />}
+        {addIdInput && <TextInput disabled source="id" />}
         {fields.map(field =>
           inputFactory(field, {
             api,

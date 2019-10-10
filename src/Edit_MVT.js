@@ -1,7 +1,6 @@
 import Api from '@api-platform/api-doc-parser/lib/Api';
 import Resource from '@api-platform/api-doc-parser/lib/Resource';
 import {
-  DisabledInput,
   TextInput,
   Edit as BaseEdit,
   SimpleForm
@@ -114,7 +113,7 @@ const Edit_MVT = props => {
             toolbar={<CustomToolbar />}
             validate={validateForm}
         >
-          {addIdInput && <DisabledInput source="id" />}
+          {addIdInput && <TextInput disabled source="id" />}
           {addIdInput && <TextInput type="hidden" source="id" label={null} />}
           {editields.map(field =>
               inputFactory(field, {

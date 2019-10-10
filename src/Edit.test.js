@@ -3,7 +3,6 @@ import Field from '@api-platform/api-doc-parser/lib/Field';
 import Resource from '@api-platform/api-doc-parser/lib/Resource';
 import {
   ArrayInput,
-  DisabledInput,
   SimpleFormIterator,
   TextInput,
 } from 'react-admin';
@@ -80,8 +79,8 @@ describe('<Edit />', () => {
 
     expect(defaultInputFactory).toHaveBeenCalledTimes(3);
     expect(render.find(ArrayInput).length).toEqual(1);
-    expect(render.find(DisabledInput).length).toEqual(1);
-    expect(render.find(DisabledInput).get(0).props.source).toEqual('id');
+    expect(render.find(TextInput).length).toEqual(1);
+    expect(render.find(TextInput).get(0).props.source).toEqual('id');
     expect(render.find(SimpleFormIterator).length).toEqual(1);
     expect(render.find(TextInput).length).toEqual(3);
     expect(render.find(ArrayInput).get(0).props.source).toEqual('fieldD');
@@ -119,7 +118,7 @@ describe('<Edit />', () => {
 
     expect(defaultInputFactory).toHaveBeenCalledTimes(3);
     expect(render.find(ArrayInput).length).toEqual(1);
-    expect(render.find(DisabledInput).length).toEqual(0);
+    expect(render.find(TextInput).length).toEqual(0);
     expect(render.find(TextInput).length).toEqual(3);
     expect(render.find(ArrayInput).get(0).props.source).toEqual('fieldD');
     expect(render.find(TextInput).get(0).props.source).toEqual('fieldA');
@@ -160,8 +159,8 @@ describe('<Edit />', () => {
     expect(customInputFactory).toHaveBeenCalledTimes(3);
     expect(defaultInputFactory).toHaveBeenCalledTimes(0);
     expect(render.find(ArrayInput).length).toEqual(1);
-    expect(render.find(DisabledInput).length).toEqual(1);
-    expect(render.find(DisabledInput).get(0).props.source).toEqual('id');
+    expect(render.find(TextInput).length).toEqual(1);
+    expect(render.find(TextInput).get(0).props.source).toEqual('id');
     expect(render.find(SimpleFormIterator).length).toEqual(1);
     expect(render.find(TextInput).length).toEqual(3);
     expect(render.find(ArrayInput).get(0).props.source).toEqual('fieldD');
@@ -210,8 +209,8 @@ describe('<Edit />', () => {
 
     expect(defaultInputFactory).toHaveBeenCalledTimes(2);
     expect(render.find(ArrayInput).length).toEqual(1);
-    expect(render.find(DisabledInput).length).toEqual(1);
-    expect(render.find(DisabledInput).get(0).props.source).toEqual('id');
+    expect(render.find(TextInput).length).toEqual(1);
+    expect(render.find(TextInput).get(0).props.source).toEqual('id');
     expect(render.find(SimpleFormIterator).length).toEqual(1);
     expect(render.find(TextInput).length).toEqual(2);
     expect(render.find(ArrayInput).get(0).props.source).toEqual('fieldE');
@@ -257,7 +256,7 @@ describe('<Edit />', () => {
 
     expect(defaultInputFactory).toHaveBeenCalledTimes(4);
     expect(render.find(ArrayInput).length).toEqual(1);
-    expect(render.find(DisabledInput).length).toEqual(0);
+    expect(render.find(TextInput).length).toEqual(0);
     expect(render.find(TextInput).length).toEqual(4);
     expect(render.find(ArrayInput).get(0).props.source).toEqual('fieldD');
     expect(render.find(TextInput).get(0).props.source).toEqual('fieldA');
