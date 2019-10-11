@@ -18,6 +18,8 @@ import MVTInputField         from '../../common/components/react-admin/form/fiel
 import MVTReferenceInput     from '../../common/components/react-admin/form/fields/MVTReferenceInput';
 import { isFieldSortable }   from './fieldFactory';
 import MVTSelectField        from '../../common/components/react-admin/form/fields/MVTSelectField';
+import MVTDateTimeInput      from '../../common/components/react-admin/form/fields/MVTDateTimeInput';
+import Typography            from '@material-ui/core/Typography';
 
 let useStyles = makeStyles(function (theme) {
   return ({
@@ -173,10 +175,19 @@ export default (field, options) => {
       return <BooleanInput key={field.name} source={field.name} {...props} />;
 
     case 'http://www.w3.org/2001/XMLSchema#date':
-    case 'http://www.w3.org/2001/XMLSchema#dateTime':
+    // case 'http://www.w3.org/2001/XMLSchema#dateTime':
+
       return <DateInput
           fullWidth={true}
           key={field.name} source={field.name} {...props}
+      />;
+
+    case 'http://www.w3.org/2001/XMLSchema#dateTime':
+      return <MVTDateTimeInput
+          fullWidth={true}
+          key={field.name}
+          source={field.name}
+          {...props}
       />;
 
     default:
