@@ -2,6 +2,7 @@ import {
   ArrayInput,
   BooleanInput,
   DateInput,
+  DateTimeInput,
   NumberInput,
   ReferenceArrayInput,
   ReferenceInput,
@@ -19,7 +20,6 @@ import MVTReferenceInput     from '../../common/components/react-admin/form/fiel
 import { isFieldSortable }   from './fieldFactory';
 import MVTSelectField        from '../../common/components/react-admin/form/fields/MVTSelectField';
 import MVTDateTimeInput      from '../../common/components/react-admin/form/fields/MVTDateTimeInput';
-import Typography            from '@material-ui/core/Typography';
 
 let useStyles = makeStyles(function (theme) {
   return ({
@@ -32,7 +32,7 @@ export default (field, options) => {
   let styles = useStyles();
 
 
-  // if(typeof console === 'object') { console.log('field %o, options %o',field, options); }
+  // if(typeof console === 'object') { console.log('field %o, options %o',field, options,props); }
 
 
   if (field.MVTInputField) {
@@ -73,7 +73,7 @@ export default (field, options) => {
 
   if (null !== field.reference) {
 
-    if(/*1===2 && */field.MVTReferenceField) {
+    if(field.MVTReferenceField && 1 === field.maxCardinality) {
 
       let refField = getReferenceNameField(field.reference);
       if(field.refField) {
@@ -188,13 +188,27 @@ export default (field, options) => {
           key={field.name} source={field.name} {...props}
       />;
 
+
     case 'http://www.w3.org/2001/XMLSchema#dateTime':
       return <MVTDateTimeInput
           fullWidth={true}
           key={field.name}
           source={field.name}
           {...props}
+          // variant="outlined"
       />;
+
+
+    case 'http://www.w3.org/2001/XMLSchema#dateTime':
+      return <DateTimeInput
+          fullWidth={true}
+          key={field.name}
+          source={field.name}
+          {...props}
+      />;
+
+
+
 
     default:
       return <TextInput
@@ -203,8 +217,16 @@ export default (field, options) => {
           clearAlwaysVisible={true}
           className={styles.resetIconFix}
 
-
           key={field.name} source={field.name} {...props}
+
+          // options={{
+          //   variant: 'outlined'
+          // }}
+          // variant="outlined"
+          // defaultValue="Success"
+          // onChange={(a) => {
+          //   if(typeof console === 'object') { console.log('HELLOOOO',a); }
+          // }}
       />;
   }
 };
