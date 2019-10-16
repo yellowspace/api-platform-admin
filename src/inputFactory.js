@@ -32,6 +32,9 @@ export default (field, options) => {
   let styles = useStyles();
 
 
+  // if(typeof console === 'object') { console.log('field %o, options %o',field, options); }
+
+
   if (field.MVTInputField) {
     return (
         <MVTInputField
@@ -70,12 +73,13 @@ export default (field, options) => {
 
   if (null !== field.reference) {
 
-    if(field.MVTReferenceField) {
+    if(/*1===2 && */field.MVTReferenceField) {
 
       let refField = getReferenceNameField(field.reference);
       if(field.refField) {
         refField = field.refField;
       }
+      // if(typeof console === 'object') { console.log('MVTReferenceField.field',field,field.reference,refField); }
 
       return (
           <MVTReferenceInput
@@ -93,12 +97,14 @@ export default (field, options) => {
     }
 
     if (1 === field.maxCardinality) {
-      // if(typeof console === 'object') { console.log('field',field,field.reference); }
 
       let refField = getReferenceNameField(field.reference);
       if(field.refField) {
         refField = field.refField;
       }
+
+      // if(typeof console === 'object') { console.log('ReferenceInput.field',field,field.reference,refField); }
+
 
       return (
         <ReferenceInput

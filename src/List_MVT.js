@@ -231,7 +231,6 @@ const List_MVT = props => {
 
 	addIdField = false;
 
-
 	return (
 		<React.Fragment>
 			<BaseList
