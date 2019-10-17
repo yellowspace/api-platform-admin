@@ -10,11 +10,15 @@ import React from 'react';
 
 import {
   Toolbar,
-  SaveButton,
+  // SaveButton as RA_SaveButton,
   DeleteButton,
   CloneButton
 } from 'react-admin';
+// import { useForm } from 'react-final-form';
 import { makeStyles } from '@material-ui/core/styles';
+
+import SaveButton from '../../common/components/react-admin/form/actions/SaveButton';
+import RA_SaveButton from '../../common/components/react-admin/form/actions/RA_SaveButton';
 
 const useStyles = makeStyles({
   toolbar: {
@@ -25,13 +29,17 @@ const useStyles = makeStyles({
 
 const CustomToolbar = props => {
 
+  // if(typeof console === 'object') { console.log('CustomToolbar.props',props.redirect); }
+  // let form = useForm();
+
   return (
     <Toolbar
         {...props}
         className="mtv__editor--toolbar"
         classes={useStyles()}
     >
-      <SaveButton />
+      <SaveButton undoable={false} redirect={props.redirect} />
+      {/*<RA_SaveButton undoable={false} />*/}
       <DeleteButton undoable={false} label={null} />
       <CloneButton undoable="" label={null} />
     </Toolbar>
@@ -99,19 +107,37 @@ const Edit_MVT = props => {
     validateForm = configFactory.conf.validateForm;
   }
 
+  const { formProps, ...rest } = props;
+
+  // if(typeof console === 'object') { console.log('formProps',formProps); }
+
   return (
       <BaseEdit
-          {...props}
+          undoable={false}
+          {...rest}
           classes={{
             card:'mtv__editor--card',
             main: 'mtv__editor--main',
             root: 'mtv__editor--root',
             noActions: 'mtv__editor--noActions',
           }}
+          // save={(a) => {
+          //   if(typeof console === 'object') { console.log('BaseEdit SAVE!',a); }
+          // }}
+          // saving={(a) => {
+          //   if(typeof console === 'object') { console.log('BaseEdit SAVING!',a); }
+          // }}
       >
         <SimpleForm
             toolbar={<CustomToolbar />}
             validate={validateForm}
+            {...formProps}
+            // save={(a) => {
+            //   if(typeof console === 'object') { console.log('SimpleForm SAVE!',a); }
+            // }}
+            // handleSubmit={(a) => {
+            //   if(typeof console === 'object') { console.log('SimpleForm handleSubmit!',a); }
+            // }}
         >
           {addIdInput && <TextInput disabled source="id" />}
           {addIdInput && <TextInput type="hidden" source="id" label={null} />}
@@ -127,6 +153,7 @@ const Edit_MVT = props => {
 };
 
 Edit_MVT.propTypes = {
+  formProps: PropTypes.object,
   addIdInput: PropTypes.bool,
   options: PropTypes.shape({
     api: PropTypes.instanceOf(Api).isRequired,
