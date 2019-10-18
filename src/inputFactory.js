@@ -8,6 +8,8 @@ import {
   ReferenceInput,
   required,
   SelectArrayInput,
+  AutocompleteInput,
+  AutocompleteArrayInput,
   SelectInput,
   SimpleFormIterator,
   TextInput,
@@ -24,13 +26,32 @@ import MVTDateTimeInput      from '../../common/components/react-admin/form/fiel
 let useStyles = makeStyles(function (theme) {
   return ({
     resetIconFix: theme.custom.content.resetIconFix,
+    autocompleteContainer: {
+      fontSize: '5rem'
+    }
   });
+});
+
+// const useAutocompleteArrayInputStyles = makeStyles({
+//   root: {
+//     flexGrow: 1,
+//     height: 450,
+//   },
+//   container: {
+//     flexGrow: 1,
+//     position: 'relative',
+//   },
+// });
+
+var useAutocompleteSugestionArrayInputStyles = makeStyles({
+  suggestionsContainer: {
+    zIndex: 2210,
+  },
 });
 
 export default (field, options) => {
   const props = {...field.inputProps};
   let styles = useStyles();
-
 
   // if(typeof console === 'object') { console.log('field %o, options %o',field, options,props); }
 
@@ -105,6 +126,21 @@ export default (field, options) => {
 
       // if(typeof console === 'object') { console.log('ReferenceInput.field',field,field.reference,refField); }
 
+      //
+      // return (
+      //     <ReferenceInput
+      //         fullWidth={true}
+      //
+      //         key={field.name}
+      //         label={field.name}
+      //         reference={field.reference.name}
+      //         source={field.name}
+      //         {...props}
+      //         allowEmpty
+      //     >
+      //       <AutocompleteInput optionText={refField} />
+      //     </ReferenceInput>
+      // );
 
       return (
         <ReferenceInput
@@ -119,6 +155,47 @@ export default (field, options) => {
         >
           <SelectInput optionText={refField} />
         </ReferenceInput>
+      );
+    }
+
+    // return (
+    //     <AutocompleteInput
+    //         label={field.name}
+    //         // source={field.name}
+    //         source={field.reference.name}
+    //         key={field.name}
+    //         optionText={getReferenceNameField(field.reference)}
+    //         {...props}
+    //         allowEmpty
+    //     />
+    // );
+    // let autocompleteArrayInputStyles = useAutocompleteArrayInputStyles();
+
+    if(field.AutocompleteArrayInput) {
+      let autocompleteSugestionArrayInputStyles = useAutocompleteSugestionArrayInputStyles();
+
+      return (
+          <ReferenceArrayInput
+              fullWidth={true}
+
+              key={field.name}
+              label={field.name}
+              reference={field.reference.name}
+              source={field.name}
+              defaultValue={[]}
+              {...props}
+              allowEmpty
+          >
+            <AutocompleteArrayInput
+                optionText={getReferenceNameField( field.reference )}
+                className={styles.autocompleteContainer}
+                options={{
+                  suggestionsContainerProps: {
+                    classes: autocompleteSugestionArrayInputStyles
+                  }
+                }}
+            />
+          </ReferenceArrayInput>
       );
     }
 
@@ -164,7 +241,15 @@ export default (field, options) => {
       );
 
     case 'http://www.w3.org/2001/XMLSchema#integer':
-      return <NumberInput key={field.name} source={field.name} {...props} />;
+      return (
+          <NumberInput
+              fullWidth={true}
+
+              key={field.name}
+              source={field.name}
+              {...props}
+          />
+      );
 
     case 'http://www.w3.org/2001/XMLSchema#decimal':
       return (
@@ -206,9 +291,6 @@ export default (field, options) => {
           source={field.name}
           {...props}
       />;
-
-
-
 
     default:
       return <TextInput
