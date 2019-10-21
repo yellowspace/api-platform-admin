@@ -11,6 +11,8 @@ import {
 import isPlainObject from 'lodash.isplainobject';
 import fetchHydra from './fetchHydra';
 
+const debug = true;
+
 class ReactAdminDocument {
   constructor(obj) {
     Object.assign(this, obj, {
@@ -47,7 +49,11 @@ export const transformJsonLdDocumentToReactAdminDocument = (
   document,
   clone = true,
   addToCache = true,
+  getSubresources = false
 ) => {
+
+  // if(debug && typeof console === 'object') { console.log('transformJsonLdDocumentToReactAdminDocument',document); }
+
   if (clone) {
     // deep clone documents
     document = JSON.parse(JSON.stringify(document));
@@ -60,8 +66,12 @@ export const transformJsonLdDocumentToReactAdminDocument = (
 
   // Replace embedded objects by their IRIs, and store the object itself in the cache to reuse without issuing new HTTP requests.
   Object.keys(document).forEach(key => {
+
     // to-one
     if (isPlainObject(document[key]) && document[key]['@id']) {
+
+      if(1===2 && debug && typeof console === 'object') { console.log('isPlainObject-document[key]',key,document[key],isPlainObject(document[key])); }
+
       if (addToCache) {
         reactAdminDocumentsCache[
           document[key]['@id']
@@ -83,11 +93,18 @@ export const transformJsonLdDocumentToReactAdminDocument = (
       isPlainObject(document[key][0]) &&
       document[key][0]['@id']
     ) {
+
+      // if(typeof console === 'object') { console.log('isArray-document[key]',key,document[key],isPlainObject(document[key])); }
+
       document[key] = document[key].map(obj => {
         if (addToCache) {
           reactAdminDocumentsCache[
             obj['@id']
           ] = transformJsonLdDocumentToReactAdminDocument(obj, false, false);
+        }
+
+        if(getSubresources) {
+          return obj;
         }
 
         return obj['@id'];
@@ -140,6 +157,8 @@ export default ({entrypoint, resources = []}, httpClient = fetchHydra) => {
     const fieldDataKeys = Object.keys(fieldData);
     const fieldDataValues = Object.values(fieldData);
 
+    // if(debug && typeof console === 'object') { console.log('convertReactAdminDataToHydraData',resource, data); }
+
     return Promise.all(fieldDataValues).then(fieldData => {
       const object = {};
       for (let i = 0; i < fieldDataKeys.length; i++) {
@@ -180,6 +199,8 @@ export default ({entrypoint, resources = []}, httpClient = fetchHydra) => {
     const entrypointUrl = new URL(entrypoint, window.location.href);
     const collectionUrl = new URL(`${entrypoint}/${resource}`, entrypointUrl);
     const itemUrl = new URL(params.id, entrypointUrl);
+
+    if(1===2 && debug && typeof console === 'object') { console.log('convertReactAdminRequestToHydraRequest',type, resource, params); }
 
     switch (type) {
       case CREATE:
@@ -272,6 +293,8 @@ export default ({entrypoint, resources = []}, httpClient = fetchHydra) => {
       return Promise.resolve(data);
     }
 
+    // if(debug && typeof console === 'object') { console.log('convertHydraDataToReactAdminData',resource, data ); }
+
     const fieldData = {};
     resource.fields.forEach(({name, denormalizeData}) => {
       if (!(name in data) || undefined === denormalizeData) {
@@ -306,6 +329,11 @@ export default ({entrypoint, resources = []}, httpClient = fetchHydra) => {
     resource,
     response,
   ) => {
+
+    if(1===2 && debug && typeof console === 'object') { console.log('convertHydraResponseToReactAdminResponse',    type,
+        resource,
+        response,); }
+
     switch (type) {
       case GET_LIST:
       case GET_MANY_REFERENCE:
