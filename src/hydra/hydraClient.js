@@ -200,7 +200,7 @@ export default ({entrypoint, resources = []}, httpClient = fetchHydra) => {
     const collectionUrl = new URL(`${entrypoint}/${resource}`, entrypointUrl);
     const itemUrl = new URL(params.id, entrypointUrl);
 
-    if(1===2 && debug && typeof console === 'object') { console.log('convertReactAdminRequestToHydraRequest',type, resource, params); }
+    // if(1===1 && debug && typeof console === 'object') { console.log('convertReactAdminRequestToHydraRequest',type, resource, params); }
 
     switch (type) {
       case CREATE:
@@ -372,6 +372,8 @@ export default ({entrypoint, resources = []}, httpClient = fetchHydra) => {
    * @returns {Promise}
    */
   const fetchApi = (type, resource, params) => {
+    // if(typeof console === 'object') { console.log('fetchApi',type, resource, params); }
+
     // Hydra doesn't handle MANY requests, so we fallback to calling the ONE request n times instead
     switch (type) {
       case GET_MANY:

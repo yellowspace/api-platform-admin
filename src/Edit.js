@@ -38,7 +38,7 @@ const Edit = props => {
     addIdInput = false === hasIdentifier(fields),
   } = resolveProps(props);
 
-  if(typeof console === 'object') { console.log('EDIT.props',props); }
+  // if(typeof console === 'object') { console.log('EDIT.props',props); }
 
   return (
     <BaseEdit
