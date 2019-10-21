@@ -79,6 +79,8 @@ const List = props => {
 	}
 
 
+	if(typeof console === 'object') { console.log('LIST props',props); }
+
 	return (
 		<BaseList
 		  {...props}
