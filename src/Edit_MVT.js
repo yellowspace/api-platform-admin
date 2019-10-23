@@ -29,8 +29,16 @@ const useStyles = makeStyles({
 
 const CustomToolbar = props => {
 
-  // if(typeof console === 'object') { console.log('CustomToolbar.props',props.redirect); }
+  // if(typeof console === 'object') { console.log('CustomToolbar.props',props); }
   // let form = useForm();
+
+  let { options } = props;
+  options = options || {};
+
+  let cloneButton = (typeof options.cloneButton !== 'undefined') ? options.cloneButton : true;
+  let deleteButton = (typeof options.deleteButton !== 'undefined') ? options.deleteButton : true;
+
+  // if(typeof console === 'object') { console.log('CustomToolbar.props',props,cloneButton,deleteButton); }
 
   return (
     <Toolbar
@@ -40,8 +48,8 @@ const CustomToolbar = props => {
     >
       <SaveButton undoable={false} redirect={props.redirect} />
       {/*<RA_SaveButton undoable={false} />*/}
-      <DeleteButton undoable={false} label={null} />
-      <CloneButton undoable="" label={null} />
+      {deleteButton &&<DeleteButton undoable={false} label={null} />}
+      {cloneButton && <CloneButton undoable="" label={null} />}
     </Toolbar>
   )
 };
@@ -129,8 +137,9 @@ const Edit_MVT = props => {
           // }}
       >
         <SimpleForm
-            toolbar={<CustomToolbar />}
+            toolbar={<CustomToolbar options={props.options} />}
             validate={validateForm}
+            variant="standard"
             {...formProps}
             // save={(a) => {
             //   if(typeof console === 'object') { console.log('SimpleForm SAVE!',a); }
