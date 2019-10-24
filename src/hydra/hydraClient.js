@@ -176,12 +176,16 @@ export default ({entrypoint, resources = []}, httpClient = fetchHydra) => {
    * @returns {Promise}
    */
   const transformReactAdminDataToRequestBody = (resource, data = {}) => {
+    // if(typeof console === 'object') { console.log('transformReactAdminDataToRequestBodyx '+resource+': %o',data); }
     resource = resources.find(({name}) => resource === name);
     if (undefined === resource) {
       return Promise.resolve(data);
     }
 
     return convertReactAdminDataToHydraData(resource, data).then(data => {
+      if(1===2 && typeof console === 'object') { console.log('convertReactAdminDataToHydraData',resource,resource.encodeData,data,JSON.stringify(data),undefined === resource.encodeData
+                                                                                                ? JSON.stringify(data)
+                                                                                                : resource.encodeData(data)); }
       return undefined === resource.encodeData
         ? JSON.stringify(data)
         : resource.encodeData(data);
