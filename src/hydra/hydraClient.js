@@ -9,6 +9,7 @@ import {
   UPDATE,
 } from 'react-admin';
 import isPlainObject from 'lodash.isplainobject';
+import { isArray } from 'lodash';
 import fetchHydra from './fetchHydra';
 
 const debug = true;
@@ -136,6 +137,9 @@ export default ({entrypoint, resources = []}, httpClient = fetchHydra) => {
    * @returns {Promise}
    */
   const convertReactAdminDataToHydraData = (resource, data = {}) => {
+
+    // if(typeof console === 'object') { console.log('convertReactAdminDataToHydraData',resource, data); }
+
     const fieldData = [];
     resource.fields.forEach(({name, reference, normalizeData}) => {
       if (!(name in data)) {
@@ -245,6 +249,20 @@ export default ({entrypoint, resources = []}, httpClient = fetchHydra) => {
             }
 
             Object.keys(filterValue).forEach(subKey => {
+              // added by chris, in order to send array values as array like
+              // filter{project: {id: ['/api/projects/1','/api/projects/3']}};
+              if(
+                  Array.isArray(filterValue[subKey])
+              ) {
+                filterValue[subKey].forEach((item, index) => {
+                  collectionUrl.searchParams.set(
+                      `${key}.${subKey}[${index}]`,
+                      item,
+                  );
+                });
+                return;
+              }
+
               collectionUrl.searchParams.set(
                 `${key}[${subKey}]`,
                 filterValue[subKey],
@@ -256,7 +274,7 @@ export default ({entrypoint, resources = []}, httpClient = fetchHydra) => {
         if (type === GET_MANY_REFERENCE && params.target) {
           collectionUrl.searchParams.set(params.target, params.id);
         }
-
+        // if(typeof console === 'object') { console.log('collectionUrl',resource,collectionUrl); }
         return Promise.resolve({
           options: {},
           url: collectionUrl,
