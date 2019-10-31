@@ -9,7 +9,7 @@ import {
   UPDATE,
 } from 'react-admin';
 import isPlainObject from 'lodash.isplainobject';
-import { isArray } from 'lodash';
+// import { isArray } from 'lodash';
 import fetchHydra from './fetchHydra';
 
 const debug = true;
@@ -39,6 +39,48 @@ class ReactAdminDocument {
 const reactAdminDocumentsCache = new Map();
 
 /**
+ * Added by Chris to resolve subresources as ReactAdmin Documents
+ * @param obj
+ * @returns {ReactAdminDocument}
+ */
+const resolveSubresources = (obj) => {
+
+  // if(typeof console === 'object') { console.log('resolveSubresources',obj); }
+  if (obj['@id']) {
+    obj = new ReactAdminDocument(obj);
+  }
+
+  Object.keys(obj).forEach(key => {
+
+    // to-one
+    if (isPlainObject(obj[key]) && obj[key]['@id']) {
+      // if(1===1 && debug && typeof console === 'object') { console.log('resolveSubresources,isPlainObject-document[key]',key,obj[key],isPlainObject(obj[key])); }
+      obj[key] = obj[key]['@id'];
+
+      return;
+    }
+
+    // to-many
+    if (
+        Array.isArray(obj[key]) &&
+        obj[key].length &&
+        isPlainObject(obj[key][0]) &&
+        obj[key][0]['@id']
+    ) {
+
+      // if(typeof console === 'object') { console.log('resolveSubresources.isArray-document[key]',key,obj[key],isPlainObject(obj[key])); }
+
+      obj[key] = obj[key].map(obj => {
+        // added by chris
+        return resolveSubresources(obj);
+      });
+    }
+  });
+
+  return obj
+};
+
+/**
  * Transforms a JSON-LD document to a react-admin compatible document.
  *
  * @param {Object} document
@@ -50,10 +92,10 @@ export const transformJsonLdDocumentToReactAdminDocument = (
   document,
   clone = true,
   addToCache = true,
-  getSubresources = false
+  getSubresources = false // added by chris
 ) => {
 
-  // if(debug && typeof console === 'object') { console.log('transformJsonLdDocumentToReactAdminDocument',document); }
+  if(1===2 && debug && typeof console === 'object') { console.log('transformJsonLdDocumentToReactAdminDocument',document); }
 
   if (clone) {
     // deep clone documents
@@ -104,8 +146,9 @@ export const transformJsonLdDocumentToReactAdminDocument = (
           ] = transformJsonLdDocumentToReactAdminDocument(obj, false, false);
         }
 
+        // added by chris
         if(getSubresources) {
-          return obj;
+          return resolveSubresources(obj);
         }
 
         return obj['@id'];
@@ -271,6 +314,11 @@ export default ({entrypoint, resources = []}, httpClient = fetchHydra) => {
           });
         }
 
+        // added by chris
+        if(params.appParams) {
+          collectionUrl.searchParams.set('appParams', JSON.stringify(params.appParams));
+        }
+
         if (type === GET_MANY_REFERENCE && params.target) {
           collectionUrl.searchParams.set(params.target, params.id);
         }
@@ -360,10 +408,19 @@ export default ({entrypoint, resources = []}, httpClient = fetchHydra) => {
       case GET_LIST:
       case GET_MANY_REFERENCE:
         // TODO: support other prefixes than "hydra:"
+          // added by chris send appParams (in progress here)
+        let getSubresources = false;
+         if(response.json && response.json['hydra:view'] && response.json['hydra:view']['@id']) {
+           getSubresources = response.json['hydra:view']['@id'].indexOf('getSubresources') > 0 ? true : false
+         }
+        // changed by chris, added getSubresources to keep getSubresources in array
         return Promise.resolve(
-          response.json['hydra:member'].map(
-            transformJsonLdDocumentToReactAdminDocument,
-          ),
+          // response.json['hydra:member'].map(
+          //   transformJsonLdDocumentToReactAdminDocument,
+          // ),
+            response.json['hydra:member'].map((d) => {
+              return transformJsonLdDocumentToReactAdminDocument(d,true,true, getSubresources);
+            }),
         )
           .then(data =>
             Promise.all(
