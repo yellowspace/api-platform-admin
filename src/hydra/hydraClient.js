@@ -287,6 +287,22 @@ export default ({entrypoint, resources = []}, httpClient = fetchHydra) => {
           Object.keys(params.filter).forEach(key => {
             const filterValue = params.filter[key];
             if (!isPlainObject(filterValue)) {
+
+              // if(typeof console === 'object') { console.log('!!isPlainObject',filterValue); }
+              // added by chris, in order to send array values as array like
+              // filter{project: ['/api/projects/1','/api/projects/3']};
+              if(
+                  Array.isArray(filterValue)
+              ) {
+                filterValue.forEach((item, index) => {
+                  collectionUrl.searchParams.set(
+                      `${key}[${index}]`,
+                      item,
+                  );
+                });
+                return;
+              }
+
               collectionUrl.searchParams.set(key, params.filter[key]);
               return;
             }
