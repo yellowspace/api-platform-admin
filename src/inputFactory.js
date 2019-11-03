@@ -16,12 +16,13 @@ import {
 }                            from 'react-admin';
 import React                 from 'react';
 import getReferenceNameField from './getReferenceNameField';
-import { makeStyles }        from '@material-ui/core';
-import MVTInputField         from '../../common/components/react-admin/form/fields/MVTInputField';
-import MVTReferenceInput     from '../../common/components/react-admin/form/fields/MVTReferenceInput';
-import { isFieldSortable }   from './fieldFactory';
-import MVTSelectField        from '../../common/components/react-admin/form/fields/MVTSelectField';
-import MVTDateTimeInput      from '../../common/components/react-admin/form/fields/MVTDateTimeInput';
+import { makeStyles }      from '@material-ui/core';
+import MVTInputField       from '../../common/components/react-admin/form/fields/MVTInputField';
+import MVTReferenceInput   from '../../common/components/react-admin/form/fields/MVTReferenceInput';
+import { isFieldSortable } from './fieldFactory';
+import MVTSelectField      from '../../common/components/react-admin/form/fields/MVTSelectField';
+import MVTDateTimeInput    from '../../common/components/react-admin/form/fields/MVTDateTimeInput';
+import MUIColorPicker      from '../../common/components/react-admin/form/fields/MUIColorPicker';
 
 let useStyles = makeStyles(function (theme) {
   return ({
@@ -69,6 +70,21 @@ export default (field, options) => {
         />
     );
   }
+
+  if (field.MUIColorPicker) {
+    return (
+        <MUIColorPicker
+            fullWidth={true}
+            resettable={props.multiline ? false : true}
+            clearAlwaysVisible={true}
+            className={styles.resetIconFix}
+
+
+            key={field.name} source={field.name} {...props}
+        />
+    );
+  }
+
 
   if (field.MVTSelectField) {
     return (
