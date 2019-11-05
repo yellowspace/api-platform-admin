@@ -8,7 +8,7 @@ import {
   ReferenceInput,
   required,
   SelectArrayInput,
-  AutocompleteInput,
+  // AutocompleteInput,
   AutocompleteArrayInput,
   SelectInput,
   SimpleFormIterator,
@@ -71,20 +71,6 @@ export default (field, options) => {
     );
   }
 
-  if (field.MUIColorPicker) {
-    return (
-        <MUIColorPicker
-            fullWidth={true}
-            resettable={props.multiline ? false : true}
-            clearAlwaysVisible={true}
-            className={styles.resetIconFix}
-
-
-            key={field.name} source={field.name} {...props}
-        />
-    );
-  }
-
 
   if (field.MVTSelectField) {
     return (
@@ -110,13 +96,13 @@ export default (field, options) => {
 
   if (null !== field.reference) {
 
-    if(field.MVTReferenceField && 1 === field.maxCardinality) {
+    if((field.MVTReferenceInput || field.MVTReferenceField) && 1 === field.maxCardinality) {
 
       let refField = getReferenceNameField(field.reference);
       if(field.refField) {
         refField = field.refField;
       }
-      // if(typeof console === 'object') { console.log('MVTReferenceField.field',field,field.reference,refField); }
+      // if(typeof console === 'object') { console.log('MVTReferenceField.field',field,field.reference,refField,props); }
 
       return (
           <MVTReferenceInput
@@ -141,8 +127,8 @@ export default (field, options) => {
       }
 
       // if(typeof console === 'object') { console.log('ReferenceInput.field',field,field.reference,refField); }
-
       //
+      // //
       // return (
       //     <ReferenceInput
       //         fullWidth={true}
@@ -154,7 +140,7 @@ export default (field, options) => {
       //         {...props}
       //         allowEmpty
       //     >
-      //       <AutocompleteInput optionText={refField} />
+      //       <AutocompleteInput allowEmpty={true} optionText={refField} />
       //     </ReferenceInput>
       // );
 
@@ -246,7 +232,34 @@ export default (field, options) => {
     };
   }
 
+  // if (field.MUIColorPicker) {
+  //   return (
+  //       <MUIColorPicker
+  //           fullWidth={true}
+  //           resettable={props.multiline ? false : true}
+  //           clearAlwaysVisible={true}
+  //           className={styles.resetIconFix}
+  //
+  //
+  //           key={field.name} source={field.name} {...props}
+  //       />
+  //   );
+  // }
+
   switch (field.range) {
+    case'local:color_picker':
+      return (
+          <MUIColorPicker
+              fullWidth={true}
+              resettable={props.multiline ? false : true}
+              clearAlwaysVisible={true}
+              className={styles.resetIconFix}
+
+
+              key={field.name} source={field.name} {...props}
+          />
+      );
+
     case 'http://www.w3.org/2001/XMLSchema#array':
       return (
         <ArrayInput key={field.name} source={field.name} {...props}>
