@@ -5,10 +5,10 @@ class Api {
 
 	// static gridSettings = {};
 
-	static mapFields(listFields,fields) {
+	static mapFields(listFields,fields,reOrder=true) {
 		let lf = [];
 
-		listFields.map((f) => {
+		listFields.forEach((f) => {
 			let name = f.name;
 			if(fields[name]) {
 				// lf.push(Object.assign(f,fields[name]));
@@ -17,6 +17,27 @@ class Api {
 				lf.push(f);
 			}
 		});
+
+		if(reOrder) {
+			let ordered = [];
+			for(let idx in fields) {
+
+				let r = ObjectUtils.findRecord(lf,{name: idx});
+
+				// if(typeof console === 'object') { console.log('idx',idx,r); }
+
+				if(r) {
+					ordered.push(r);
+					ObjectUtils.remove(lf,(n) => {
+						return n.name === idx;
+					});
+
+					// if(typeof console === 'object') { console.log('REMOVE FROM ? ',lf); }
+				}
+			}
+
+			lf = ordered.concat(lf);
+		}
 
 		return lf;
 	}
