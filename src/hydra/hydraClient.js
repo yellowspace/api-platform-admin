@@ -335,6 +335,15 @@ export default ({entrypoint, resources = []}, httpClient = fetchHydra) => {
           collectionUrl.searchParams.set('appParams', JSON.stringify(params.appParams));
         }
 
+        // send groups[]=related:read
+        // added by chris
+        if(params.groups && params.groups.length) {
+          params.groups.forEach((item,index) => {
+            collectionUrl.searchParams.set( `groups[${index}]`, item);
+
+          });
+        }
+
         if (type === GET_MANY_REFERENCE && params.target) {
           collectionUrl.searchParams.set(params.target, params.id);
         }
@@ -427,7 +436,11 @@ export default ({entrypoint, resources = []}, httpClient = fetchHydra) => {
           // added by chris send appParams (in progress here)
         let getSubresources = false;
          if(response.json && response.json['hydra:view'] && response.json['hydra:view']['@id']) {
-           getSubresources = response.json['hydra:view']['@id'].indexOf('getSubresources') > 0 ? true : false
+           let hydraView = decodeURIComponent(response.json['hydra:view']['@id']);
+           // getSubresources = hydraView.indexOf('getSubresources') > 0 ? true : false;
+           if(hydraView.indexOf('groups[]=related:read') > 0) {
+             getSubresources = true;
+           }
          }
         // changed by chris, added getSubresources to keep getSubresources in array
         return Promise.resolve(
