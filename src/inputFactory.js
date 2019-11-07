@@ -19,10 +19,11 @@ import getReferenceNameField from './getReferenceNameField';
 import { makeStyles }      from '@material-ui/core';
 import MVTInputField       from '../../common/components/react-admin/form/fields/MVTInputField';
 import MVTReferenceInput   from '../../common/components/react-admin/form/fields/MVTReferenceInput';
-import { isFieldSortable } from './fieldFactory';
+// import { isFieldSortable } from './fieldFactory';
 import MVTSelectField      from '../../common/components/react-admin/form/fields/MVTSelectField';
 import MVTDateTimeInput    from '../../common/components/react-admin/form/fields/MVTDateTimeInput';
 import MUIColorPicker      from '../../common/components/react-admin/form/fields/MUIColorPicker';
+import AutocompleteInput from '../../common/components/react-admin/form/fields/MUIAutocompleteDownshift';
 
 let useStyles = makeStyles(function (theme) {
   return ({
@@ -55,6 +56,24 @@ export default (field, options) => {
   let styles = useStyles();
 
   // if(typeof console === 'object') { console.log('field %o, options %o',field, options,props); }
+
+
+  if(field.JSX) {
+    let cj = {
+      key: field.name,
+      source: field.name,
+      ...props
+    };
+    let df = {
+      fullWidth:true,
+      resettable: props.multiline ? false : true,
+      clearAlwaysVisible: true,
+      className: styles.resetIconFix,
+    };
+    Object.assign(cj,df);
+    // if(typeof console === 'object') { console.log('JSX FIELD!!!',cj); }
+    return React.cloneElement( field.JSX, cj);
+  }
 
 
   if (field.MVTInputField) {
@@ -126,23 +145,24 @@ export default (field, options) => {
         refField = field.refField;
       }
 
-      // if(typeof console === 'object') { console.log('ReferenceInput.field',field,field.reference,refField); }
-      //
-      // //
-      // return (
-      //     <ReferenceInput
-      //         fullWidth={true}
-      //
-      //         key={field.name}
-      //         label={field.name}
-      //         reference={field.reference.name}
-      //         source={field.name}
-      //         {...props}
-      //         allowEmpty
-      //     >
-      //       <AutocompleteInput allowEmpty={true} optionText={refField} />
-      //     </ReferenceInput>
-      // );
+      if(field.AutocompleteInput) {
+        // if ( typeof console === 'object' ) { console.log( 'ReferenceInput.field', field, field.reference, refField ); }
+
+        return (
+            <ReferenceInput
+                fullWidth={true}
+
+                key={field.name}
+                label={field.name}
+                reference={field.reference.name}
+                source={field.name}
+                {...props}
+                allowEmpty
+            >
+              <AutocompleteInput allowEmpty={true} optionText={refField} />
+            </ReferenceInput>
+        );
+      }
 
       return (
         <ReferenceInput
