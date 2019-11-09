@@ -19,6 +19,7 @@ import getReferenceNameField from './getReferenceNameField';
 import { makeStyles }      from '@material-ui/core';
 import MVTInputField       from '../../common/components/react-admin/form/fields/MVTInputField';
 import MVTReferenceInput   from '../../common/components/react-admin/form/fields/MVTReferenceInput';
+import MVTReferenceArrayInput   from '../../common/components/react-admin/form/fields/MVTReferenceArrayInput';
 // import { isFieldSortable } from './fieldFactory';
 import MVTSelectField      from '../../common/components/react-admin/form/fields/MVTSelectField';
 import MVTDateTimeInput    from '../../common/components/react-admin/form/fields/MVTDateTimeInput';
@@ -177,6 +178,29 @@ export default (field, options) => {
         >
           <SelectInput optionText={refField} />
         </ReferenceInput>
+      );
+    }
+
+    if(field.MVTReferenceArrayInput) {
+
+      let refField = getReferenceNameField(field.reference);
+      if(field.refField) {
+        refField = field.refField;
+      }
+      // if(typeof console === 'object') { console.log('MVTReferenceField.field',field,field.reference,refField,props); }
+
+      return (
+          <MVTReferenceArrayInput
+              fullWidth={true}
+
+              key={field.name}
+              label={field.name}
+              reference={field.reference}
+              source={field.name}
+              // defaultValue={[]}
+              {...props}
+              allowEmpty
+          />
       );
     }
 
