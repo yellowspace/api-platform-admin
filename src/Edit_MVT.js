@@ -16,9 +16,11 @@ import {
 } from 'react-admin';
 // import { useForm } from 'react-final-form';
 import { makeStyles } from '@material-ui/core/styles';
-
 import SaveButton from '../../common/components/react-admin/form/actions/SaveButton';
 import RA_SaveButton from '../../common/components/react-admin/form/actions/RA_SaveButton';
+
+import { FormInput } from 'react-admin';
+
 
 const useStyles = makeStyles({
   toolbar: {
@@ -83,6 +85,48 @@ const resolveProps = props => {
   };
 };
 
+/**
+ * see @link node_modules/ra-ui-materialui/esm/form/SimpleForm.js
+ * //  Children.map(children, function (input) { return (React.createElement(FormInput,
+ * { basePath: basePath, input: input, record: record, resource: resource, variant: variant, margin: margin }));
+ *
+ * @param props
+ * @returns {*}
+ * @constructor
+ */
+const Editfields = (props) => {
+
+  const {inputFactory,addIdInput,editields,api} = props;
+  const { basePath, record, resource, variant, margin } = props;
+  // if(typeof console === 'object') { console.log('props',props); }
+
+  return (
+      <React.Fragment>
+        {addIdInput && <TextInput disabled source="id" />}
+        {addIdInput && <TextInput type="hidden" source="id" label={null} />}
+        {editields.map(field => {
+
+          let input = inputFactory( field, {
+            api,
+            resource,
+          });
+
+          // if(typeof console === 'object') { console.log('input',input,field,field.name); }
+
+          return React.createElement( FormInput , {
+            key: field.name,
+            basePath: basePath,
+            input   : input,
+            record  : record,
+            resource: resource,
+            variant : variant,
+            margin  : margin
+          } )
+        })}
+      </React.Fragment>
+  );
+};
+
 const Edit_MVT = props => {
   let {
     options: {
@@ -92,8 +136,16 @@ const Edit_MVT = props => {
       configFactory,
       resource
     },
-    addIdInput = false === hasIdentifier(fields),
+    // addIdInput = false === hasIdentifier(fields),
   } = resolveProps(props);
+
+  let {
+    formProps,
+    renderFields,
+    addIdInput,
+    ...rest
+  } = props;
+
 
   // if(typeof console === 'object') { console.log('EDIT props',props); }
 
@@ -104,8 +156,6 @@ const Edit_MVT = props => {
   //
   // if(editType === 'drawer') {}
 
-  addIdInput = false;
-
 
   let editields = fields;
   let validateForm = () => {};
@@ -115,9 +165,9 @@ const Edit_MVT = props => {
     validateForm = configFactory.conf.validateForm;
   }
 
-  const { formProps, ...rest } = props;
 
   // if(typeof console === 'object') { console.log('formProps',formProps); }
+
 
   return (
       <BaseEdit
@@ -148,9 +198,17 @@ const Edit_MVT = props => {
             //   if(typeof console === 'object') { console.log('SimpleForm handleSubmit!',a); }
             // }}
         >
-          {addIdInput && <TextInput disabled source="id" />}
-          {addIdInput && <TextInput type="hidden" source="id" label={null} />}
-          {editields.map(field =>
+          {renderFields === 'editfields' && <Editfields
+              {...props}
+              addIdInput={addIdInput}
+              editields={editields}
+              inputFactory={inputFactory}
+              api={api}
+              resource={resource}
+          />}
+          {renderFields === 'direct' && addIdInput && <TextInput disabled source="id" />}
+          {renderFields === 'direct' && addIdInput && <TextInput type="hidden" source="id" label={null} />}
+          {renderFields === 'direct' && editields.map(field =>
               inputFactory(field, {
                 api,
                 resource,
@@ -161,7 +219,13 @@ const Edit_MVT = props => {
   );
 };
 
+Edit_MVT.defaultProps = {
+  renderFields: 'direct',
+  addIdInput: false
+};
+
 Edit_MVT.propTypes = {
+  renderFields: PropTypes.string,
   formProps: PropTypes.object,
   addIdInput: PropTypes.bool,
   options: PropTypes.shape({
