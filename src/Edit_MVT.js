@@ -159,10 +159,12 @@ const Edit_MVT = props => {
 
   let editields = fields;
   let validateForm = () => {};
+  let formSettings = {};
 
   if(configFactory.conf) {
     editields = configFactory.conf.getFormFields(editields);
     validateForm = configFactory.conf.validateForm;
+    formSettings = configFactory.conf.getFormSettings();
   }
 
 
