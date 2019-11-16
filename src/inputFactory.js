@@ -290,19 +290,33 @@ export default (field, options) => {
   //   );
   // }
 
+  if(field.MUIColorPicker || field.range.indexOf('HexRgbColor') >= 0) {
+    return (
+        <MUIColorPicker
+            fullWidth={true}
+            resettable={props.multiline ? false : true}
+            clearAlwaysVisible={true}
+            className={styles.resetIconFix}
+
+
+            key={field.name} source={field.name} {...props}
+        />
+    );
+  }
+
   switch (field.range) {
-    case'local:color_picker':
-      return (
-          <MUIColorPicker
-              fullWidth={true}
-              resettable={props.multiline ? false : true}
-              clearAlwaysVisible={true}
-              className={styles.resetIconFix}
-
-
-              key={field.name} source={field.name} {...props}
-          />
-      );
+    // case'local:color_picker':
+    //   return (
+    //       <MUIColorPicker
+    //           fullWidth={true}
+    //           resettable={props.multiline ? false : true}
+    //           clearAlwaysVisible={true}
+    //           className={styles.resetIconFix}
+    //
+    //
+    //           key={field.name} source={field.name} {...props}
+    //       />
+    //   );
 
     case 'http://www.w3.org/2001/XMLSchema#array':
       return (

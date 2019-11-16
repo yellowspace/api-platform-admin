@@ -3,6 +3,7 @@ import Resource from '@api-platform/api-doc-parser/lib/Resource';
 import {
 	EditButton,
 	List as BaseList,
+	SimpleList,
 	ShowButton,
 	TextField,
 	TopToolbar,
@@ -20,15 +21,15 @@ import PropTypes                      from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import ListFilter                     from './ListFilter';
 import {isFieldSortable}              from './fieldFactory';
-import { makeStyles }   from '@material-ui/core';
-import MuiDrawer        from '../../common/components/common/MuiDrawer';
+import { makeStyles, Typography }     from '@material-ui/core';
+import MuiDrawer                      from '../../common/components/common/MuiDrawer';
 // import { ProjectCreate } from '../../src/scenes/Projects/ProjectCreate';
-import { Route }        from 'react-router-dom';
-import History          from '../../src/admin-containers/History';
-import Create           from './Create';
-import Edit             from './Edit_MVT';
-import Show             from './Show';
-import MuiDrawerEditor  from '../../common/components/react-admin/form/MuiDrawerEditor';
+import { Route }                      from 'react-router-dom';
+import History                        from '../../src/admin-containers/History';
+import Create                         from './Create';
+import Edit                           from './Edit_MVT';
+import Show                           from './Show';
+import MuiDrawerEditor                from '../../common/components/react-admin/form/MuiDrawerEditor';
 import MuiDrawerCreator from '../../common/components/react-admin/form/MuiDrawerCreator';
 
 
@@ -136,7 +137,7 @@ const resolveProps = props => {
   };
 };
 
-const List_MVT = props => {
+const SimpleList_MVT = props => {
 
 	let styles = useStyles();
 
@@ -248,33 +249,27 @@ const List_MVT = props => {
 					// actions: 'mtv__list--toolbar--actions',
 				}}
 			>
-				<MVT_Datagrid
+				<SimpleList
 					component="div"
 					// configFactory={configFactory}
 					conf={configFactory.conf}
 					paginationComponent={true}
 					toolbar={true}
 					// toolbarComponent={true}
-				>
-					{addIdField && (
-						<TextField
-							source="id"
-							sortable={isFieldSortable({name: 'id'}, resource)}
+					primaryText={(record) => {
+						if(typeof console === 'object') { console.log('record',record); }
+						return <Typography variant="p">{record['name']}</Typography>
+						return <TextField
+							source="project"
 						/>
-					)}
-					{listFields
-						.filter(field => !listFieldFilter || listFieldFilter(resource, field))
-						.map(field =>
-							fieldFactory(field, {
-								api,
-								resource,
-							}),
-						)}
-					{hasShow && <ShowButton label={null} width={80} />}
-					{hasEdit && <EditButton label={null} width={80} />}
-				</MVT_Datagrid>
+					}}
+					// secondaryText={record => `${record.views} views`}
+					// tertiaryText={record => new Date(record.published_at).toLocaleDateString()}
+				>
+
+				</SimpleList>
 			</BaseList>
-			{configFactory.options.createType === 'drawer' &&<Route
+			{1===2 &&configFactory.options.createType === 'drawer' &&<Route
 				path={props.basePath + '/create'}
 			>
 				{({ match }) => {
@@ -294,23 +289,9 @@ const List_MVT = props => {
 
 						/>
 					);
-					//
-					// return (
-					// 	<MuiDrawer
-					// 		open={!!match}
-					// 		anchor="right"
-					// 		onClose={handleClose}
-					// 	>
-					// 		<Create
-					// 			className={styles.drawerContent}
-					// 			onCancel={handleClose}
-					// 			{...editProps}
-					// 		/>
-					// 	</MuiDrawer>
-					// )
 				}}
 			</Route>}
-			{configFactory.options.editType === 'drawer' && <Route
+			{1===2 &&configFactory.options.editType === 'drawer' && <Route
 				path={props.basePath + '/:id'}
 			>
 				{({ match }) => {
@@ -340,30 +321,9 @@ const List_MVT = props => {
 						// 	handleEditorSave(redirect,id,record);
 						// }}
 					/>);
-
-					// return (
-					// 	<MuiDrawer
-					// 		open={isMatch}
-					// 		anchor="right"
-					// 		onClose={handleClose}
-					// 	>
-					// 		{isMatch ? (
-					// 			<Edit
-					// 				// className={styles.drawerContent}
-					// 				id={isMatch ? id : null}
-					// 				onCancel={handleClose}
-					// 				{...editProps}
-					// 			/>
-					// 		) : (
-					// 			 <div
-					// 				 // className={styles.drawerContent}
-					// 			 />
-					// 		 )}
-					// 	</MuiDrawer>
-					// );
 				}}
 			</Route>}
-			{configFactory.options.showType === 'drawer' && <Route
+			{1===2 &&configFactory.options.showType === 'drawer' && <Route
 				path={props.basePath + '/:id/show'}
 			>
 				{({ match }) => {
@@ -403,11 +363,11 @@ const List_MVT = props => {
 	);
 };
 
-List_MVT.defaultProps = {
+SimpleList_MVT.defaultProps = {
   perPage: 30, // Default value in API Platform
 };
 
-List_MVT.propTypes = {
+SimpleList_MVT.propTypes = {
   addIdField: PropTypes.bool,
   options: PropTypes.shape({
     api: PropTypes.instanceOf(Api).isRequired,
@@ -421,4 +381,4 @@ List_MVT.propTypes = {
   hasShow: PropTypes.bool.isRequired,
 };
 
-export default List_MVT;
+export default SimpleList_MVT;

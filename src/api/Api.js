@@ -43,6 +43,29 @@ class Api {
 	}
 
 
+	static _hasEdit(hasEdit,configFactoryOptions) {
+		if(typeof this.hasEdit !== 'undefined') {
+			return this.hasEdit;
+		}
+		else if(configFactoryOptions.createType === 'drawer') {
+			hasEdit = true;
+		}
+
+		return hasEdit;
+	}
+
+	static _hasShow(hasShow,configFactoryOptions) {
+
+		if(typeof this.hasShow !== 'undefined') {
+			return this.hasShow;
+		}
+		else if(configFactoryOptions.showType === 'drawer') {
+			hasShow = true;
+		}
+
+		return hasShow;
+	}
+
 };
 
 export default Api;

@@ -355,6 +355,17 @@ export default ({entrypoint, resources = []}, httpClient = fetchHydra) => {
       }
 
       case GET_ONE:
+
+        // send groups[]=related:read
+        // added by chris
+        if(params.groups && params.groups.length) {
+          params.groups.forEach((item,index) => {
+            itemUrl.searchParams.set( `groups[${index}]`, item);
+          });
+        }
+
+        // if(typeof console === 'object') { console.log('itemUrl',params,itemUrl,collectionUrl); }
+
         return Promise.resolve({
           options: {},
           url: itemUrl,
@@ -429,12 +440,13 @@ export default ({entrypoint, resources = []}, httpClient = fetchHydra) => {
         resource,
         response,); }
 
+    let getSubresources = false;
+
     switch (type) {
       case GET_LIST:
       case GET_MANY_REFERENCE:
         // TODO: support other prefixes than "hydra:"
           // added by chris send appParams (in progress here)
-        let getSubresources = false;
          if(response.json && response.json['hydra:view'] && response.json['hydra:view']['@id']) {
            let hydraView = decodeURIComponent(response.json['hydra:view']['@id']);
            // getSubresources = hydraView.indexOf('getSubresources') > 0 ? true : false;
@@ -464,8 +476,18 @@ export default ({entrypoint, resources = []}, httpClient = fetchHydra) => {
         return Promise.resolve({data: {id: null}});
 
       default:
+
+        // added by chris send appParams (in progress here)
+        // if(response.json && response.json['hydra:view'] && response.json['hydra:view']['@id']) {
+        //   let hydraView = decodeURIComponent(response.json['hydra:view']['@id']);
+        //   // getSubresources = hydraView.indexOf('getSubresources') > 0 ? true : false;
+        //   if(hydraView.indexOf('groups[]=related:read') > 0) {
+        //     getSubresources = true;
+        //   }
+        // }
+
         return Promise.resolve(
-          transformJsonLdDocumentToReactAdminDocument(response.json),
+          transformJsonLdDocumentToReactAdminDocument(response.json,true,true, getSubresources),
         )
           .then(data => convertHydraDataToReactAdminData(resource, data))
           .then(data => ({data}));
