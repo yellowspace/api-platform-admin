@@ -483,6 +483,7 @@ export default ({entrypoint, resources = []}, httpClient = fetchHydra) => {
 
       default:
 
+        let addToCache = true;
         // added by chris send appParams (in progress here)
         if(response.json && response.json['@localMetadata']) {
           let hydraView = response.json['@localMetadata'];
@@ -493,7 +494,7 @@ export default ({entrypoint, resources = []}, httpClient = fetchHydra) => {
         }
 
         return Promise.resolve(
-          transformJsonLdDocumentToReactAdminDocument(response.json,true,true, getSubresources),
+          transformJsonLdDocumentToReactAdminDocument(response.json,true,addToCache, getSubresources),
         )
           .then(data => convertHydraDataToReactAdminData(resource, data))
           .then(data => ({data}));
