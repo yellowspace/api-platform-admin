@@ -40,7 +40,7 @@ const CustomToolbar = props => {
   let cloneButton = (typeof options.cloneButton !== 'undefined') ? options.cloneButton : true;
   let deleteButton = (typeof options.deleteButton !== 'undefined') ? options.deleteButton : true;
 
-  if(typeof console === 'object') { console.log('CustomToolbar.props',props,cloneButton,deleteButton); }
+  // if(typeof console === 'object') { console.log('CustomToolbar.props',props,cloneButton,deleteButton); }
 
   return (
     <Toolbar

@@ -124,6 +124,12 @@ export const transformJsonLdDocumentToReactAdminDocument = (
           false,
         );
       }
+
+      // added by chris
+      if(getSubresources) {
+        return resolveSubresources(document);
+      }
+
       document[key] = document[key]['@id'];
 
       return;
@@ -478,13 +484,13 @@ export default ({entrypoint, resources = []}, httpClient = fetchHydra) => {
       default:
 
         // added by chris send appParams (in progress here)
-        // if(response.json && response.json['hydra:view'] && response.json['hydra:view']['@id']) {
-        //   let hydraView = decodeURIComponent(response.json['hydra:view']['@id']);
-        //   // getSubresources = hydraView.indexOf('getSubresources') > 0 ? true : false;
-        //   if(hydraView.indexOf('groups[]=related:read') > 0) {
-        //     getSubresources = true;
-        //   }
-        // }
+        if(response.json && response.json['@localMetadata']) {
+          let hydraView = response.json['@localMetadata'];
+          // if(typeof console === 'object') { console.log('xhydraViewo',hydraView); }
+          if(hydraView && typeof hydraView === 'object' && hydraView.relationsRequested === true) {
+            getSubresources = true;
+          }
+        }
 
         return Promise.resolve(
           transformJsonLdDocumentToReactAdminDocument(response.json,true,true, getSubresources),
