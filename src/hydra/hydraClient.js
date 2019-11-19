@@ -343,6 +343,8 @@ export default ({entrypoint, resources = []}, httpClient = fetchHydra) => {
 
         // send groups[]=related:read
         // added by chris
+        // if(typeof console === 'object') { console.log('params.groups',resource,params,params.groups); }
+
         if(params.groups && params.groups.length) {
           params.groups.forEach((item,index) => {
             collectionUrl.searchParams.set( `groups[${index}]`, item);
