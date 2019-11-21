@@ -10,13 +10,22 @@ import {
   TextField,
   UrlField,
   FunctionField
-}                            from 'react-admin';
-import React                 from 'react';
-import getReferenceNameField from './getReferenceNameField';
-import { MVTListField }      from '../../common/components/react-admin';
-import MVTReferenceField     from '../../common/components/react-admin/grid/fields/MVTReferenceField';
-import MVTReferenceArrayField     from '../../common/components/react-admin/grid/fields/MVTReferenceArrayField';
+}                             from 'react-admin';
+import React                  from 'react';
+import getReferenceNameField  from './getReferenceNameField';
+import { MVTListField }       from '../../common/components/react-admin';
+import MVTReferenceField      from '../../common/components/react-admin/grid/fields/MVTReferenceField';
+import MVTReferenceArrayField from '../../common/components/react-admin/grid/fields/MVTReferenceArrayField';
+import { makeStyles }         from '@material-ui/core';
 // import EmptyComponent        from '../../common/components/common/EmptyComponent';
+
+
+var referenceStyles = makeStyles(function (theme) { return ({
+  link: {
+    textDecoration: 'none',
+    color: theme.palette.textColors.link,
+  },
+}); });
 
 export const isFieldSortable = (field, resource) => {
   // if(typeof console === 'object') { console.log('isFieldSortable',field, field.isSortable, resource); }
@@ -55,7 +64,7 @@ export default (field, options) => {
 
   if (null !== field.reference && field.reference !== undefined) {
     // if(typeof console === 'object') { console.log('fieldFactory.field.reference',field,field.reference); }
-
+    let refStyles = referenceStyles();
     if(field.MVTReferenceField) {
       return (
           <MVTReferenceField
@@ -76,6 +85,7 @@ export default (field, options) => {
       // if(typeof console === 'object') { console.log('field',field); }
       return (
         <ReferenceField
+          classes={refStyles}
           basePath={field.reference.name}
           source={field.name}
           reference={field.reference.name}
@@ -113,7 +123,9 @@ export default (field, options) => {
         key={field.name}
         sortable={isFieldSortable(field, options.resource)}
         {...props}>
-        <SingleFieldList>
+        <SingleFieldList
+            classes={refStyles}
+        >
           <ChipField source={referenceNameField} key={referenceNameField} />
         </SingleFieldList>
       </ReferenceArrayField>
