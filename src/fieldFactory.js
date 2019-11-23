@@ -124,7 +124,7 @@ export default (field, options) => {
         sortable={isFieldSortable(field, options.resource)}
         {...props}>
         <SingleFieldList
-            classes={refStyles}
+            // classes={refStyles}
         >
           <ChipField source={referenceNameField} key={referenceNameField} />
         </SingleFieldList>

@@ -22,7 +22,6 @@ import ListFilter                     from './ListFilter';
 import {isFieldSortable}              from './fieldFactory';
 import { makeStyles }   from '@material-ui/core';
 import MuiDrawer        from '../../common/components/common/MuiDrawer';
-// import { ProjectCreate } from '../../src/scenes/Projects/ProjectCreate';
 import { Route }        from 'react-router-dom';
 import History          from '../../src/admin-containers/History';
 import Create           from './Create';
@@ -278,6 +277,8 @@ const List_MVT = props => {
 				path={props.basePath + '/create'}
 			>
 				{({ match }) => {
+
+					// if(typeof console === 'object') { console.log('CREATE MATCH',match); }
 
 					return (
 						<MuiDrawerCreator
