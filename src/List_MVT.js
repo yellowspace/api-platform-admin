@@ -165,11 +165,13 @@ const List_MVT = props => {
 		addIdField = false === hasIdentifier(fields),
 	} = resolveProps(props);
 
+	const {permanentFilter,...rest} = props;
+
 	  // if(typeof console === 'object') { console.log('LIST props %o configFactory %o',props,configFactory); }
 	let confDefaults = {};
 
 	const [sort, setSort] = useState({});
-	const [filter, setFilter] = useState(null);
+	const [filter, setFilter] = useState(permanentFilter);
 	const [filterDefaultValues, setFilterDefaultValues] = useState(null);
 
 	const getFilterValues = () => {
@@ -178,23 +180,21 @@ const List_MVT = props => {
 		// filterDefaultValues={{ is_published: true }}
 		// confDefaults.filter = <TextInput label="Search" source="q" alwaysOn />;
 		const { conf } = configFactory;
+		// const { permanentFilter } = props;
+		let filter = permanentFilter,
+			filterDefaultValues = {};
 
 		if(conf && typeof conf.getGridPermanentFilter === 'function') {
-			let filter = conf.getGridPermanentFilter(null);
-			let filterDefaultValues = conf.getGridFilterDefaults(null);
+			filter = conf.getGridPermanentFilter(filter);
+			filterDefaultValues = conf.getGridFilterDefaults(null);
+		}
 
-			if(filter) {
-				setFilter(filter);
-			}
+		if(filter) {
+			setFilter(filter);
+		}
 
-			if(filterDefaultValues) {
-				setFilterDefaultValues(filterDefaultValues);
-			}
-
-			//filters={<PostFilter />} filterDefaultValues={{ is_published: true }}
-			// if(sort) {
-			// 	confDefaults.sort = sort;
-			// }
+		if(filterDefaultValues) {
+			setFilterDefaultValues(filterDefaultValues);
 		}
 	};
 
@@ -217,7 +217,7 @@ const List_MVT = props => {
 		getFilterValues();
 		getSort();
 		// console.log('ComponentDidMount: sort,filter,filterDefaultValue',sort,filter,filterDefaultValues);
-	},[]);
+	},[permanentFilter]);
 
 	let { perPage, ...editProps} = props;
 	let listFields = fields;
@@ -231,10 +231,13 @@ const List_MVT = props => {
 
 	addIdField = false;
 
+	// if(typeof console === 'object') { console.log('configFactory.options.createType',configFactory.options); }
+	// if(typeof console === 'object') { console.log('filterfilterfilter',filter); }
+
 	return (
 		<React.Fragment>
 			<BaseList
-				{...props}
+				{...rest}
 				{...confDefaults}
 				sort={sort}
 				filter={filter}
@@ -382,17 +385,18 @@ List_MVT.defaultProps = {
 };
 
 List_MVT.propTypes = {
-  addIdField: PropTypes.bool,
-  options: PropTypes.shape({
-    api: PropTypes.instanceOf(Api).isRequired,
-    fieldFactory: PropTypes.func.isRequired,
-    parameterFactory: PropTypes.func.isRequired,
-    listProps: PropTypes.object,
-    resource: PropTypes.instanceOf(Resource).isRequired,
-  }),
-  perPage: PropTypes.number,
-  hasEdit: PropTypes.bool.isRequired,
-  hasShow: PropTypes.bool.isRequired,
+	addIdField: PropTypes.bool,
+	options: PropTypes.shape({
+		api: PropTypes.instanceOf(Api).isRequired,
+		fieldFactory: PropTypes.func.isRequired,
+		parameterFactory: PropTypes.func.isRequired,
+		listProps: PropTypes.object,
+		resource: PropTypes.instanceOf(Resource).isRequired,
+	}),
+	perPage: PropTypes.number,
+	hasEdit: PropTypes.bool.isRequired,
+	hasShow: PropTypes.bool.isRequired,
+	permanentFilter: PropTypes.object,
 };
 
 export default List_MVT;
