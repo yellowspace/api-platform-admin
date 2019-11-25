@@ -22,13 +22,14 @@ import ListFilter                     from './ListFilter';
 import {isFieldSortable}              from './fieldFactory';
 import { makeStyles }   from '@material-ui/core';
 import MuiDrawer        from '../../common/components/common/MuiDrawer';
-import { Route }        from 'react-router-dom';
+import { Route, Redirect }        from 'react-router-dom';
 import History          from '../../src/admin-containers/History';
 import Create           from './Create';
 import Edit             from './Edit_MVT';
 import Show             from './Show';
 import MuiDrawerEditor  from '../../common/components/react-admin/form/MuiDrawerEditor';
 import MuiDrawerCreator from '../../common/components/react-admin/form/MuiDrawerCreator';
+import ProjectList      from '../../src/scenes/Projects/ProjectList';
 
 
 let useStyles = makeStyles(function (theme) {
@@ -84,7 +85,10 @@ const TagListActions = (
 			   filterValues,
 			   context: 'button',
 		   })}
-		   <CreateButton basePath={basePath} />
+		   <CreateButton
+			   basePath={basePath}
+			   // basePath="/project"
+		   />
 		   <ExportButton
 			   disabled={total === 0}
 			   resource={resource}
@@ -270,7 +274,11 @@ const List_MVT = props => {
 							}),
 						)}
 					{hasShow && <ShowButton label={null} width={80} />}
-					{hasEdit && <EditButton label={null} width={80} />}
+					{hasEdit && <EditButton
+						// basePath="/project"
+						label={null}
+						width={80}
+					/>}
 				</MVT_Datagrid>
 			</BaseList>
 			{configFactory.options.createType === 'drawer' &&<Route
@@ -295,20 +303,6 @@ const List_MVT = props => {
 
 						/>
 					);
-					//
-					// return (
-					// 	<MuiDrawer
-					// 		open={!!match}
-					// 		anchor="right"
-					// 		onClose={handleClose}
-					// 	>
-					// 		<Create
-					// 			className={styles.drawerContent}
-					// 			onCancel={handleClose}
-					// 			{...editProps}
-					// 		/>
-					// 	</MuiDrawer>
-					// )
 				}}
 			</Route>}
 			{configFactory.options.editType === 'drawer' && <Route
@@ -341,27 +335,6 @@ const List_MVT = props => {
 						// 	handleEditorSave(redirect,id,record);
 						// }}
 					/>);
-
-					// return (
-					// 	<MuiDrawer
-					// 		open={isMatch}
-					// 		anchor="right"
-					// 		onClose={handleClose}
-					// 	>
-					// 		{isMatch ? (
-					// 			<Edit
-					// 				// className={styles.drawerContent}
-					// 				id={isMatch ? id : null}
-					// 				onCancel={handleClose}
-					// 				{...editProps}
-					// 			/>
-					// 		) : (
-					// 			 <div
-					// 				 // className={styles.drawerContent}
-					// 			 />
-					// 		 )}
-					// 	</MuiDrawer>
-					// );
 				}}
 			</Route>}
 			{configFactory.options.showType === 'drawer' && <Route
