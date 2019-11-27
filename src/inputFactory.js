@@ -350,7 +350,13 @@ export default (field, options) => {
       );
 
     case 'http://www.w3.org/2001/XMLSchema#boolean':
-      return <BooleanInput key={field.name} source={field.name} {...props} />;
+      return <BooleanInput
+          // color="primary"
+
+          key={field.name}
+          source={field.name}
+          {...props}
+      />;
 
     case 'http://www.w3.org/2001/XMLSchema#date':
     // case 'http://www.w3.org/2001/XMLSchema#dateTime':
