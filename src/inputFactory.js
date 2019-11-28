@@ -382,6 +382,10 @@ export default (field, options) => {
           fullWidth={true}
           key={field.name}
           source={field.name}
+          normalizeData={(d) => {
+            if(typeof console === 'object') { console.log('normalizeDatanormalizeDatanormalizeDatanormalizeData',d); }
+            return d;
+          }}
           {...props}
       />;
 

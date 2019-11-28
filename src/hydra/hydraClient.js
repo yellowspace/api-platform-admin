@@ -7,10 +7,11 @@ import {
   GET_MANY_REFERENCE,
   GET_ONE,
   UPDATE,
-} from 'react-admin';
+}                    from 'react-admin';
 import isPlainObject from 'lodash.isplainobject';
 // import { isArray } from 'lodash';
-import fetchHydra from './fetchHydra';
+import fetchHydra    from './fetchHydra';
+import DateUtils     from '../../../common/utils/DateUtils';
 
 const debug = true;
 
@@ -179,6 +180,32 @@ export const transformJsonLdDocumentToReactAdminDocument = (
  * UPDATE   => PUT http://my.api.url/posts/123
  */
 export default ({entrypoint, resources = []}, httpClient = fetchHydra) => {
+
+
+  /**
+   * Generell normalizer
+   * @param field
+   * @param name
+   * @param reference
+   * @param data
+   * @returns {string}
+   */
+  const generellNormalizeData = (field, name, reference, data) => {
+
+    switch(field.range) {
+      // because json.stringify, makes strange things with GMT Dates
+      // we convert all dates of our datetime input to isoDate b4 submitting!
+      case 'http://www.w3.org/2001/XMLSchema#dateTime':
+        let isDate = DateUtils.isDate(data);
+        if(isDate) {
+          return DateUtils.formatIso(data);
+        }
+        break;
+      default:
+        return null;
+    }
+  };
+
   /**
    * @param {Object} resource
    * @param {Object} data
@@ -190,7 +217,11 @@ export default ({entrypoint, resources = []}, httpClient = fetchHydra) => {
     // if(typeof console === 'object') { console.log('convertReactAdminDataToHydraData',resource, data); }
 
     const fieldData = [];
-    resource.fields.forEach(({name, reference, normalizeData}) => {
+    resource.fields.forEach(({name, reference, normalizeData, ...rest}) => {
+
+      // if(typeof console === 'object') { console.log('convertReactAdminDataToHydraData',name,data,normalizeData,data[name]); }
+
+
       if (!(name in data)) {
         return;
       }
@@ -198,6 +229,11 @@ export default ({entrypoint, resources = []}, httpClient = fetchHydra) => {
       if (reference && data[name] === '') {
         data[name] = null;
         return;
+      }
+
+      let gFD = generellNormalizeData(rest, name, reference, data[name]);
+      if(gFD) {
+        fieldData[name] = gFD;
       }
 
       if (undefined === normalizeData) {
@@ -239,6 +275,9 @@ export default ({entrypoint, resources = []}, httpClient = fetchHydra) => {
       if(1===2 && typeof console === 'object') { console.log('convertReactAdminDataToHydraData',resource,resource.encodeData,data,JSON.stringify(data),undefined === resource.encodeData
                                                                                                 ? JSON.stringify(data)
                                                                                                 : resource.encodeData(data)); }
+
+
+
       return undefined === resource.encodeData
         ? JSON.stringify(data)
         : resource.encodeData(data);
