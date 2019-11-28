@@ -150,7 +150,10 @@ export default (field, options) => {
         // if ( typeof console === 'object' ) { console.log( 'ReferenceInput.field', field, field.reference, refField ); }
 
         return (
-            <ReferenceInput
+            <AutocompleteInput
+                allowEmpty={true}
+                optionText={refField}
+
                 fullWidth={true}
 
                 key={field.name}
@@ -158,11 +161,23 @@ export default (field, options) => {
                 reference={field.reference.name}
                 source={field.name}
                 {...props}
-                allowEmpty
-            >
-              <AutocompleteInput allowEmpty={true} optionText={refField} />
-            </ReferenceInput>
+            />
         );
+
+        // return (
+        //     <ReferenceInput
+        //         fullWidth={true}
+        //
+        //         key={field.name}
+        //         label={field.name}
+        //         reference={field.reference.name}
+        //         source={field.name}
+        //         {...props}
+        //         allowEmpty
+        //     >
+        //       <AutocompleteInput allowEmpty={true} optionText={refField} />
+        //     </ReferenceInput>
+        // );
       }
 
       return (
