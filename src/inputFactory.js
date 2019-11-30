@@ -305,7 +305,7 @@ export default (field, options) => {
   //   );
   // }
 
-  if(field.MUIColorPicker || field.range.indexOf('HexRgbColor') >= 0) {
+  if(field.MUIColorPicker || (field.range && field.range.indexOf('HexRgbColor') >= 0)) {
     return (
         <MUIColorPicker
             fullWidth={true}
