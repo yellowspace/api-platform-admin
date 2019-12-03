@@ -147,7 +147,7 @@ export default (field, options) => {
       }
 
       if(field.AutocompleteInput) {
-        // if ( typeof console === 'object' ) { console.log( 'ReferenceInput.field', field, field.reference, refField ); }
+        // if ( typeof console === 'object' ) { console.log( 'ReferenceInput.field', field, field.reference, refField, props ); }
 
         return (
             <AutocompleteInput

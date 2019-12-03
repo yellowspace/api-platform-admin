@@ -5,11 +5,14 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import SaveButton from '../../common/components/react-admin/form/actions/SaveButton';
+import CustomCreatorToolbar from './components/CustomCreatorToolbar';
+import GridEditfields from './components/GridEditfields';
 
 import {
   Toolbar,
   SaveButton as RA_SaveButton,
-} from 'react-admin';
+}               from 'react-admin';
+import Edit_MVT from './Edit_MVT';
 
 const useStyles = makeStyles({
   toolbar: {
@@ -82,7 +85,13 @@ const Create_MVT = props => {
     validateForm = configFactory.conf.validateForm;
   }
 
-  const { formProps, ...rest } = props;
+  const {
+    formProps,
+    renderFields,
+    addIdInput,
+    toolbar,
+    ...rest
+  } = props;
 
   return (
     <BaseCreate
@@ -95,12 +104,20 @@ const Create_MVT = props => {
         }}
     >
       <SimpleForm
-          toolbar={<CustomToolbar options={props.options}  />}
+          toolbar={<CustomCreatorToolbar options={props.options}  />}
           validate={validateForm}
           variant="standard"
           {...formProps}
       >
-        {editields.map(field =>
+        {renderFields === 'editfields' && <GridEditfields
+            {...props}
+            addIdInput={addIdInput}
+            editields={editields}
+            inputFactory={inputFactory}
+            api={api}
+            resource={resource}
+        />}
+        {renderFields === 'direct' && editields.map(field =>
           inputFactory(field, {
             api,
             resource,
@@ -111,7 +128,13 @@ const Create_MVT = props => {
   );
 };
 
+Create_MVT.defaultProps = {
+  renderFields: 'direct',
+  // addIdInput: false
+};
+
 Create_MVT.propTypes = {
+  renderFields: PropTypes.string,
   options: PropTypes.shape({
     api: PropTypes.instanceOf(Api).isRequired,
     inputFactory: PropTypes.func.isRequired,

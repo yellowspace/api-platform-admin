@@ -9,52 +9,52 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import {
-  Toolbar,
+  // Toolbar,
   // SaveButton as RA_SaveButton,
-  DeleteButton,
-  CloneButton
-} from 'react-admin';
+  // DeleteButton,
+  // CloneButton
+}                          from 'react-admin';
 // import { useForm } from 'react-final-form';
-import { makeStyles } from '@material-ui/core/styles';
-import SaveButton from '../../common/components/react-admin/form/actions/SaveButton';
-import RA_SaveButton from '../../common/components/react-admin/form/actions/RA_SaveButton';
+// import { makeStyles } from '@material-ui/core/styles';
+// import SaveButton from '../../common/components/react-admin/form/actions/SaveButton';
+// import RA_SaveButton from '../../common/components/react-admin/form/actions/RA_SaveButton';
+import CustomEditorToolbar from './components/CustomEditorToolbar';
+import GridEditfields      from './components/GridEditfields';
 
-import { FormInput } from 'react-admin';
 
-
-const useStyles = makeStyles({
-  toolbar: {
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
-});
-
-const CustomToolbar = props => {
-
-  // if(typeof console === 'object') { console.log('CustomToolbar.props',props); }
-  // let form = useForm();
-
-  let { options } = props;
-  options = options || {};
-
-  let cloneButton = (typeof options.cloneButton !== 'undefined') ? options.cloneButton : true;
-  let deleteButton = (typeof options.deleteButton !== 'undefined') ? options.deleteButton : true;
-
-  // if(typeof console === 'object') { console.log('CustomToolbar.props',props,cloneButton,deleteButton); }
-
-  return (
-    <Toolbar
-        {...props}
-        className="mtv__editor--toolbar"
-        classes={useStyles()}
-    >
-      <SaveButton undoable={false} redirect={props.redirect} />
-      {/*<RA_SaveButton undoable={false} />*/}
-      {deleteButton &&<DeleteButton undoable={false} label={null} />}
-      {cloneButton && <CloneButton undoable="" label={null} />}
-    </Toolbar>
-  )
-};
+// const useStyles = makeStyles({
+//   toolbar: {
+//     display: 'flex',
+//     justifyContent: 'space-between',
+//   },
+// });
+//
+// const CustomToolbar = props => {
+//
+//   // if(typeof console === 'object') { console.log('CustomToolbar.props',props); }
+//   // let form = useForm();
+//
+//   let { options } = props;
+//   options = options || {};
+//
+//   let cloneButton = (typeof options.cloneButton !== 'undefined') ? options.cloneButton : true;
+//   let deleteButton = (typeof options.deleteButton !== 'undefined') ? options.deleteButton : true;
+//
+//   // if(typeof console === 'object') { console.log('CustomToolbar.props',props,cloneButton,deleteButton); }
+//
+//   return (
+//     <Toolbar
+//         {...props}
+//         className="mtv__editor--toolbar"
+//         classes={useStyles()}
+//     >
+//       <SaveButton undoable={false} redirect={props.redirect} />
+//       {/*<RA_SaveButton undoable={false} />*/}
+//       {deleteButton &&<DeleteButton undoable={false} label={null} />}
+//       {cloneButton && <CloneButton undoable="" label={null} />}
+//     </Toolbar>
+//   )
+// };
 
 
 const hasIdentifier = fields => {
@@ -94,38 +94,38 @@ const resolveProps = props => {
  * @returns {*}
  * @constructor
  */
-const Editfields = (props) => {
-
-  const {inputFactory,addIdInput,editields,api} = props;
-  const { basePath, record, resource, variant, margin } = props;
-  // if(typeof console === 'object') { console.log('props',props); }
-
-  return (
-      <React.Fragment>
-        {addIdInput && <TextInput disabled source="id" />}
-        {addIdInput && <TextInput type="hidden" source="id" label={null} />}
-        {editields.map(field => {
-
-          let input = inputFactory( field, {
-            api,
-            resource,
-          });
-
-          // if(typeof console === 'object') { console.log('input',input,field,field.name); }
-
-          return React.createElement( FormInput , {
-            key: field.name,
-            basePath: basePath,
-            input   : input,
-            record  : record,
-            resource: resource,
-            variant : variant,
-            margin  : margin
-          } )
-        })}
-      </React.Fragment>
-  );
-};
+// const Editfields = (props) => {
+//
+//   const {inputFactory,addIdInput,editields,api} = props;
+//   const { basePath, record, resource, variant, margin } = props;
+//   // if(typeof console === 'object') { console.log('props',props); }
+//
+//   return (
+//       <React.Fragment>
+//         {addIdInput && <TextInput disabled source="id" />}
+//         {addIdInput && <TextInput type="hidden" source="id" label={null} />}
+//         {editields.map(field => {
+//
+//           let input = inputFactory( field, {
+//             api,
+//             resource,
+//           });
+//
+//           // if(typeof console === 'object') { console.log('input',input,field,field.name); }
+//
+//           return React.createElement( FormInput , {
+//             key: field.name,
+//             basePath: basePath,
+//             input   : input,
+//             record  : record,
+//             resource: resource,
+//             variant : variant,
+//             margin  : margin
+//           } )
+//         })}
+//       </React.Fragment>
+//   );
+// };
 
 const Edit_MVT = props => {
   let {
@@ -143,6 +143,7 @@ const Edit_MVT = props => {
     formProps,
     renderFields,
     addIdInput,
+    toolbar,
     ...rest
   } = props;
 
@@ -169,7 +170,9 @@ const Edit_MVT = props => {
 
 
   // if(typeof console === 'object') { console.log('formProps',formProps); }
-
+  if(typeof toolbar === 'undefined') {
+    toolbar = <CustomEditorToolbar options={props.options} />
+  }
 
   return (
       <BaseEdit
@@ -181,26 +184,14 @@ const Edit_MVT = props => {
             root: 'mtv__editor--root',
             noActions: 'mtv__editor--noActions',
           }}
-          // save={(a) => {
-          //   if(typeof console === 'object') { console.log('BaseEdit SAVE!',a); }
-          // }}
-          // saving={(a) => {
-          //   if(typeof console === 'object') { console.log('BaseEdit SAVING!',a); }
-          // }}
       >
         <SimpleForm
-            toolbar={<CustomToolbar options={props.options} />}
+            toolbar={toolbar}
             validate={validateForm}
             variant="standard"
             {...formProps}
-            // save={(a) => {
-            //   if(typeof console === 'object') { console.log('SimpleForm SAVE!',a); }
-            // }}
-            // handleSubmit={(a) => {
-            //   if(typeof console === 'object') { console.log('SimpleForm handleSubmit!',a); }
-            // }}
         >
-          {renderFields === 'editfields' && <Editfields
+          {renderFields === 'editfields' && <GridEditfields
               {...props}
               addIdInput={addIdInput}
               editields={editields}
@@ -228,6 +219,7 @@ Edit_MVT.defaultProps = {
 
 Edit_MVT.propTypes = {
   renderFields: PropTypes.string,
+  toolbar: PropTypes.any,
   formProps: PropTypes.object,
   addIdInput: PropTypes.bool,
   options: PropTypes.shape({
