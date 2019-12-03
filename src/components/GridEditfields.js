@@ -31,7 +31,7 @@ let useStyles = makeStyles(function (theme) {
 				justifyContent: 'space-between',
 			},
 			item: {
-				marginRight: '20px',
+				// marginRight: '20px',
 				marginBottom: '10px',
 				whiteSpace: 'nowrap',
 			},
