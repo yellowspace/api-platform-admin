@@ -24,15 +24,10 @@ const useStyles = makeStyles({
 const CustomCreatorToolbar = props => {
 
 	// if(typeof console === 'object') { console.log('CustomToolbar.props',props); }
-	// let form = useForm();
 
 	let { options } = props;
 	options = options || {};
 
-	// let cloneButton = (typeof options.cloneButton !== 'undefined') ? options.cloneButton : true;
-	// let deleteButton = (typeof options.deleteButton !== 'undefined') ? options.deleteButton : true;
-
-	// if(typeof console === 'object') { console.log('CustomToolbar.props',props,cloneButton,deleteButton); }
 	return (
 		<Toolbar
 			{...props}
@@ -40,8 +35,7 @@ const CustomCreatorToolbar = props => {
 			classes={useStyles()}
 			redirect={props.redirect}
 		>
-			<SaveButton redirect={props.redirect} actionType="create" />
-			{/*<RA_SaveButton />*/}
+			<SaveButton redirect={props.redirect} actionType="create" options={options} />
 		</Toolbar>
 	)
 };

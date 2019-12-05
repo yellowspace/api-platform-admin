@@ -1,12 +1,12 @@
-import Api from '@api-platform/api-doc-parser/lib/Api';
-import Resource from '@api-platform/api-doc-parser/lib/Resource';
+import Api                            from '@api-platform/api-doc-parser/lib/Api';
+import Resource                       from '@api-platform/api-doc-parser/lib/Resource';
 import {
   TextInput,
   Edit as BaseEdit,
   SimpleForm
-} from 'react-admin';
-import PropTypes from 'prop-types';
-import React from 'react';
+}                                     from 'react-admin';
+import PropTypes                      from 'prop-types';
+import React, { useEffect, useState } from 'react';
 
 import {
   // Toolbar,
@@ -22,46 +22,11 @@ import CustomEditorToolbar from './components/CustomEditorToolbar';
 import GridEditfields      from './components/GridEditfields';
 
 
-// const useStyles = makeStyles({
-//   toolbar: {
-//     display: 'flex',
-//     justifyContent: 'space-between',
-//   },
-// });
-//
-// const CustomToolbar = props => {
-//
-//   // if(typeof console === 'object') { console.log('CustomToolbar.props',props); }
-//   // let form = useForm();
-//
-//   let { options } = props;
-//   options = options || {};
-//
-//   let cloneButton = (typeof options.cloneButton !== 'undefined') ? options.cloneButton : true;
-//   let deleteButton = (typeof options.deleteButton !== 'undefined') ? options.deleteButton : true;
-//
-//   // if(typeof console === 'object') { console.log('CustomToolbar.props',props,cloneButton,deleteButton); }
-//
+// const hasIdentifier = fields => {
 //   return (
-//     <Toolbar
-//         {...props}
-//         className="mtv__editor--toolbar"
-//         classes={useStyles()}
-//     >
-//       <SaveButton undoable={false} redirect={props.redirect} />
-//       {/*<RA_SaveButton undoable={false} />*/}
-//       {deleteButton &&<DeleteButton undoable={false} label={null} />}
-//       {cloneButton && <CloneButton undoable="" label={null} />}
-//     </Toolbar>
-//   )
+//     undefined !== fields.find(({id}) => 'http://schema.org/identifier' === id)
+//   );
 // };
-
-
-const hasIdentifier = fields => {
-  return (
-    undefined !== fields.find(({id}) => 'http://schema.org/identifier' === id)
-  );
-};
 
 const resolveProps = props => {
   const {options} = props;
@@ -127,6 +92,70 @@ const resolveProps = props => {
 //   );
 // };
 
+
+const LocalForm = props => {
+
+      const {
+        renderFields,
+        addIdInput,
+        editields,
+        inputFactory,
+        record,
+        configFactory,
+        ...simpleFormRest
+      } = props;
+
+      const {
+        api,
+        resource,
+        ...rest
+      } = props;
+
+      const [initialRecord, setInitialRecord] = useState(record);
+
+      let onBeforeFormRender = null;
+      if(configFactory && configFactory.conf) {
+        if(typeof configFactory.conf.onBeforeFormRender === 'function') {
+          onBeforeFormRender = configFactory.conf.onBeforeFormRender;
+        }
+      }
+
+      useEffect(() => {
+        if(onBeforeFormRender) {
+          const { changedRecord } = onBeforeFormRender( initialRecord, { actionType: 'edit' });
+          if(changedRecord) {
+            setInitialRecord(changedRecord);
+          }
+        }
+      },[initialRecord]);
+
+      return (
+          <SimpleForm
+              {...simpleFormRest}
+              record={initialRecord}
+          >
+            {renderFields === 'editfields' && <GridEditfields
+                {...rest}
+                // record={initalRecord}
+                addIdInput={addIdInput}
+                editields={editields}
+                inputFactory={inputFactory}
+                api={api}
+                resource={resource}
+            />}
+            {renderFields === 'direct' && addIdInput && <TextInput disabled source="id" />}
+            {renderFields === 'direct' && addIdInput && <TextInput type="hidden" source="id" label={null} />}
+            {renderFields === 'direct' && editields.map(field =>
+                inputFactory(field, {
+                  api,
+                  resource,
+                }),
+            )}
+          </SimpleForm>
+      );
+};
+
+
 const Edit_MVT = props => {
   let {
     options: {
@@ -185,29 +214,21 @@ const Edit_MVT = props => {
             noActions: 'mtv__editor--noActions',
           }}
       >
-        <SimpleForm
+        <LocalForm
             toolbar={toolbar}
             validate={validateForm}
             variant="standard"
             {...formProps}
-        >
-          {renderFields === 'editfields' && <GridEditfields
-              {...props}
-              addIdInput={addIdInput}
-              editields={editields}
-              inputFactory={inputFactory}
-              api={api}
-              resource={resource}
-          />}
-          {renderFields === 'direct' && addIdInput && <TextInput disabled source="id" />}
-          {renderFields === 'direct' && addIdInput && <TextInput type="hidden" source="id" label={null} />}
-          {renderFields === 'direct' && editields.map(field =>
-              inputFactory(field, {
-                api,
-                resource,
-              }),
-          )}
-        </SimpleForm>
+
+            renderFields={renderFields}
+            addIdInput={addIdInput}
+            editields={editields}
+            inputFactory={inputFactory}
+            configFactory={configFactory}
+            api={api}
+            resource={resource}
+
+        />
       </BaseEdit>
   );
 };

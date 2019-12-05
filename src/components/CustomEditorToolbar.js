@@ -24,7 +24,6 @@ const useStyles = makeStyles({
 const CustomEditorToolbar = props => {
 
 	// if(typeof console === 'object') { console.log('CustomToolbar.props',props); }
-	// let form = useForm();
 
 	let { options } = props;
 	options = options || {};
@@ -40,7 +39,7 @@ const CustomEditorToolbar = props => {
 			className="mtv__editor--toolbar"
 			classes={useStyles()}
 		>
-			<SaveButton undoable={false} redirect={props.redirect} />
+			<SaveButton undoable={false} redirect={props.redirect} options={options} />
 			{/*<RA_SaveButton undoable={false} />*/}
 			{deleteButton &&<DeleteButton undoable={false} label={null} />}
 			{cloneButton && <CloneButton undoable="" label={null} />}

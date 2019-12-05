@@ -51,12 +51,15 @@ let useStyles = makeStyles(function (theme) {
  */
 const GridEditfields = (props) => {
 
+	// if(typeof console === 'object') { console.log('GridEditfields',props); }
+
 	const classes = useStyles();
 	const {inputFactory,addIdInput,editields,api} = props;
 	const { basePath, record, resource, variant, margin } = props;
+
 	// if(typeof console === 'object') { console.log('props',props); }
 	let gridCols = [{},{}];
-	let gridCollength = gridCols.length;
+	// let gridCollength = gridCols.length;
 	let fieldLength = editields.length;
 	let n2w = false;
 
