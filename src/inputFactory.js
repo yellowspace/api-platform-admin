@@ -20,11 +20,11 @@ import { makeStyles }      from '@material-ui/core';
 import MVTInputField       from '../../common/components/react-admin/form/fields/MVTInputField';
 import MVTReferenceInput   from '../../common/components/react-admin/form/fields/MVTReferenceInput';
 import MVTReferenceArrayInput   from '../../common/components/react-admin/form/fields/MVTReferenceArrayInput';
-// import { isFieldSortable } from './fieldFactory';
 import MVTSelectField      from '../../common/components/react-admin/form/fields/MVTSelectField';
 import MVTDateTimeInput    from '../../common/components/react-admin/form/fields/MVTDateTimeInput';
 import MUIColorPicker      from '../../common/components/react-admin/form/fields/MUIColorPicker';
 import AutocompleteInput from '../../common/components/react-admin/form/fields/MUIAutocompleteDownshift';
+// import { isFieldSortable } from './fieldFactory';
 
 let useStyles = makeStyles(function (theme) {
   return ({
