@@ -3,10 +3,11 @@ import Resource                           from '@api-platform/api-doc-parser/lib
 import {Create as BaseCreate, SimpleForm} from 'react-admin';
 import PropTypes                          from 'prop-types';
 import React, { useEffect, useState }     from 'react';
-// import { makeStyles } from '@material-ui/core/styles';
-// import SaveButton from '../../common/components/react-admin/form/actions/SaveButton';
 import CustomCreatorToolbar               from './components/CustomCreatorToolbar';
 import GridEditfields                     from './components/GridEditfields';
+import ApiPlatformUtils                   from './utils/ApiPlatformUtils';
+// import { makeStyles } from '@material-ui/core/styles';
+// import SaveButton from '../../common/components/react-admin/form/actions/SaveButton';
 
 // import {
 //   Toolbar,
@@ -40,29 +41,29 @@ import GridEditfields                     from './components/GridEditfields';
 // };
 
 
-
-
-const resolveProps = props => {
-  const {options} = props;
-  const {inputFactory: defaultInputFactory, resource} = options;
-  const {
-    createFields: customFields,
-    createProps = {},
-    writableFields: defaultFields,
-  } = resource;
-  const {options: {inputFactory: customInputFactory} = {}} = createProps;
-
-  return {
-    ...props,
-    ...createProps,
-    options: {
-      ...options,
-      fields:
-        customFields || defaultFields.filter(({deprecated}) => !deprecated),
-      inputFactory: customInputFactory || defaultInputFactory,
-    },
-  };
-};
+//
+//
+// const resolveProps = props => {
+//   const {options} = props;
+//   const {inputFactory: defaultInputFactory, resource} = options;
+//   const {
+//     createFields: customFields,
+//     createProps = {},
+//     writableFields: defaultFields,
+//   } = resource;
+//   const {options: {inputFactory: customInputFactory} = {}} = createProps;
+//
+//   return {
+//     ...props,
+//     ...createProps,
+//     options: {
+//       ...options,
+//       fields:
+//         customFields || defaultFields.filter(({deprecated}) => !deprecated),
+//       inputFactory: customInputFactory || defaultInputFactory,
+//     },
+//   };
+// };
 
 
 const LocalForm = props => {
@@ -131,7 +132,17 @@ const LocalForm = props => {
 };
 
 const Create_MVT = props => {
-  const {
+  // const {
+  //   options: {
+  //     api,
+  //     fields,
+  //     inputFactory,
+  //     configFactory,
+  //     resource
+  //   },
+  // } = resolveProps(props);
+
+ const {
     options: {
       api,
       fields,
@@ -139,9 +150,9 @@ const Create_MVT = props => {
       configFactory,
       resource
     },
-  } = resolveProps(props);
+  } = ApiPlatformUtils.resolveCreatorProps(props);
 
-  // if(typeof console === 'object') { console.log('CREATE.props',props); }
+  if(typeof console === 'object') { console.log('CREATE.props',props); }
 
   let editields = fields;
   let validateForm = () => {};

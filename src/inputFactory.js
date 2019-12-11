@@ -28,7 +28,7 @@ import AutocompleteInput from '../../common/components/react-admin/form/fields/M
 
 let useStyles = makeStyles(function (theme) {
   return ({
-    resetIconFix: theme.custom.content.resetIconFix,
+    // resetIconFix: theme.custom.content.resetIconFix,
     autocompleteContainer: {
       fontSize: '5rem'
     }

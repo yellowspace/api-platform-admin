@@ -20,6 +20,8 @@ import {
 // import RA_SaveButton from '../../common/components/react-admin/form/actions/RA_SaveButton';
 import CustomEditorToolbar from './components/CustomEditorToolbar';
 import GridEditfields      from './components/GridEditfields';
+import DumpForm            from '../../common/components/react-admin/form/fields/DumpForm';
+import ApiPlatformUtils    from './utils/ApiPlatformUtils';
 
 
 // const hasIdentifier = fields => {
@@ -28,27 +30,27 @@ import GridEditfields      from './components/GridEditfields';
 //   );
 // };
 
-const resolveProps = props => {
-  const {options} = props;
-  const {inputFactory: defaultInputFactory, resource} = options;
-  const {
-    editFields: customFields,
-    editProps = {},
-    writableFields: defaultFields,
-  } = resource;
-  const {options: {inputFactory: customInputFactory} = {}} = editProps;
-
-  return {
-    ...props,
-    ...editProps,
-    options: {
-      ...options,
-      fields:
-        customFields || defaultFields.filter(({deprecated}) => !deprecated),
-      inputFactory: customInputFactory || defaultInputFactory,
-    },
-  };
-};
+// const resolveProps = props => {
+//   const {options} = props;
+//   const {inputFactory: defaultInputFactory, resource} = options;
+//   const {
+//     editFields: customFields,
+//     editProps = {},
+//     writableFields: defaultFields,
+//   } = resource;
+//   const {options: {inputFactory: customInputFactory} = {}} = editProps;
+//
+//   return {
+//     ...props,
+//     ...editProps,
+//     options: {
+//       ...options,
+//       fields:
+//         customFields || defaultFields.filter(({deprecated}) => !deprecated),
+//       inputFactory: customInputFactory || defaultInputFactory,
+//     },
+//   };
+// };
 
 /**
  * see @link node_modules/ra-ui-materialui/esm/form/SimpleForm.js
@@ -129,11 +131,14 @@ const LocalForm = props => {
         }
       },[initialRecord]);
 
+      let dump = true;
+
       return (
           <SimpleForm
               {...simpleFormRest}
               record={initialRecord}
           >
+            {dump && <DumpForm />}
             {renderFields === 'editfields' && <GridEditfields
                 {...rest}
                 // record={initalRecord}
@@ -157,7 +162,18 @@ const LocalForm = props => {
 
 
 const Edit_MVT = props => {
-  let {
+  // let {
+  //   options: {
+  //     api,
+  //     fields,
+  //     inputFactory,
+  //     configFactory,
+  //     resource
+  //   },
+  //   // addIdInput = false === hasIdentifier(fields),
+  // } = resolveProps(props);
+
+   let {
     options: {
       api,
       fields,
@@ -166,7 +182,9 @@ const Edit_MVT = props => {
       resource
     },
     // addIdInput = false === hasIdentifier(fields),
-  } = resolveProps(props);
+  } = ApiPlatformUtils.resolveEditorProps(props);
+
+
 
   let {
     formProps,
@@ -177,7 +195,7 @@ const Edit_MVT = props => {
   } = props;
 
 
-  // if(typeof console === 'object') { console.log('EDIT props',props); }
+  // if(typeof console === 'object') { console.log('EDIT props',resource,props); }
 
   // let editType = null;
   // if(props.options.configFactory && props.options.configFactory.options && props.options.configFactory.options.editType) {
