@@ -22,6 +22,7 @@ import CustomEditorToolbar from './components/CustomEditorToolbar';
 import GridEditfields      from './components/GridEditfields';
 import DumpForm            from '../../common/components/react-admin/form/fields/DumpForm';
 import ApiPlatformUtils    from './utils/ApiPlatformUtils';
+import authProvider        from '../../src/admin-store/authProvider';
 
 
 // const hasIdentifier = fields => {
@@ -131,14 +132,14 @@ const LocalForm = props => {
         }
       },[initialRecord]);
 
-      let dump = true;
+      const isDeveloper = authProvider.isDeveloper();
 
       return (
           <SimpleForm
               {...simpleFormRest}
               record={initialRecord}
           >
-            {dump && <DumpForm />}
+            {isDeveloper && <DumpForm />}
             {renderFields === 'editfields' && <GridEditfields
                 {...rest}
                 // record={initalRecord}

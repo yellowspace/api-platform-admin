@@ -6,6 +6,8 @@ import React, { useEffect, useState }     from 'react';
 import CustomCreatorToolbar               from './components/CustomCreatorToolbar';
 import GridEditfields                     from './components/GridEditfields';
 import ApiPlatformUtils                   from './utils/ApiPlatformUtils';
+import authProvider                       from '../../src/admin-store/authProvider';
+import DumpForm                           from '../../common/components/react-admin/form/fields/DumpForm';
 // import { makeStyles } from '@material-ui/core/styles';
 // import SaveButton from '../../common/components/react-admin/form/actions/SaveButton';
 
@@ -105,12 +107,14 @@ const LocalForm = props => {
     }
   }, [ initialRecord ] );
 
+    const isDeveloper = authProvider.isDeveloper();
 
   return (
       <SimpleForm
           {...simpleFormRest}
           initialValues={initialRecord}
       >
+          {isDeveloper && <DumpForm />}
         {renderFields === 'editfields' && <GridEditfields
             {...rest}
             addIdInput={addIdInput}
@@ -152,7 +156,7 @@ const Create_MVT = props => {
     },
   } = ApiPlatformUtils.resolveCreatorProps(props);
 
-  if(typeof console === 'object') { console.log('CREATE.props',props); }
+  // if(typeof console === 'object') { console.log('CREATE.props',props); }
 
   let editields = fields;
   let validateForm = () => {};
