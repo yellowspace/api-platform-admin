@@ -44,11 +44,16 @@ const reactAdminDocumentsCache = new Map();
  * @param obj
  * @returns {ReactAdminDocument}
  */
-const resolveSubresources = (obj) => {
+const resolveSubresources = (obj,createReactAdminDocument = true) => {
 
   // if(typeof console === 'object') { console.log('resolveSubresources',obj); }
-  if (obj['@id']) {
+  if (obj['@id'] && createReactAdminDocument) {
     obj = new ReactAdminDocument(obj);
+  } else {
+    Object.assign(obj, {
+      originId: obj.id,
+      id: obj['@id'],
+    });
   }
 
   Object.keys(obj).forEach(key => {
@@ -130,6 +135,14 @@ export const transformJsonLdDocumentToReactAdminDocument = (
       if(getSubresources) {
         return resolveSubresources(document);
       }
+      /*else {
+        // create new sub resource
+        // if(typeof console === 'object') { console.log('CREATE Resource key',key,resolveSubresources(obj)); }
+        if(!document[key+ '_SR_']) {
+          document[key+ '_SR_'] = [];
+        }
+        document[key+ '_SR_'] = resolveSubresources(document,false); //Resources
+      }*/
 
       document[key] = document[key]['@id'];
 
@@ -144,9 +157,9 @@ export const transformJsonLdDocumentToReactAdminDocument = (
       document[key][0]['@id']
     ) {
 
-      // if(typeof console === 'object') { console.log('isArray-document[key]',key,document[key],isPlainObject(document[key])); }
+      // if(typeof console === 'object') { console.log('isArray-document[key]',document,key,document[key],isPlainObject(document[key])); }
 
-      document[key] = document[key].map(obj => {
+      document[key] = document[key].map((obj, idx) => {
         if (addToCache) {
           reactAdminDocumentsCache[
             obj['@id']
@@ -156,6 +169,13 @@ export const transformJsonLdDocumentToReactAdminDocument = (
         // added by chris
         if(getSubresources) {
           return resolveSubresources(obj);
+        } else {
+          // create new sub resource
+          // if(typeof console === 'object') { console.log('CREATE Resource key',key,resolveSubresources(obj)); }
+          if(!document[key+ '_SR_']) {
+            document[key+ '_SR_'] = [];
+          }
+          document[key+ '_SR_'][idx] = resolveSubresources(obj,false); //Resources
         }
 
         return obj['@id'];
@@ -325,6 +345,7 @@ export default ({entrypoint, resources = []}, httpClient = fetchHydra) => {
           sort: {field, order},
         } = params;
 
+        // if (params.cacheTTL) collectionUrl.searchParams.set(`cacheTTL`, params.cacheTTL);
         if (order) collectionUrl.searchParams.set(`order[${field}]`, order);
         if (page) collectionUrl.searchParams.set('page', page);
         if (perPage) collectionUrl.searchParams.set('perPage', perPage);
