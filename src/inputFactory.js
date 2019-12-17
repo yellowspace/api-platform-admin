@@ -196,6 +196,7 @@ export default (field, options) => {
       );
     }
 
+
     if(field.MVTReferenceArrayInput) {
 
       let refField = getReferenceNameField(field.reference);

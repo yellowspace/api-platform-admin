@@ -227,27 +227,27 @@ const Edit_MVT = props => {
           undoable={false}
           {...rest}
           classes={{
-            card:'mtv__editor--card',
-            main: 'mtv__editor--main',
-            root: 'mtv__editor--root',
-            noActions: 'mtv__editor--noActions',
+              card:'mtv__editor--card',
+              main: 'mtv__editor--main',
+              root: 'mtv__editor--root',
+              noActions: 'mtv__editor--noActions',
           }}
       >
-        <LocalForm
-            toolbar={toolbar}
-            validate={validateForm}
-            variant="standard"
-            {...formProps}
+          <LocalForm
+              toolbar={toolbar}
+              validate={validateForm}
+              variant="standard"
+              {...formProps}
 
-            renderFields={renderFields}
-            addIdInput={addIdInput}
-            editields={editields}
-            inputFactory={inputFactory}
-            configFactory={configFactory}
-            api={api}
-            resource={resource}
+              renderFields={renderFields}
+              addIdInput={addIdInput}
+              editields={editields}
+              inputFactory={inputFactory}
+              configFactory={configFactory}
+              api={api}
+              resource={resource}
 
-        />
+          />
       </BaseEdit>
   );
 };
