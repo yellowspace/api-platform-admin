@@ -440,7 +440,7 @@ const List_MVT = props => {
 };
 
 List_MVT.defaultProps = {
-  perPage: 100, // Default value in API Platform
+  perPage: 50, // Default value in API Platform
 };
 
 List_MVT.propTypes = {
