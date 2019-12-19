@@ -9,7 +9,10 @@ import {
 	CreateButton,
 	RefreshButton,
 	ExportButton,
-	Responsive
+	Button as RA_Button,
+	// ResetViewsButton,
+	BulkDeleteButton,
+	// Responsive
 } from 'react-admin';
 
 import {
@@ -20,16 +23,15 @@ import PropTypes                      from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import ListFilter                     from './ListFilter';
 import {isFieldSortable}              from './fieldFactory';
-import { makeStyles }   from '@material-ui/core';
+import { makeStyles, IconButton, Button }   from '@material-ui/core';
+import { Clear }   from '@material-ui/icons';
+
 import MuiDrawer        from '../../common/components/common/MuiDrawer';
-import { Route, Redirect }        from 'react-router-dom';
+import { Route }        from 'react-router-dom';
 import History          from '../../src/admin-containers/History';
-import Create           from './Create';
-import Edit             from './Edit_MVT';
 import Show             from './Show';
 import MuiDrawerEditor  from '../../common/components/react-admin/form/MuiDrawerEditor';
 import MuiDrawerCreator from '../../common/components/react-admin/form/MuiDrawerCreator';
-import ProjectList      from '../../src/scenes/Projects/ProjectList';
 
 
 let useStyles = makeStyles(function (theme) {
@@ -53,8 +55,9 @@ let useStyles = makeStyles(function (theme) {
 	});
 });
 
-const TagListActions = (
-	{
+const TagListActions = ( props ) => {
+
+	let {
 		basePath,
 		currentSort,
 		displayedFilters,
@@ -67,7 +70,7 @@ const TagListActions = (
 		showFilter,
 		total,
 		...rest
-	} ) => {
+	} = props;
 
 	// let styles = useStyles();
 
@@ -77,6 +80,7 @@ const TagListActions = (
 	   <TopToolbar
 	    className="mtv__list--actiontoolbar"
 	   >
+		   <BulkActionButtons {...props} />
 		   <RefreshButton label={null} />
 		   {filters && React.cloneElement(filters, {
 			   resource,
@@ -101,6 +105,56 @@ const TagListActions = (
 	   </TopToolbar>
 	)
 };
+
+const BulkActionButtons = props => {
+
+	const {
+		basePath,
+		selectedIds,
+		resource,
+		onSelect
+	} = props;
+
+	// let {
+	// 	currentSort,
+	// 	displayedFilters,
+	// 	exporter,
+	// 	filters,
+	// 	filterValues,
+	// 	onUnselectItems,
+	// 	showFilter,
+	// 	total,
+	// 	...rest
+	// } = props;
+
+	if(1===2 && typeof console === 'object') { console.log('BulkActionButtons',props,basePath,
+		selectedIds,
+		resource); }
+
+	return (
+		<React.Fragment>
+			{/*<ResetViewsButton label="Reset Views" {...props} />*/}
+			{/* default bulk delete action */}
+			{selectedIds && selectedIds.length > 0 && <BulkDeleteButton
+				basePath={basePath}
+				selectedIds={selectedIds}
+				resource={resource}
+				label={"(" + selectedIds.length +")"}
+			/>}
+			{selectedIds && selectedIds.length > 0 && <RA_Button
+				size="small"
+				color="primary"
+				icon={<Clear />}
+				label={"(" + selectedIds.length +")"}
+				onClick={() => {
+					onSelect([])
+				}}>
+				<Clear fontSize="small" />
+			</RA_Button>
+			}
+		</React.Fragment>
+	);
+}
 
 const hasIdentifier = fields => {
   return (
@@ -232,7 +286,7 @@ const List_MVT = props => {
 	addIdField = false;
 
 	// if(typeof console === 'object') { console.log('configFactory.options.createType',configFactory.options); }
-	// if(typeof console === 'object') { console.log('filterfilterfilter',filter); }
+	// if(typeof console === 'object') { console.log('BaseList',rest,confDefaults); }
 
 	return (
 		<React.Fragment>
@@ -245,6 +299,7 @@ const List_MVT = props => {
 				pagination={<React.Fragment />}
 				actions={<TagListActions />}
 				filters={<ListFilter options={{parameterFactory, parameters, configFactory}} />}
+				bulkActionButtons={false}
 				className="mtv__list"
 				classes={{
 					content:'mtv__list--content',
