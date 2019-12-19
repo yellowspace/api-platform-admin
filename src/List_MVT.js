@@ -291,6 +291,7 @@ const List_MVT = props => {
 	return (
 		<React.Fragment>
 			<BaseList
+
 				{...rest}
 				{...confDefaults}
 				sort={sort}
@@ -301,6 +302,9 @@ const List_MVT = props => {
 				filters={<ListFilter options={{parameterFactory, parameters, configFactory}} />}
 				bulkActionButtons={false}
 				className="mtv__list"
+
+				perPage={100}
+
 				classes={{
 					content:'mtv__list--content',
 					main: 'mtv__list--main',
@@ -436,7 +440,7 @@ const List_MVT = props => {
 };
 
 List_MVT.defaultProps = {
-  perPage: 30, // Default value in API Platform
+  perPage: 100, // Default value in API Platform
 };
 
 List_MVT.propTypes = {
