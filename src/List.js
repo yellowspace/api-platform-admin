@@ -8,7 +8,8 @@ import {
 	TextField,
 } from 'react-admin';
 
-import List_MVT from './List_MVT';
+// import List_MVT from './List_MVT';
+import List_DG from './List_DG';
 
 import PropTypes              from 'prop-types';
 import React                  from 'react';
@@ -74,9 +75,12 @@ const List = props => {
 
   // if(typeof console === 'object') { console.log('LIST props %o configFactory %o',props,configFactory); }
 
-	if(configFactory.options.listType === 'mvt') {
+	/*if(configFactory.options.listType === 'mvt') {
 		return <List_MVT {...props} />;
+	} else */ if(configFactory.options.listType === 'dg') {
+		return <List_DG {...props} />;
 	}
+
 
 
 	// if(typeof console === 'object') { console.log('LIST props',props); }

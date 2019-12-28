@@ -13,11 +13,8 @@ import {
 	// ResetViewsButton,
 	BulkDeleteButton,
 	// Responsive
-} from 'react-admin';
 
-import {
-  Datagrid as MVT_Datagrid
-} from '../../common/components/react-admin';
+} from 'react-admin';
 
 import PropTypes                      from 'prop-types';
 import React, { useEffect, useState } from 'react';
@@ -32,6 +29,9 @@ import History          from '../../src/admin-containers/History';
 import Show             from './Show';
 import MuiDrawerEditor  from '../../common/components/react-admin/form/MuiDrawerEditor';
 import MuiDrawerCreator from '../../common/components/react-admin/form/MuiDrawerCreator';
+import DataGridWrapper  from '../../common/components/grid/react-admin/DataGridWrapper';
+import memoize          from "memoize-one";
+import ObjectUtils      from '../../common/utils/ObjectUtils';
 
 
 let useStyles = makeStyles(function (theme) {
@@ -39,6 +39,9 @@ let useStyles = makeStyles(function (theme) {
 		drawerContent: {
 			width: 300
 		},
+		w60: {
+			width: 60
+		}
 		// toolbar: {
 		// 	paddingLeft: theme.spacing(3),
 		// 	paddingRight: theme.spacing(3),
@@ -193,7 +196,7 @@ const resolveProps = props => {
   };
 };
 
-const List_MVT = props => {
+const List_DG = props => {
 
 	let styles = useStyles();
 
@@ -285,13 +288,42 @@ const List_MVT = props => {
 
 	addIdField = false;
 
+
+	const manipulateField = memoize(
+		(field) => {
+
+			if(
+				field.fieldProps
+				&& field.fieldProps.cellAndHeaderClassName
+			) {
+				// if(typeof console === 'object') { console.log('MEMO manipulateField',field,typeof field.fieldProps.headerClassName); }
+
+				field.fieldProps.cellClassName = field.fieldProps.cellAndHeaderClassName;
+				field.fieldProps.headerClassName = field.fieldProps.cellAndHeaderClassName;
+			}
+
+
+			return field;
+		}
+	);
+
+	const memoFieldFactory = memoize(
+		(field,api,resource) => {
+
+			return fieldFactory( field, {
+				api,
+				resource,
+			} );
+		}
+	);
+
+	// if(typeof console === 'object') { console.log('configFactory.conf',configFactory.conf,listFields); }
 	// if(typeof console === 'object') { console.log('configFactory.options.createType',configFactory.options); }
 	// if(typeof console === 'object') { console.log('BaseList',rest,confDefaults); }
 
 	return (
 		<React.Fragment>
 			<BaseList
-
 				{...rest}
 				{...confDefaults}
 				sort={sort}
@@ -310,12 +342,17 @@ const List_MVT = props => {
 					// actions: 'mtv__list--toolbar--actions',
 				}}
 			>
-				<MVT_Datagrid
-					component="div"
-					// configFactory={configFactory}
+				<DataGridWrapper
 					conf={configFactory.conf}
-					paginationComponent={true}
-					toolbar={true}
+					isRowSelectable={true}
+					// optimized={true}
+					// rowClick={}
+					// expand={<Component />}
+					// isRowSelectable=={ record => record.id > 300 }
+
+					// hasBulkActions={true}
+					// paginationComponent={true}
+					// toolbar={true}
 					// toolbarComponent={true}
 				>
 					{addIdField && (
@@ -326,19 +363,27 @@ const List_MVT = props => {
 					)}
 					{listFields
 						.filter(field => !listFieldFilter || listFieldFilter(resource, field))
-						.map(field =>
-							fieldFactory(field, {
-								api,
-								resource,
-							}),
-						)}
-					{hasShow && <ShowButton label={null} width={80} />}
+						.map(field => {
+							field = manipulateField(field);
+							return memoFieldFactory(field,api,resource);
+
+							// return fieldFactory( field, {
+							// 	api,
+							// 	resource,
+							// } );
+						})}
+					{hasShow && <ShowButton
+						label={null}
+						width={80}
+						// cellClassName={styles.w60}
+					/>}
 					{hasEdit && <EditButton
+						// cellClassName={styles.w60}
 						// basePath="/project"
 						label={null}
 						width={80}
 					/>}
-				</MVT_Datagrid>
+				</DataGridWrapper>
 			</BaseList>
 			{configFactory.options.createType === 'drawer' &&<Route
 				path={props.basePath + '/create'}
@@ -436,11 +481,11 @@ const List_MVT = props => {
 	);
 };
 
-List_MVT.defaultProps = {
+List_DG.defaultProps = {
   perPage: 50, // Default value in API Platform
 };
 
-List_MVT.propTypes = {
+List_DG.propTypes = {
 	addIdField: PropTypes.bool,
 	options: PropTypes.shape({
 		api: PropTypes.instanceOf(Api).isRequired,
@@ -455,4 +500,36 @@ List_MVT.propTypes = {
 	permanentFilter: PropTypes.object,
 };
 
-export default List_MVT;
+function areEqual(prevProps, nextProps) {
+		// if(typeof console === 'object') { console.log('List_DG.isEqualAll',prevProps, nextProps); }
+
+	// let isEqualAll = ObjectUtils.fastDeepEqual(prevProps, nextProps);
+	// if(isEqualAll) {
+	// 	if(typeof console === 'object') { console.log('isEqualAll',prevProps, nextProps); }
+	// 	return true;
+	// } else {
+	// 	if(typeof console === 'object') { console.log('isNOTEqualAll',prevProps, nextProps); }
+	//
+	// }
+
+	let a = {
+		ids: prevProps.ids,
+	};
+	let b = {
+		ids: nextProps.ids,
+	};
+
+	let isEqualA = ObjectUtils.isEqual(a,b);
+	if(isEqualA) {
+		// if(typeof console === 'object') { console.log('areEqual',prevProps, nextProps); }
+		// if(typeof console === 'object') { console.log('this.props.isEqualA',isEqualA,a,b); }
+		// return true;
+	}
+
+	/*
+	 return true if passing nextProps to render would return
+	 the same result as passing prevProps to render,
+	 otherwise return false
+	 */
+}
+export default React.memo(List_DG,areEqual);

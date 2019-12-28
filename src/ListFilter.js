@@ -17,7 +17,7 @@ const ListFilter = props => {
 
   const parameterAlwaysOn = parameters.length < 8;
 
-  // if(typeof console === 'object') { console.log('ListFilter.parameters, parameterFactory, conf',parameters, typeof conf.getGridFilter); }
+  // if(typeof console === 'object') { console.log('ListFilter.parameters, parameterFactory, conf',parameters); }
 
   return (
     <Filter {...props}>

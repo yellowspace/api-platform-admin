@@ -32,6 +32,7 @@ import History          from '../../src/admin-containers/History';
 import Show             from './Show';
 import MuiDrawerEditor  from '../../common/components/react-admin/form/MuiDrawerEditor';
 import MuiDrawerCreator from '../../common/components/react-admin/form/MuiDrawerCreator';
+import MaterialTable    from '../../common/components/grid/material-table/MaterialTable';
 
 
 let useStyles = makeStyles(function (theme) {
@@ -310,35 +311,13 @@ const List_MVT = props => {
 					// actions: 'mtv__list--toolbar--actions',
 				}}
 			>
-				<MVT_Datagrid
-					component="div"
-					// configFactory={configFactory}
+				<MaterialTable
 					conf={configFactory.conf}
 					paginationComponent={true}
 					toolbar={true}
 					// toolbarComponent={true}
 				>
-					{addIdField && (
-						<TextField
-							source="id"
-							sortable={isFieldSortable({name: 'id'}, resource)}
-						/>
-					)}
-					{listFields
-						.filter(field => !listFieldFilter || listFieldFilter(resource, field))
-						.map(field =>
-							fieldFactory(field, {
-								api,
-								resource,
-							}),
-						)}
-					{hasShow && <ShowButton label={null} width={80} />}
-					{hasEdit && <EditButton
-						// basePath="/project"
-						label={null}
-						width={80}
-					/>}
-				</MVT_Datagrid>
+				</MaterialTable>
 			</BaseList>
 			{configFactory.options.createType === 'drawer' &&<Route
 				path={props.basePath + '/create'}
