@@ -3,8 +3,9 @@ import {
   NullableBooleanInput,
   NumberInput,
   TextInput,
-} from 'react-admin';
-import React from 'react';
+}                  from 'react-admin';
+import React       from 'react';
+import SearchField from './components/list/filter/SearchField';
 
 function guessType(parameter, apiPlatform) {
   let type = guessTypeForApiPlatform(parameter, apiPlatform);
@@ -37,7 +38,8 @@ function guessTypeFromRange(range) {
 }
 
 export default (parameter, options) => {
-  let type = guessType(parameter, options.apiPlatform);
+  let type = parameter.type || guessType(parameter, options.apiPlatform);
+  // if(typeof console === 'object') { console.log('ParameterFactory',type,parameter, options); }
 
   switch (type) {
     case 'date':
@@ -80,6 +82,14 @@ export default (parameter, options) => {
         />
       );
 
+    case 'search':
+      return (
+          <SearchField
+              key={parameter.variable}
+              source={parameter.variable}
+              {...options}
+          />
+      );
     default:
   }
 };

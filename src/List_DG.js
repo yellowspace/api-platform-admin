@@ -1,37 +1,35 @@
 import Api from '@api-platform/api-doc-parser/lib/Api';
 import Resource from '@api-platform/api-doc-parser/lib/Resource';
 import {
-	EditButton,
 	List as BaseList,
-	ShowButton,
 	TextField,
 	TopToolbar,
 	CreateButton,
 	RefreshButton,
 	ExportButton,
 	Button as RA_Button,
-	// ResetViewsButton,
 	BulkDeleteButton,
-	// Responsive
-
 } from 'react-admin';
 
 import PropTypes                      from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import ListFilter                     from './ListFilter';
 import {isFieldSortable}              from './fieldFactory';
-import { makeStyles, IconButton, Button }   from '@material-ui/core';
+import { makeStyles }   from '@material-ui/core';
 import { Clear }   from '@material-ui/icons';
 
 import MuiDrawer        from '../../common/components/common/MuiDrawer';
 import { Route }        from 'react-router-dom';
 import History          from '../../src/admin-containers/History';
 import Show             from './Show';
-import MuiDrawerEditor  from '../../common/components/react-admin/form/MuiDrawerEditor';
-import MuiDrawerCreator from '../../common/components/react-admin/form/MuiDrawerCreator';
-import DataGridWrapper  from '../../common/components/grid/react-admin/DataGridWrapper';
-import memoize          from "memoize-one";
-import ObjectUtils      from '../../common/utils/ObjectUtils';
+import MuiDrawerEditor        from '../../common/components/react-admin/form/MuiDrawerEditor';
+import MuiDrawerCreator       from '../../common/components/react-admin/form/MuiDrawerCreator';
+import DataGridWrapper        from '../../common/components/grid/react-admin/DataGridWrapper';
+import memoize                from "memoize-one";
+import ObjectUtils            from '../../common/utils/ObjectUtils';
+import EditButton             from './components/list/actions/EditButton';
+import ShowButton             from './components/list/actions/ShowButton';
+import GlobalLoadingIndicator from '../../common/components/react-admin/components/GlobalLoadingIndicator';
 
 
 let useStyles = makeStyles(function (theme) {
@@ -40,7 +38,8 @@ let useStyles = makeStyles(function (theme) {
 			width: 300
 		},
 		w60: {
-			width: 60
+			width: 60,
+			overflow: 'hidden',
 		}
 		// toolbar: {
 		// 	paddingLeft: theme.spacing(3),
@@ -84,8 +83,22 @@ const TagListActions = ( props ) => {
 	    className="mtv__list--actiontoolbar"
 	   >
 		   <BulkActionButtons {...props} />
-		   <RefreshButton label={null} />
-		   {filters && React.cloneElement(filters, {
+		   {1===2 &&<RefreshButton label={null} />}
+		   <GlobalLoadingIndicator
+			   showRefresh={true}
+			   refreshButtonType="button"
+			   refreshButtonProps={{label: null}}
+			   circularProgressProps={{
+			   	style: {
+				    margin  : '8px 24px',
+				    width: '14px',
+				    height: '14px',
+				    fontSize: '0.8125rem',
+				    color   : '#e8eaf6'
+			    }
+			   }}
+		   />
+		   {1===1 && filters && React.cloneElement(filters, {
 			   resource,
 			   showFilter,
 			   displayedFilters,
@@ -94,6 +107,7 @@ const TagListActions = ( props ) => {
 		   })}
 		   <CreateButton
 			   basePath={basePath}
+			   label={null}
 			   // basePath="/project"
 		   />
 		   <ExportButton
@@ -223,65 +237,74 @@ const List_DG = props => {
 	} = resolveProps(props);
 
 	const {permanentFilter,...rest} = props;
-
+	const { conf } = configFactory;
 	  // if(typeof console === 'object') { console.log('LIST props %o configFactory %o',props,configFactory); }
 	let confDefaults = {};
 
-	const [sort, setSort] = useState({});
-	const [filter, setFilter] = useState(permanentFilter);
-	const [filterDefaultValues, setFilterDefaultValues] = useState(null);
+	// const [sort, setSort] = useState({});
+	// const [filter, setFilter] = useState(permanentFilter);
+	// const [filterDefaultValues, setFilterDefaultValues] = useState(null);
 
-	const getFilterValues = () => {
-		// filter=Component
-		// filters={<PostFilter />} // <-- always on
-		// filterDefaultValues={{ is_published: true }}
-		// confDefaults.filter = <TextInput label="Search" source="q" alwaysOn />;
-		const { conf } = configFactory;
-		// const { permanentFilter } = props;
-		let filter = permanentFilter,
-			filterDefaultValues = {};
+	const getFilterValues = memoize(
+		(permanentFilter, conf) => {
+			// filter=Component
+			// filters={<PostFilter />} // <-- always on
+			// filterDefaultValues={{ is_published: true }}
+			// confDefaults.filter = <TextInput label="Search" source="q" alwaysOn />;
 
-		if(conf && typeof conf.getGridPermanentFilter === 'function') {
-			filter = conf.getGridPermanentFilter(filter);
-			filterDefaultValues = conf.getGridFilterDefaults(null);
-		}
+			// const { permanentFilter } = props;
+			let filter = permanentFilter,
+				filterDefaultValues = {};
 
-		if(filter) {
-			setFilter(filter);
-		}
+			if ( conf && typeof conf.getGridPermanentFilter === 'function' ) {
+				filter = conf.getGridPermanentFilter( filter );
+				filterDefaultValues = conf.getGridFilterDefaults( null );
+			}
 
-		if(filterDefaultValues) {
-			setFilterDefaultValues(filterDefaultValues);
-		}
-	};
+			// if ( filter ) {
+			// 	setFilter( filter );
+			// }
+			//
+			// if ( filterDefaultValues ) {
+			// 	setFilterDefaultValues( filterDefaultValues );
+			// }
 
-	const getSort = () => {
-		// confDefaults.sort={ field: 'title', order: 'DESC' };
-
-		const { conf } = configFactory;
-
-		if(conf && typeof conf.getGridSorting === 'function') {
-			let sort = conf.getGridSorting(conf);
-			if(sort) {
-				// confDefaults.sort = sort;
-				setSort(sort);
+			return {
+				filter: filter,
+				filterDefaultValues: filterDefaultValues
 			}
 		}
-	};
+	);
 
+	const getSort = memoize(
+		(conf) => {
+
+			// const { conf } = configFactory;
+			// if(typeof console === 'object') { console.log('getSort',conf); }
+			if(conf && typeof conf.getGridSorting === 'function') {
+				let sort = conf.getGridSorting(conf);
+				if(sort) {
+					// confDefaults.sort = sort;
+					return sort;
+				}
+			}
+
+
+		}
+	);
 
 	useEffect(() => {
 		getFilterValues();
-		getSort();
+		// getSort();
 		// console.log('ComponentDidMount: sort,filter,filterDefaultValue',sort,filter,filterDefaultValues);
 	},[permanentFilter]);
 
 	let { perPage, ...editProps} = props;
 	let listFields = fields;
-	if(configFactory.conf) {
-		listFields = configFactory.conf.getGridColumns(listFields);
-		hasEdit = configFactory.conf._hasEdit(hasEdit,configFactory.options);
-		hasShow = configFactory.conf._hasShow(hasShow,configFactory.options);
+	if(conf) {
+		listFields = conf.getGridColumns(listFields);
+		hasEdit = conf._hasEdit(hasEdit,configFactory.options);
+		hasShow = conf._hasShow(hasShow,configFactory.options);
 		editProps.hasEdit = hasEdit;
 		editProps.hasShow = hasShow;
 	}
@@ -317,16 +340,23 @@ const List_DG = props => {
 		}
 	);
 
+	const getRowClick = () => {
+		// edit, show, expand, function
+		return 'toggleSelection';
+	};
+
 	// if(typeof console === 'object') { console.log('configFactory.conf',configFactory.conf,listFields); }
 	// if(typeof console === 'object') { console.log('configFactory.options.createType',configFactory.options); }
 	// if(typeof console === 'object') { console.log('BaseList',rest,confDefaults); }
+
+	const { filter, filterDefaultValues } = getFilterValues(permanentFilter, conf);
 
 	return (
 		<React.Fragment>
 			<BaseList
 				{...rest}
 				{...confDefaults}
-				sort={sort}
+				sort={getSort(conf)}
 				filter={filter}
 				filterDefaultValues={filterDefaultValues}
 				pagination={<React.Fragment />}
@@ -343,8 +373,11 @@ const List_DG = props => {
 				}}
 			>
 				<DataGridWrapper
-					conf={configFactory.conf}
+					conf={conf}
 					isRowSelectable={true}
+					getSort={getSort}
+					rowClick="toggleSelection"
+					// setSort={setSort}
 					// optimized={true}
 					// rowClick={}
 					// expand={<Component />}
@@ -375,10 +408,10 @@ const List_DG = props => {
 					{hasShow && <ShowButton
 						label={null}
 						width={80}
-						// cellClassName={styles.w60}
+						cellClassName={styles.w60}
 					/>}
 					{hasEdit && <EditButton
-						// cellClassName={styles.w60}
+						cellClassName={styles.w60}
 						// basePath="/project"
 						label={null}
 						width={80}
