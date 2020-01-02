@@ -19,7 +19,7 @@ const ListFilter = props => {
   const { translate, ...rest } = props;
   const parameterAlwaysOn = parameters.length < 8;
 
-  // if(typeof console === 'object') { console.log('ListFilter.parameters, parameterFactory, conf',parameters); }
+  if(typeof console === 'object') { console.log('ListFilter.parameters, parameterFactory, conf',parameters); }
   let defaultFilters = ['q']
 
   const getStandardFilter = () => {
@@ -29,7 +29,7 @@ const ListFilter = props => {
       parameters.forEach(parameter => {
 
         if ( ObjectUtils.inArray( defaultFilters, parameter.variable ) ) {
-          // if ( typeof console === 'object' ) { console.log( 'parameter', parameter ); }
+          if ( typeof console === 'object' ) { console.log( 'getStandardFilter.parameter', parameter ); }
 
           let p = {...parameter,type: 'search'}
 
@@ -61,6 +61,7 @@ const ListFilter = props => {
           if ( ObjectUtils.inArray( defaultFilters, parameter.variable ) ) {
             return null;
           }
+          if ( typeof console === 'object' ) { console.log( 'Filter.parameter', parameter ); }
 
           return parameterFactory( parameter, {
             alwaysOn: parameterAlwaysOn,
