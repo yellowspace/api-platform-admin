@@ -293,11 +293,11 @@ const List_DG = props => {
 		}
 	);
 
-	useEffect(() => {
-		getFilterValues();
-		// getSort();
-		// console.log('ComponentDidMount: sort,filter,filterDefaultValue',sort,filter,filterDefaultValues);
-	},[permanentFilter]);
+	// useEffect(() => {
+	// 	getFilterValues();
+	// 	// getSort();
+	// 	// console.log('ComponentDidMount: sort,filter,filterDefaultValue',sort,filter,filterDefaultValues);
+	// },[permanentFilter]);
 
 	let { perPage, ...editProps} = props;
 	let listFields = fields;
@@ -376,7 +376,8 @@ const List_DG = props => {
 					conf={conf}
 					isRowSelectable={true}
 					getSort={getSort}
-					rowClick="toggleSelection"
+					rowClick={getRowClick()}
+					gridOptimized={true}
 					// setSort={setSort}
 					// optimized={true}
 					// rowClick={}
@@ -546,17 +547,19 @@ function areEqual(prevProps, nextProps) {
 	// }
 
 	let a = {
-		ids: prevProps.ids,
+		location: prevProps.location,
+		match: prevProps.match,
 	};
 	let b = {
-		ids: nextProps.ids,
+		location: nextProps.location,
+		match: nextProps.match,
 	};
 
 	let isEqualA = ObjectUtils.isEqual(a,b);
 	if(isEqualA) {
-		// if(typeof console === 'object') { console.log('areEqual',prevProps, nextProps); }
+		// if(typeof console === 'object') { console.log('LIST_DG _ IsEqual - DO NOT UPDATE',prevProps, nextProps); }
 		// if(typeof console === 'object') { console.log('this.props.isEqualA',isEqualA,a,b); }
-		// return true;
+		return true;
 	}
 
 	/*
