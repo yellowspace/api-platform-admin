@@ -113,7 +113,7 @@ const List = props => {
 };
 
 List.defaultProps = {
-  perPage: 30, // Default value in API Platform
+  perPage: 50, // Default value in API Platform
 };
 
 List.propTypes = {
