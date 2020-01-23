@@ -30,6 +30,8 @@ import ObjectUtils            from '../../common/utils/ObjectUtils';
 import EditButton             from './components/list/actions/EditButton';
 import ShowButton             from './components/list/actions/ShowButton';
 import GlobalLoadingIndicator from '../../common/components/react-admin/components/GlobalLoadingIndicator';
+import MuiModalEditor         from '../../common/components/react-admin/form/MuiModalEditor';
+import MuiModalCreator        from '../../common/components/react-admin/form/MuiModalCreator';
 
 
 let useStyles = makeStyles(function (theme) {
@@ -419,12 +421,32 @@ const List_DG = props => {
 					/>}
 				</DataGridWrapper>
 			</BaseList>
-			{configFactory.options.createType === 'drawer' &&<Route
+			{(configFactory.options.createType === 'drawer' || configFactory.options.createType === 'modal' )&&<Route
 				path={props.basePath + '/create'}
 			>
 				{({ match }) => {
 
 					// if(typeof console === 'object') { console.log('CREATE MATCH',match); }
+
+
+					if(configFactory.options.createType === 'modal') {
+						return (
+							<MuiModalCreator
+								isOpen={!!match}
+								contentWidth="90vh"
+								maxWidth={false}
+								dialogContentStyle={{
+									width: '90vh',
+									maxWidth: '800px',
+								}}
+								title={resource.title}
+								closeButton={true}
+								disableBackdropClick={true}
+								handleEditorClose={handleClose}
+								{...editProps}
+							/>
+						);
+					}
 
 					return (
 						<MuiDrawerCreator
@@ -443,14 +465,14 @@ const List_DG = props => {
 					);
 				}}
 			</Route>}
-			{configFactory.options.editType === 'drawer' && <Route
+			{(configFactory.options.editType === 'drawer' || configFactory.options.editType === 'modal')&& <Route
 				path={props.basePath + '/:id'}
 			>
 				{({ match }) => {
 
 					const isMatch = match && match.params && match.params.id !== 'create' ? true : false;
 					// if(isMatch && typeof console === 'object') { console.log('EDIT ROUTE match,isMatch',decodeURIComponent(match.params.id),encodeURIComponent(match.params.id),match,isMatch); }
-
+					// if(typeof console === 'object') { console.log('editor',props.name,props,resource,editProps); }
 					let id = null;
 					if(isMatch) {
 						id = match.params.id;
@@ -460,9 +482,29 @@ const List_DG = props => {
 					}
 
 					// if(typeof console === 'object') { console.log('editProps',editProps); }
+					if(configFactory.options.editType === 'modal') {
+						return (
+							<MuiModalEditor
+								contentWidth="90vh"
+								maxWidth={false}
+								dialogContentStyle={{
+									width   : '90vh',
+									maxWidth: '800px',
+								}}
+								title={resource.title}
+								closeButton={true}
+								disableBackdropClick={true}
+								isOpen={isMatch}
+								id={isMatch ? id : null}
+								// options={Object.assign( {}, props.options, { cloneButton: false } )}
+								handleEditorClose={handleClose}
+								{...editProps}
+							/>
+						);
+					}
 
 					return (<MuiDrawerEditor
-						resource={props.name}
+						// resource={props.name}
 						isOpen={isMatch}
 						id={isMatch ? id : null}
 						{...editProps}

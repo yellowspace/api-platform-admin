@@ -388,6 +388,10 @@ export default (field, options) => {
           fullWidth={true}
           key={field.name}
           source={field.name}
+          settings={{
+            fieldType: 'datetime'
+          }}
+
           {...props}
           // variant="outlined"
       />;

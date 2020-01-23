@@ -5,6 +5,20 @@ class Api {
 
 	// static gridSettings = {};
 
+	static util_exportFields(fields) {
+
+		let eF = [];
+		let eS = "\n";
+
+		fields.forEach((f) => {
+			eF.push({[f.name] : true});
+
+			eS += [f.name] + ': true,'+"\n";
+		});
+
+		if(typeof console === 'object') { console.log('eS',eS); }
+	};
+
 	static mapFields(listFields,fields,reOrder=true) {
 		let lf = [];
 
@@ -39,6 +53,7 @@ class Api {
 			lf = ordered.concat(lf);
 		}
 
+
 		return lf;
 	}
 
@@ -48,6 +63,9 @@ class Api {
 			return this.hasEdit;
 		}
 		else if(configFactoryOptions.createType === 'drawer') {
+			hasEdit = true;
+		}
+		else if(configFactoryOptions.createType === 'modal') {
 			hasEdit = true;
 		}
 
@@ -60,6 +78,9 @@ class Api {
 			return this.hasShow;
 		}
 		else if(configFactoryOptions.showType === 'drawer') {
+			hasShow = true;
+		}
+		else if(configFactoryOptions.showType === 'modal') {
 			hasShow = true;
 		}
 
