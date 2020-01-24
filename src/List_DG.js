@@ -216,6 +216,8 @@ const List_DG = props => {
 
 	let styles = useStyles();
 
+	// if(typeof console === 'object') { console.log('List_DG',props); }
+
 	const handleClose = () => {
 		// if(typeof console === 'object') { console.log('handleClose',true); }
 		History.push( props.basePath);

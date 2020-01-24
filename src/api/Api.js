@@ -59,6 +59,8 @@ class Api {
 
 
 	static _hasEdit(hasEdit,configFactoryOptions) {
+		// if(typeof console === 'object') { console.log('_hasEdit',_hasEdit,configFactoryOptions); }
+
 		if(typeof this.hasEdit !== 'undefined') {
 			return this.hasEdit;
 		}
@@ -73,6 +75,7 @@ class Api {
 	}
 
 	static _hasShow(hasShow,configFactoryOptions) {
+		// if(typeof console === 'object') { console.log('_hasShow',hasShow,configFactoryOptions); }
 
 		if(typeof this.hasShow !== 'undefined') {
 			return this.hasShow;
