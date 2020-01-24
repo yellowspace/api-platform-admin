@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, isValidElement, cloneElement  } from 'react';
 import PropTypes                      from 'prop-types';
 import { Grid, makeStyles }           from '@material-ui/core';
 import { FormInput }                  from 'react-admin';
 import {
 	TextInput,
+	Labeled,
 	// Edit as BaseEdit,
 	// SimpleForm
-}                                     from 'react-admin';
+} from 'react-admin';
+import classnames from 'classnames';
 import { FontAwesomeIcon }            from '@fortawesome/react-fontawesome';
 import { faProjectDiagram }           from '@fortawesome/free-solid-svg-icons';
+// import Labeled from '../input/Labeled';
 // import { withTranslate } from 'react-admin';
 // import { connect } from 'react-redux';
 // import { withStyles } from '@material-ui/core/styles';
@@ -54,13 +57,22 @@ const GridEditfields = (props) => {
 	// if(typeof console === 'object') { console.log('GridEditfields',props); }
 
 	const classes = useStyles();
-	const {inputFactory,addIdInput,editields,api} = props;
+	const {api} = props;
+	const {inputFactory,addIdInput,editields} = props;
+	const {fieldFactory,addIdField,showfields} = props;
+
 	const { basePath, record, resource, variant, margin } = props;
 
 	// if(typeof console === 'object') { console.log('props',props); }
 	let gridCols = [{},{}];
 	// let gridCollength = gridCols.length;
-	let fieldLength = editields.length;
+	let fieldLength = 0;
+	if(editields && editields.length) {
+		fieldLength = editields.length;
+	} else if (showfields && showfields.length) {
+		fieldLength = showfields.length;
+	}
+
 	let n2w = false;
 
 	const checkGridCol = (fieldIdx,idx,field) => {
@@ -117,7 +129,37 @@ const GridEditfields = (props) => {
 							{...col}
 							xs
 						>
-							{editields.map( ( field, fieldIdx ) => {
+
+							{showfields && showfields.map( ( field, fieldIdx ) => {
+
+								if ( checkGridCol( fieldIdx, idx, field ) ) {
+									// if(typeof console === 'object') { console.log('SHOW field',field); }
+									let f = fieldFactory( field, {
+										api,
+										resource,
+									} );
+
+									return f && isValidElement(f) ? (React.createElement("div", { key: f.props.source, className: classnames("ra-field ra-field-" + f.props.source, f.props.className) }, f.props.addLabel ? (React.createElement(Labeled, { record: record, resource: resource, basePath: basePath, label: f.props.label, source: f.props.source, disabled: false }, f)) : typeof f.type === 'string' ? (f) : (cloneElement(f, {
+										record: record,
+										resource: resource,
+										basePath: basePath,
+									})))) : null;
+
+									// return React.createElement( input, {
+									// 	key     : field.name,
+									// 	basePath: basePath,
+									// 	record  : record,
+									// 	resource: resource,
+									// 	variant : variant,
+									// 	margin  : margin
+									// } );
+
+								}
+
+								return null;
+							} )}
+
+							{editields && editields.map( ( field, fieldIdx ) => {
 
 								let input = inputFactory( field, {
 									api,
@@ -139,8 +181,7 @@ const GridEditfields = (props) => {
 								}
 
 								return null;
-							} )
-							}
+							} )}
 
 						</Grid>
 					)

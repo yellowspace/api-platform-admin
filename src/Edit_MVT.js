@@ -7,51 +7,11 @@ import {
 }                                     from 'react-admin';
 import PropTypes                      from 'prop-types';
 import React, { useEffect, useState } from 'react';
-
-import {
-  // Toolbar,
-  // SaveButton as RA_SaveButton,
-  // DeleteButton,
-  // CloneButton
-}                          from 'react-admin';
-// import { useForm } from 'react-final-form';
-// import { makeStyles } from '@material-ui/core/styles';
-// import SaveButton from '../../common/components/react-admin/form/actions/SaveButton';
-// import RA_SaveButton from '../../common/components/react-admin/form/actions/RA_SaveButton';
 import CustomEditorToolbar from './components/CustomEditorToolbar';
 import GridEditfields      from './components/GridEditfields';
 import DumpForm            from '../../common/components/react-admin/form/fields/DumpForm';
 import ApiPlatformUtils    from './utils/ApiPlatformUtils';
 import authProvider        from '../../src/admin-store/authProvider';
-
-
-// const hasIdentifier = fields => {
-//   return (
-//     undefined !== fields.find(({id}) => 'http://schema.org/identifier' === id)
-//   );
-// };
-
-// const resolveProps = props => {
-//   const {options} = props;
-//   const {inputFactory: defaultInputFactory, resource} = options;
-//   const {
-//     editFields: customFields,
-//     editProps = {},
-//     writableFields: defaultFields,
-//   } = resource;
-//   const {options: {inputFactory: customInputFactory} = {}} = editProps;
-//
-//   return {
-//     ...props,
-//     ...editProps,
-//     options: {
-//       ...options,
-//       fields:
-//         customFields || defaultFields.filter(({deprecated}) => !deprecated),
-//       inputFactory: customInputFactory || defaultInputFactory,
-//     },
-//   };
-// };
 
 /**
  * see @link node_modules/ra-ui-materialui/esm/form/SimpleForm.js
@@ -62,39 +22,6 @@ import authProvider        from '../../src/admin-store/authProvider';
  * @returns {*}
  * @constructor
  */
-// const Editfields = (props) => {
-//
-//   const {inputFactory,addIdInput,editields,api} = props;
-//   const { basePath, record, resource, variant, margin } = props;
-//   // if(typeof console === 'object') { console.log('props',props); }
-//
-//   return (
-//       <React.Fragment>
-//         {addIdInput && <TextInput disabled source="id" />}
-//         {addIdInput && <TextInput type="hidden" source="id" label={null} />}
-//         {editields.map(field => {
-//
-//           let input = inputFactory( field, {
-//             api,
-//             resource,
-//           });
-//
-//           // if(typeof console === 'object') { console.log('input',input,field,field.name); }
-//
-//           return React.createElement( FormInput , {
-//             key: field.name,
-//             basePath: basePath,
-//             input   : input,
-//             record  : record,
-//             resource: resource,
-//             variant : variant,
-//             margin  : margin
-//           } )
-//         })}
-//       </React.Fragment>
-//   );
-// };
-
 
 const LocalForm = props => {
 
@@ -163,16 +90,6 @@ const LocalForm = props => {
 
 
 const Edit_MVT = props => {
-  // let {
-  //   options: {
-  //     api,
-  //     fields,
-  //     inputFactory,
-  //     configFactory,
-  //     resource
-  //   },
-  //   // addIdInput = false === hasIdentifier(fields),
-  // } = resolveProps(props);
 
    let {
     options: {
@@ -184,8 +101,6 @@ const Edit_MVT = props => {
     },
     // addIdInput = false === hasIdentifier(fields),
   } = ApiPlatformUtils.resolveEditorProps(props);
-
-
 
   let {
     formProps,

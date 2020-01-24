@@ -32,6 +32,8 @@ import ShowButton             from './components/list/actions/ShowButton';
 import GlobalLoadingIndicator from '../../common/components/react-admin/components/GlobalLoadingIndicator';
 import MuiModalEditor         from '../../common/components/react-admin/form/MuiModalEditor';
 import MuiModalCreator        from '../../common/components/react-admin/form/MuiModalCreator';
+import MuiDrawerShow          from '../../common/components/react-admin/form/MuiDrawerShow';
+import MuiModalShow           from '../../common/components/react-admin/form/MuiModalShow';
 
 
 let useStyles = makeStyles(function (theme) {
@@ -467,13 +469,13 @@ const List_DG = props => {
 					);
 				}}
 			</Route>}
-			{(configFactory.options.editType === 'drawer' || configFactory.options.editType === 'modal')&& <Route
+			{(configFactory.options.editType === 'drawer' || configFactory.options.editType === 'modal') && <Route
 				path={props.basePath + '/:id'}
 			>
-				{({ match }) => {
+				{({ match, location }) => {
 
-					const isMatch = match && match.params && match.params.id !== 'create' ? true : false;
-					// if(isMatch && typeof console === 'object') { console.log('EDIT ROUTE match,isMatch',decodeURIComponent(match.params.id),encodeURIComponent(match.params.id),match,isMatch); }
+					const isMatch = match && match.params && match.params.id !== 'create' && location.pathname.indexOf('/show') === -1 ? true : false;
+					// if(isMatch && typeof console === 'object') { console.log('EDIT ROUTE match,isMatch',decodeURIComponent(match.params.id),encodeURIComponent(match.params.id),match,isMatch,rest); }
 					// if(typeof console === 'object') { console.log('editor',props.name,props,resource,editProps); }
 					let id = null;
 					if(isMatch) {
@@ -519,13 +521,13 @@ const List_DG = props => {
 					/>);
 				}}
 			</Route>}
-			{configFactory.options.showType === 'drawer' && <Route
+			{(configFactory.options.showType === 'drawer' || configFactory.options.showType === 'modal') && <Route
 				path={props.basePath + '/:id/show'}
 			>
 				{({ match }) => {
 
 					const isMatch = match && match.params && match.params.id !== 'create' ? true : false;
-					// if(isMatch && typeof console === 'object') { console.log('EDIT ROUTE match,isMatch',decodeURIComponent(match.params.id),encodeURIComponent(match.params.id),match,isMatch); }
+					// if(isMatch && typeof console === 'object') { console.log('Show ROUTE match,isMatch',decodeURIComponent(match.params.id),encodeURIComponent(match.params.id),match,isMatch); }
 
 					let id = null;
 					if(isMatch) {
@@ -535,24 +537,55 @@ const List_DG = props => {
 						}
 					}
 
+					if(configFactory.options.showType === 'modal') {
+						return (
+							<MuiModalShow
+								contentWidth="90vh"
+								maxWidth={false}
+								dialogContentStyle={{
+									width   : '90vh',
+									maxWidth: '800px',
+								}}
+								title={resource.title}
+								closeButton={true}
+								disableBackdropClick={true}
+								isOpen={isMatch}
+								id={isMatch ? id : null}
+								// options={Object.assign( {}, props.options, { cloneButton: false } )}
+								handleEditorClose={handleClose}
+								{...editProps}
+							/>
+						);
+					}
+
 					return (
-						<MuiDrawer
-							open={isMatch}
-							anchor="right"
-							onClose={handleClose}
-						>
-							{isMatch ? (
-								<Show
-									className={styles.drawerContent}
-									id={isMatch ? id : null}
-									onCancel={handleClose}
-									{...editProps}
-								/>
-							) : (
-								 <div className={styles.drawerContent} />
-							 )}
-						</MuiDrawer>
+						<MuiDrawerShow
+							isOpen={isMatch}
+							id={isMatch ? id : null}
+							{...editProps}
+							// options={Object.assign({},editProps.options,{cloneButton: false})}
+							handleEditorClose={handleClose}
+						/>
 					);
+
+					// return (
+					// 	<MuiDrawer
+					// 		open={isMatch}
+					// 		anchor="right"
+					// 		onClose={handleClose}
+					// 	>
+					// 		{isMatch ? (
+					// 			<Show
+					// 				className={styles.drawerContent}
+					// 				id={isMatch ? id : null}
+					// 				onCancel={handleClose}
+					// 				{...editProps}
+					// 			/>
+					// 		) : (
+					// 			 <div className={styles.drawerContent} />
+					// 		 )}
+					// 	</MuiDrawer>
+					// );
 				}}
 			</Route>}
 		</React.Fragment>

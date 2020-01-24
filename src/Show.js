@@ -38,6 +38,8 @@ const Show = props => {
     addIdField = false === hasIdentifier(fields),
   } = resolveProps(props);
 
+  // if(typeof console === 'object') { console.log('Show.props',props,fields); }
+
   return (
     <BaseShow {...props}>
       <SimpleShowLayout>

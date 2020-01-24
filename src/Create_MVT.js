@@ -8,64 +8,6 @@ import GridEditfields                     from './components/GridEditfields';
 import ApiPlatformUtils                   from './utils/ApiPlatformUtils';
 import authProvider                       from '../../src/admin-store/authProvider';
 import DumpForm                           from '../../common/components/react-admin/form/fields/DumpForm';
-// import { makeStyles } from '@material-ui/core/styles';
-// import SaveButton from '../../common/components/react-admin/form/actions/SaveButton';
-
-// import {
-//   Toolbar,
-//   SaveButton as RA_SaveButton,
-// }               from 'react-admin';
-// import Edit_MVT from './Edit_MVT';
-
-// const useStyles = makeStyles({
-//   toolbar: {
-//     display: 'flex',
-//     justifyContent: 'space-between',
-//   },
-// });
-//
-// const CustomToolbar = props => {
-//
-//   // if(typeof console === 'object') { console.log('CustomToolbar.props',props.redirect); }
-//   // let form = useForm();
-//
-//   return (
-//       <Toolbar
-//           {...props}
-//           className="mtv__editor--toolbar"
-//           classes={useStyles()}
-//           redirect={props.redirect}
-//       >
-//         <SaveButton redirect={props.redirect} actionType="create" />
-//         {/*<RA_SaveButton />*/}
-//       </Toolbar>
-//   )
-// };
-
-
-//
-//
-// const resolveProps = props => {
-//   const {options} = props;
-//   const {inputFactory: defaultInputFactory, resource} = options;
-//   const {
-//     createFields: customFields,
-//     createProps = {},
-//     writableFields: defaultFields,
-//   } = resource;
-//   const {options: {inputFactory: customInputFactory} = {}} = createProps;
-//
-//   return {
-//     ...props,
-//     ...createProps,
-//     options: {
-//       ...options,
-//       fields:
-//         customFields || defaultFields.filter(({deprecated}) => !deprecated),
-//       inputFactory: customInputFactory || defaultInputFactory,
-//     },
-//   };
-// };
 
 
 const LocalForm = props => {
@@ -162,7 +104,7 @@ const Create_MVT = props => {
   let validateForm = () => {};
 
   if(configFactory.conf) {
-    editields = configFactory.conf.getFormFields(editields);
+    editields = configFactory.conf.getCreateFormFields(editields);
     validateForm = configFactory.conf.validateForm;
   }
 
