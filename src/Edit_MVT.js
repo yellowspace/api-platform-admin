@@ -132,7 +132,7 @@ const Edit_MVT = props => {
   }
 
 
-  // if(typeof console === 'object') { console.log('formProps',formProps); }
+  // if(typeof console === 'object') { console.log('formProps',formProps,editields); }
   if(typeof toolbar === 'undefined') {
     toolbar = <CustomEditorToolbar options={props.options} />
   }

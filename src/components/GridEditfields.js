@@ -75,6 +75,8 @@ const GridEditfields = (props) => {
 
 	let n2w = false;
 
+	// if(typeof console === 'object') { console.log('editields',editields); }
+
 	const checkGridCol = (fieldIdx,idx,field) => {
 		let r = false;
 
