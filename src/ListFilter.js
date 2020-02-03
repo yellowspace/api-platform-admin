@@ -68,10 +68,16 @@ const ListFilter = props => {
           } );
         })}
       {conf && typeof conf.getGridFilter === 'function' &&
-       conf.getGridFilter().map(parameter =>
-             parameterFactory(parameter, {
+       conf.getGridFilter().map(parameter => {
+
+             // if ( ObjectUtils.inArray( defaultFilters, parameter.variable ) ) {
+             //   return null;
+             // }
+
+             return parameterFactory( parameter, {
                alwaysOn: parameterAlwaysOn,
-             }),
+             } );
+           }
          )
       }
     </Filter>
