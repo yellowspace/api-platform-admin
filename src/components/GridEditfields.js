@@ -60,6 +60,7 @@ const GridEditfields = (props) => {
 	const {api} = props;
 	const {inputFactory,addIdInput,editields} = props;
 	const {fieldFactory,addIdField,showfields} = props;
+	const {formTabIdx} = props;
 
 	const { basePath, record, resource, variant, margin } = props;
 
@@ -77,11 +78,30 @@ const GridEditfields = (props) => {
 
 	// if(typeof console === 'object') { console.log('editields',editields); }
 
+	const checkFieldTab = (field,idx) => {
+
+		if(
+			field.formTab === idx ||
+			(idx === 1 &&  (!field.formTab))
+		) {
+			return true;
+		}
+
+
+		return false;
+
+	};
+
 	const checkGridCol = (fieldIdx,idx,field) => {
 		let r = false;
 
 		// if(typeof console === 'object') { console.log('fieldIdx,idx,field',fieldIdx,idx,field); }
 
+		if(formTabIdx) {
+			if(!checkFieldTab(field,formTabIdx)) {
+				return false;
+			}
+		}
 
 		if(field.col === idx) {
 			return true;

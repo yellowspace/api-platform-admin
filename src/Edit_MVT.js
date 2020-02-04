@@ -1,17 +1,21 @@
 import Api                            from '@api-platform/api-doc-parser/lib/Api';
 import Resource                       from '@api-platform/api-doc-parser/lib/Resource';
 import {
-  TextInput,
-  Edit as BaseEdit,
-  SimpleForm
+    TextInput,
+    Edit as BaseEdit,
+    SimpleForm,
+    TabbedForm,
+    FormTab,
+    TabbedFormTabs,
 }                                     from 'react-admin';
 import PropTypes                      from 'prop-types';
 import React, { useEffect, useState } from 'react';
-import CustomEditorToolbar from './components/CustomEditorToolbar';
-import GridEditfields      from './components/GridEditfields';
-import DumpForm            from '../../common/components/react-admin/form/fields/DumpForm';
-import ApiPlatformUtils    from './utils/ApiPlatformUtils';
-import authProvider        from '../../src/admin-store/authProvider';
+import CustomEditorToolbar            from './components/CustomEditorToolbar';
+import GridEditfields                 from './components/GridEditfields';
+import DumpForm                       from '../../common/components/react-admin/form/fields/DumpForm';
+import ApiPlatformUtils               from './utils/ApiPlatformUtils';
+import authProvider                   from '../../src/admin-store/authProvider';
+import { makeStyles }                 from '@material-ui/core/styles';
 
 /**
  * see @link node_modules/ra-ui-materialui/esm/form/SimpleForm.js
@@ -23,6 +27,16 @@ import authProvider        from '../../src/admin-store/authProvider';
  * @constructor
  */
 
+let usetTabStyles = makeStyles(function (theme) {
+    return (
+        {
+            contentClassName: {
+                margin: '10px 0 0 10px',
+            },
+        }
+    );
+});
+
 const LocalForm = props => {
 
       const {
@@ -32,6 +46,7 @@ const LocalForm = props => {
         inputFactory,
         record,
         configFactory,
+        formSettings,
         ...simpleFormRest
       } = props;
 
@@ -42,8 +57,10 @@ const LocalForm = props => {
       } = props;
 
       const [initialRecord, setInitialRecord] = useState(record);
+    const classes = usetTabStyles();
 
-      let onBeforeFormRender = null;
+
+    let onBeforeFormRender = null;
       if(configFactory && configFactory.conf) {
         if(typeof configFactory.conf.onBeforeFormRender === 'function') {
           onBeforeFormRender = configFactory.conf.onBeforeFormRender;
@@ -60,6 +77,125 @@ const LocalForm = props => {
       },[initialRecord]);
 
       const isDeveloper = authProvider.isDeveloper();
+
+    const checkFieldTab = (field,idx) => {
+
+        if(
+            field.formTab === idx ||
+            (idx === 1 &&  (!field.formTab))
+        ) {
+            return true;
+        }
+
+
+        return false;
+
+    };
+
+
+    // const getFormTabs = () => {
+    //     let f = null;
+    //
+    //     formSettings.tabbedForm.forEach((tab, idx) => {
+    //
+    //         let formTabIdx = idx +1;
+    //
+    //         return (
+    //             <FormTab
+    //                 label={tab.label}
+    //                 key={'formTab' + idx}
+    //                 scrollable={true}
+    //             >
+    //                 {isDeveloper && <DumpForm />}
+    //                 {renderFields === 'editfields' && <GridEditfields
+    //                     {...rest}
+    //                     // record={initalRecord}
+    //                     formTabIdx={formTabIdx}
+    //                     addIdInput={addIdInput}
+    //                     editields={editields}
+    //                     inputFactory={inputFactory}
+    //                     api={api}
+    //                     resource={resource}
+    //                 />}
+    //                 {renderFields === 'direct' && addIdInput && <TextInput disabled source="id" />}
+    //                 {renderFields === 'direct' && addIdInput && <TextInput type="hidden" source="id" label={null} />}
+    //                 {renderFields === 'direct' && editields.map(field => {
+    //
+    //
+    //                     if(checkFieldTab(field,formTabIdx)) {
+    //                         return inputFactory( field, {
+    //                             api,
+    //                             resource,
+    //                         } );
+    //                     }
+    //
+    //
+    //                     return null;
+    //                 })}
+    //             </FormTab>
+    //         );
+    //     })
+    //
+    // };
+
+
+      if(formSettings.tabbedForm) {
+          return (
+              <TabbedForm
+                  //variant="fullWidth"
+                  // centered
+                  // indicatorColor="secondary"
+                  // textColor="secondary"
+                  {...simpleFormRest}
+                  record={initialRecord}
+                  className="mtv__editor--tabbedform"
+                  tabs={<TabbedFormTabs centered indicatorColor="secondary" textColor="secondary" variant="fullWidth" />}
+              >
+                  {formSettings.tabbedForm.map((tab, idx) => {
+
+                      let formTabIdx = idx +1;
+
+                      return (
+                          <FormTab
+                              label={tab.label}
+                              key={'formTab' + idx}
+                              //contentClassName={classes.contentClassName}
+                              contentClassName="mtv__editor--formTab"
+                              //scrollable={true}
+                          >
+                              {isDeveloper && <DumpForm />}
+                              {renderFields === 'editfields' && <GridEditfields
+                                  {...rest}
+                                  // record={initalRecord}
+                                  formTabIdx={formTabIdx}
+                                  addIdInput={addIdInput}
+                                  editields={editields}
+                                  inputFactory={inputFactory}
+                                  api={api}
+                                  resource={resource}
+                              />}
+                              {renderFields === 'direct' && addIdInput && <TextInput disabled source="id" />}
+                              {renderFields === 'direct' && addIdInput && <TextInput type="hidden" source="id" label={null} />}
+                              {renderFields === 'direct' && editields.map(field => {
+
+
+                                  if(checkFieldTab(field,formTabIdx)) {
+                                      return inputFactory( field, {
+                                          api,
+                                          resource,
+                                      } );
+                                  }
+
+
+                                  return null;
+                              })}
+                          </FormTab>
+                      );
+                  })}
+              </TabbedForm>
+          );
+      }
+
 
       return (
           <SimpleForm
@@ -154,6 +290,7 @@ const Edit_MVT = props => {
               variant="standard"
               {...formProps}
 
+              formSettings={formSettings}
               renderFields={renderFields}
               addIdInput={addIdInput}
               editields={editields}
