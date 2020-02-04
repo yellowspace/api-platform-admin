@@ -1,6 +1,12 @@
 import Api                                from '@api-platform/api-doc-parser/lib/Api';
 import Resource                           from '@api-platform/api-doc-parser/lib/Resource';
-import {Create as BaseCreate, SimpleForm} from 'react-admin';
+import {
+    Create as BaseCreate,
+    SimpleForm,
+    TabbedForm,
+    TabbedFormTabs,
+    FormTab
+} from 'react-admin';
 import PropTypes                          from 'prop-types';
 import React, { useEffect, useState }     from 'react';
 import CustomCreatorToolbar               from './components/CustomCreatorToolbar';
@@ -20,6 +26,7 @@ const LocalForm = props => {
     record,
     initialValues,
     configFactory,
+    formSettings,
     ...simpleFormRest
   } = props;
 
@@ -49,9 +56,80 @@ const LocalForm = props => {
     }
   }, [ initialRecord ] );
 
-    const isDeveloper = authProvider.isDeveloper();
+  const isDeveloper = authProvider.isDeveloper();
 
-  return (
+
+    const checkFieldTab = (field,idx) => {
+
+        if(
+            field.formTab === idx ||
+            (idx === 1 &&  (!field.formTab))
+        ) {
+            return true;
+        }
+
+
+        return false;
+
+    };
+
+
+
+    if(formSettings.tabbedForm) {
+        return (
+            <TabbedForm
+                //variant="fullWidth"
+                // centered
+                // indicatorColor="secondary"
+                // textColor="secondary"
+                {...simpleFormRest}
+                initialValues={initialRecord}
+                className="mtv__editor--tabbedform"
+                tabs={<TabbedFormTabs centered indicatorColor="secondary" variant="fullWidth" />}
+            >
+                {formSettings.tabbedForm.map((tab, idx) => {
+
+                    let formTabIdx = idx +1;
+
+                    return (
+                        <FormTab
+                            label={tab.label}
+                            key={'formTab' + idx}
+                            //contentClassName={classes.contentClassName}
+                            contentClassName="mtv__editor--formTab"
+                            //scrollable={true}
+                        >
+                            {isDeveloper && <DumpForm />}
+                            {renderFields === 'editfields' && <GridEditfields
+                                {...rest}
+                                formTabIdx={formTabIdx}
+                                addIdInput={addIdInput}
+                                editields={editields}
+                                inputFactory={inputFactory}
+                                api={api}
+                                resource={resource}
+                            />}
+                            {renderFields === 'direct' && editields.map(field => {
+
+                                if(checkFieldTab(field,formTabIdx)) {
+                                    return inputFactory( field, {
+                                        api,
+                                        resource,
+                                    } );
+                                }
+
+                                return null;
+                            })}
+                        </FormTab>
+                    );
+                })}
+            </TabbedForm>
+        );
+    }
+
+
+
+    return (
       <SimpleForm
           {...simpleFormRest}
           initialValues={initialRecord}
@@ -102,10 +180,12 @@ const Create_MVT = props => {
 
   let editields = fields;
   let validateForm = () => {};
+  let formSettings = {};
 
   if(configFactory.conf) {
     editields = configFactory.conf.getCreateFormFields(editields);
     validateForm = configFactory.conf.validateForm;
+    formSettings = configFactory.conf.getCreateFormSettings();
   }
 
   let {
@@ -136,6 +216,7 @@ const Create_MVT = props => {
           variant="standard"
           {...formProps}
 
+          formSettings={formSettings}
           renderFields={renderFields}
           addIdInput={addIdInput}
           editields={editields}

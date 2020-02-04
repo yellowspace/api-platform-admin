@@ -39,6 +39,8 @@ let usetTabStyles = makeStyles(function (theme) {
 
 const LocalForm = props => {
 
+    // if(typeof console === 'object') { console.log('LocalForm.props',props); }
+
       const {
         renderFields,
         addIdInput,
@@ -93,51 +95,6 @@ const LocalForm = props => {
     };
 
 
-    // const getFormTabs = () => {
-    //     let f = null;
-    //
-    //     formSettings.tabbedForm.forEach((tab, idx) => {
-    //
-    //         let formTabIdx = idx +1;
-    //
-    //         return (
-    //             <FormTab
-    //                 label={tab.label}
-    //                 key={'formTab' + idx}
-    //                 scrollable={true}
-    //             >
-    //                 {isDeveloper && <DumpForm />}
-    //                 {renderFields === 'editfields' && <GridEditfields
-    //                     {...rest}
-    //                     // record={initalRecord}
-    //                     formTabIdx={formTabIdx}
-    //                     addIdInput={addIdInput}
-    //                     editields={editields}
-    //                     inputFactory={inputFactory}
-    //                     api={api}
-    //                     resource={resource}
-    //                 />}
-    //                 {renderFields === 'direct' && addIdInput && <TextInput disabled source="id" />}
-    //                 {renderFields === 'direct' && addIdInput && <TextInput type="hidden" source="id" label={null} />}
-    //                 {renderFields === 'direct' && editields.map(field => {
-    //
-    //
-    //                     if(checkFieldTab(field,formTabIdx)) {
-    //                         return inputFactory( field, {
-    //                             api,
-    //                             resource,
-    //                         } );
-    //                     }
-    //
-    //
-    //                     return null;
-    //                 })}
-    //             </FormTab>
-    //         );
-    //     })
-    //
-    // };
-
 
       if(formSettings.tabbedForm) {
           return (
@@ -149,7 +106,7 @@ const LocalForm = props => {
                   {...simpleFormRest}
                   record={initialRecord}
                   className="mtv__editor--tabbedform"
-                  tabs={<TabbedFormTabs centered indicatorColor="secondary" textColor="secondary" variant="fullWidth" />}
+                  tabs={<TabbedFormTabs centered indicatorColor="secondary" variant="fullWidth" />}
               >
                   {formSettings.tabbedForm.map((tab, idx) => {
 
