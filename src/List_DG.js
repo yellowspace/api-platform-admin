@@ -7,21 +7,18 @@ import {
 	CreateButton,
 	RefreshButton,
 	ExportButton,
-	Button as RA_Button,
+	Button as RaButton,
 	BulkDeleteButton,
 } from 'react-admin';
 
 import PropTypes                      from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import ListFilter                     from './ListFilter';
 import {isFieldSortable}              from './fieldFactory';
 import { makeStyles }   from '@material-ui/core';
 import { Clear }   from '@material-ui/icons';
-
-import MuiDrawer        from '../../common/components/common/MuiDrawer';
 import { Route }        from 'react-router-dom';
 import History          from '../../src/admin-containers/History';
-import Show             from './Show';
 import MuiDrawerEditor        from '../../common/components/react-admin/form/MuiDrawerEditor';
 import MuiDrawerCreator       from '../../common/components/react-admin/form/MuiDrawerCreator';
 import DataGridWrapper        from '../../common/components/grid/react-admin/DataGridWrapper';
@@ -36,7 +33,7 @@ import MuiDrawerShow          from '../../common/components/react-admin/form/Mui
 import MuiModalShow           from '../../common/components/react-admin/form/MuiModalShow';
 
 
-let useStyles = makeStyles(function (theme) {
+let useStyles = makeStyles(function () {
 	return ({
 		drawerContent: {
 			width: 300
@@ -45,19 +42,6 @@ let useStyles = makeStyles(function (theme) {
 			width: 60,
 			overflow: 'hidden',
 		}
-		// toolbar: {
-		// 	paddingLeft: theme.spacing(3),
-		// 	paddingRight: theme.spacing(3),
-		// 	[theme.breakpoints.down('xs')]: {
-		// 		paddingLeft: theme.spacing(3),
-		// 	},
-		// 	[theme.breakpoints.up('xs')]: {
-		// 		paddingLeft: theme.spacing(3),
-		// 	},
-		// 	[theme.breakpoints.up('sm')]: {
-		// 		paddingLeft: theme.spacing(3),
-		// 	},
-		// }
 	});
 });
 
@@ -70,17 +54,12 @@ const TagListActions = ( props ) => {
 		exporter,
 		filters,
 		filterValues,
-		onUnselectItems,
 		resource,
-		selectedIds,
 		showFilter,
 		total,
-		...rest
 	} = props;
 
-	// let styles = useStyles();
-
-	// if(typeof console === 'object') { console.log('basePath,rest',basePath,rest); }
+	// if(typeof console === 'object') { console.log('TagListActions.basePath,rest',basePath,props); }
 
 	return (
 	   <TopToolbar
@@ -102,7 +81,7 @@ const TagListActions = ( props ) => {
 			    }
 			   }}
 		   />
-		   {1===1 && filters && React.cloneElement(filters, {
+		   {filters && React.cloneElement(filters, {
 			   resource,
 			   showFilter,
 			   displayedFilters,
@@ -112,7 +91,6 @@ const TagListActions = ( props ) => {
 		   <CreateButton
 			   basePath={basePath}
 			   label={null}
-			   // basePath="/project"
 		   />
 		   <ExportButton
 			   disabled={total === 0}
@@ -136,18 +114,6 @@ const BulkActionButtons = props => {
 		onSelect
 	} = props;
 
-	// let {
-	// 	currentSort,
-	// 	displayedFilters,
-	// 	exporter,
-	// 	filters,
-	// 	filterValues,
-	// 	onUnselectItems,
-	// 	showFilter,
-	// 	total,
-	// 	...rest
-	// } = props;
-
 	if(1===2 && typeof console === 'object') { console.log('BulkActionButtons',props,basePath,
 		selectedIds,
 		resource); }
@@ -162,7 +128,7 @@ const BulkActionButtons = props => {
 				resource={resource}
 				label={"(" + selectedIds.length +")"}
 			/>}
-			{selectedIds && selectedIds.length > 0 && <RA_Button
+			{selectedIds && selectedIds.length > 0 && <RaButton
 				size="small"
 				color="primary"
 				icon={<Clear />}
@@ -171,17 +137,17 @@ const BulkActionButtons = props => {
 					onSelect([])
 				}}>
 				<Clear fontSize="small" />
-			</RA_Button>
+			</RaButton>
 			}
 		</React.Fragment>
 	);
-}
-
-const hasIdentifier = fields => {
-  return (
-    undefined !== fields.find(({id}) => 'http://schema.org/identifier' === id)
-  );
 };
+
+// const hasIdentifier = fields => {
+//   return (
+//     undefined !== fields.find(({id}) => 'http://schema.org/identifier' === id)
+//   );
+// };
 
 
 const resolveProps = props => {
@@ -214,17 +180,164 @@ const resolveProps = props => {
   };
 };
 
-const List_DG = props => {
+
+function LocalList( props ) {
 
 	let styles = useStyles();
 
-	// if(typeof console === 'object') { console.log('List_DG',props); }
+	const {
+		conf,
+		isRowSelectable,
+		getSort,
+		rowClick,
+		gridOptimized,
+		addIdField,
+		listFields,
+		hasEdit,
+		hasShow,
+		resourceObj,
+		api,
+		listFieldFilter,
+		fieldFactory,
+
+		...rest
+	} = props;
+
+	const manipulateField = memoize(
+		(field) => {
+
+			if(
+				field.fieldProps
+				&& field.fieldProps.cellAndHeaderClassName
+			) {
+				// if(typeof console === 'object') { console.log('MEMO manipulateField',field,typeof field.fieldProps.headerClassName); }
+
+				field.fieldProps.cellClassName = field.fieldProps.cellAndHeaderClassName;
+				field.fieldProps.headerClassName = field.fieldProps.cellAndHeaderClassName;
+			}
+
+
+			return field;
+		}
+	);
+
+	const memoFieldFactory = memoize(
+		(field,api,resource) => {
+
+			return fieldFactory( field, {
+				api,
+				resource,
+			} );
+		}
+	);
+
+	const getRowClick = () => {
+		// edit, show, expand, function
+		return 'toggleSelection';
+	};
+
+	return (
+		<BaseList
+			{...rest}
+			hasEdit={hasEdit}
+			hasShow={hasShow}
+		>
+			<DataGridWrapper
+				conf={conf}
+				isRowSelectable={isRowSelectable}
+				getSort={getSort}
+				rowClick={getRowClick()}
+				gridOptimized={gridOptimized}
+			>
+				{addIdField && (
+					<TextField
+						source="id"
+						sortable={isFieldSortable({name: 'id'}, resourceObj)}
+					/>
+				)}
+				{listFields
+					.filter(field => !listFieldFilter || listFieldFilter(resourceObj, field))
+					.map(field => {
+						field = manipulateField(field);
+						return memoFieldFactory(field,api,resourceObj);
+					})}
+				{hasShow && <ShowButton
+					label={null}
+					width={80}
+					cellClassName={styles.w60}
+				/>}
+				{hasEdit && <EditButton
+					cellClassName={styles.w60}
+					label={null}
+					width={80}
+				/>}
+			</DataGridWrapper>
+		</BaseList>
+	);
+
+}
+
+
+LocalList.defaultProps = {
+};
+
+LocalList.propTypes = {
+
+};
+
+function areEqualD(prevProps, nextProps) {
+
+	// let isEqualAll = ObjectUtils.fastDeepEqual(prevProps, nextProps);
+	// if(isEqualAll) {
+	// 	if(typeof console === 'object') { console.log('isEqualAll',prevProps, nextProps); }
+	// 	return true;
+	// } else {
+	// 	if(typeof console === 'object') { console.log('isNOTEqualAll',prevProps, nextProps); }
+	// }
+
+	let a = {
+		// match: prevProps.match,
+		basePath: prevProps.basePath,
+		perPage: prevProps.perPage,
+		sort: prevProps.sort,
+	};
+	let b = {
+		// match: nextProps.match,
+		basePath: nextProps.basePath,
+		perPage: nextProps.perPage,
+		sort: nextProps.sort,
+	};
+
+	let isEqualA = ObjectUtils.fastDeepEqual(a,b);
+	if(isEqualA) {
+		// if(typeof console === 'object') { console.log('LocalListMemo.areEqual',prevProps, nextProps); }
+		// if(typeof console === 'object') { console.log('this.props.isEqualA',isEqualA,a,b); }
+		return true;
+	} else {
+		// if(typeof console === 'object') { console.log('this.props.NOT isEqualA',isEqualA,a,b); }
+		// if(typeof console === 'object') { console.log('isEqualA',prevProps, nextProps); }
+	}
+
+	/*
+	 return true if passing nextProps to render would return
+	 the same result as passing prevProps to render,
+	 otherwise return false
+	 */
+
+	return false;
+}
+
+
+const LocalListMemo = React.memo(LocalList,areEqualD);
+
+
+const List_DG = props => {
 
 	const handleClose = () => {
-		// if(typeof console === 'object') { console.log('handleClose',true); }
 		History.push( props.basePath);
-		// props.push('/tags');
 	};
+
+	let addIdField = false;
 
 	let {
 		hasEdit,
@@ -239,7 +352,7 @@ const List_DG = props => {
 			resource,
 			configFactory
 		},
-		addIdField = false === hasIdentifier(fields),
+		//addIdField = false === hasIdentifier(fields),
 	} = resolveProps(props);
 
 	const {permanentFilter,...rest} = props;
@@ -315,7 +428,7 @@ const List_DG = props => {
 		editProps.hasShow = hasShow;
 	}
 
-	addIdField = false;
+
 
 
 	const manipulateField = memoize(
@@ -359,7 +472,43 @@ const List_DG = props => {
 
 	return (
 		<React.Fragment>
-			<BaseList
+			<LocalListMemo
+				{...rest}
+				{...confDefaults}
+				sort={getSort(conf)}
+				filter={filter}
+				filterDefaultValues={filterDefaultValues}
+				pagination={<React.Fragment />}
+				actions={<TagListActions />}
+				filters={<ListFilter options={{parameterFactory, parameters, configFactory}} />}
+				bulkActionButtons={false}
+				className="mtv__list"
+				classes={{
+					content:'mtv__list--content',
+					main: 'mtv__list--main',
+					root: 'mtv__list--root',
+					// toolbar:'mtv__list--toolbar',
+					// actions: 'mtv__list--toolbar--actions',
+				}}
+				// hasCreate={hasCreate}
+				// hasList={hasList}
+
+				conf={conf}
+				isRowSelectable={true}
+				getSort={getSort}
+				rowClick={getRowClick()}
+				gridOptimized={true}
+				addIdField={addIdField}
+				listFields={listFields}
+				hasShow={hasShow}
+				hasEdit={hasEdit}
+				api={api}
+				resourceObj={resource}
+				listFieldFilter={listFieldFilter}
+				fieldFactory={fieldFactory}
+			/>
+
+			{1 === 2 && <BaseList
 				{...rest}
 				{...confDefaults}
 				sort={getSort(conf)}
@@ -415,22 +564,25 @@ const List_DG = props => {
 					{hasShow && <ShowButton
 						label={null}
 						width={80}
-						cellClassName={styles.w60}
+						// cellClassName={styles.w60}
 					/>}
 					{hasEdit && <EditButton
-						cellClassName={styles.w60}
+						// cellClassName={styles.w60}
 						// basePath="/project"
 						label={null}
 						width={80}
 					/>}
 				</DataGridWrapper>
-			</BaseList>
+			</BaseList>}
 			{(configFactory.options.createType === 'drawer' || configFactory.options.createType === 'modal' )&&<Route
 				path={props.basePath + '/create'}
 			>
 				{({ match }) => {
 
-					// if(typeof console === 'object') { console.log('CREATE MATCH',match); }
+
+					if(!match) {
+						return null;
+					}
 
 
 					if(configFactory.options.createType === 'modal') {
@@ -483,6 +635,8 @@ const List_DG = props => {
 						if(typeof id === 'string') {
 							id = decodeURIComponent(id);
 						}
+					} else {
+						return null;
 					}
 
 					// if(typeof console === 'object') { console.log('editProps',editProps); }
@@ -535,6 +689,8 @@ const List_DG = props => {
 						if(typeof id === 'string') {
 							id = decodeURIComponent(id);
 						}
+					} else {
+						return null;
 					}
 
 					if(configFactory.options.showType === 'modal') {
@@ -644,5 +800,7 @@ function areEqual(prevProps, nextProps) {
 	 the same result as passing prevProps to render,
 	 otherwise return false
 	 */
+
+	return false;
 }
 export default React.memo(List_DG,areEqual);
