@@ -17,6 +17,7 @@ import { MVTListField }       from '../../common/components/react-admin';
 import MVTReferenceField      from '../../common/components/react-admin/grid/fields/MVTReferenceField';
 import MVTReferenceArrayField from '../../common/components/react-admin/grid/fields/MVTReferenceArrayField';
 import { makeStyles }         from '@material-ui/core';
+import InlineEditorField      from '../../common/components/react-admin/form/fields/InlineEditorField';
 // import EmptyComponent        from '../../common/components/common/EmptyComponent';
 
 
@@ -49,6 +50,23 @@ export default (field, options) => {
   //       React.cloneElement( field.JSX, {key: field.name,options:options,source: field.name,...props} )
   //   );
   // }
+
+
+  if(field.InlineEditorField) {
+    return (
+        <InlineEditorField
+            field={field}
+
+            key={field.name}
+            options={options}
+            source={field.name}
+            schemaId={field.id}
+            schemaRange={field.range}
+            sortable={isFieldSortable(field, options.resource)}
+            {...props}
+        />
+    );
+  }
 
 
   if (field.field) {

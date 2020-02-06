@@ -337,11 +337,14 @@ const List_DG = props => {
 		History.push( props.basePath);
 	};
 
-	let addIdField = false;
+	// let addIdField = false;
+	// let rowClick = 'toggleSelection';
 
 	let {
 		hasEdit,
 		hasShow,
+		rowClick,
+		addIdField,
 		options: {
 			api,
 			fieldFactory,
@@ -355,11 +358,11 @@ const List_DG = props => {
 		//addIdField = false === hasIdentifier(fields),
 	} = resolveProps(props);
 
-	const {permanentFilter,...rest} = props;
+	const { permanentFilter, initialValues, ...rest } = props;
 	const { conf } = configFactory;
-	  // if(typeof console === 'object') { console.log('LIST props %o configFactory %o',props,configFactory); }
 	let confDefaults = {};
 
+	  // if(typeof console === 'object') { console.log('LIST props %o configFactory %o',props,configFactory); }
 	// const [sort, setSort] = useState({});
 	// const [filter, setFilter] = useState(permanentFilter);
 	// const [filterDefaultValues, setFilterDefaultValues] = useState(null);
@@ -397,7 +400,6 @@ const List_DG = props => {
 
 	const getSort = memoize(
 		(conf) => {
-
 			// const { conf } = configFactory;
 			// if(typeof console === 'object') { console.log('getSort',conf); }
 			if(conf && typeof conf.getGridSorting === 'function') {
@@ -407,16 +409,8 @@ const List_DG = props => {
 					return sort;
 				}
 			}
-
-
 		}
 	);
-
-	// useEffect(() => {
-	// 	getFilterValues();
-	// 	// getSort();
-	// 	// console.log('ComponentDidMount: sort,filter,filterDefaultValue',sort,filter,filterDefaultValues);
-	// },[permanentFilter]);
 
 	let { perPage, ...editProps} = props;
 	let listFields = fields;
@@ -427,9 +421,6 @@ const List_DG = props => {
 		editProps.hasEdit = hasEdit;
 		editProps.hasShow = hasShow;
 	}
-
-
-
 
 	const manipulateField = memoize(
 		(field) => {
@@ -461,7 +452,7 @@ const List_DG = props => {
 
 	const getRowClick = () => {
 		// edit, show, expand, function
-		return 'toggleSelection';
+		return rowClick;
 	};
 
 	// if(typeof console === 'object') { console.log('configFactory.conf',configFactory.conf,listFields); }
@@ -749,11 +740,14 @@ const List_DG = props => {
 };
 
 List_DG.defaultProps = {
-  perPage: 50, // Default value in API Platform
+	perPage: 50, // Default value in API Platform
+	addIdField: false,
+	rowClick: 'toggleSelection',
 };
 
 List_DG.propTypes = {
 	addIdField: PropTypes.bool,
+	rowClick: PropTypes.any,
 	options: PropTypes.shape({
 		api: PropTypes.instanceOf(Api).isRequired,
 		fieldFactory: PropTypes.func.isRequired,
