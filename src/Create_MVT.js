@@ -176,7 +176,7 @@ const Create_MVT = props => {
     },
   } = ApiPlatformUtils.resolveCreatorProps(props);
 
-  if(typeof console === 'object') { console.log('CREATE.props',props); }
+  // if(typeof console === 'object') { console.log('CREATE.props',props); }
 
   let editields = fields;
   let validateForm = () => {};
