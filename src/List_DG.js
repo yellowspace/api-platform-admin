@@ -300,12 +300,14 @@ function areEqualD(prevProps, nextProps) {
 		basePath: prevProps.basePath,
 		perPage: prevProps.perPage,
 		sort: prevProps.sort,
+		filter: prevProps.filter,
 	};
 	let b = {
 		// match: nextProps.match,
 		basePath: nextProps.basePath,
 		perPage: nextProps.perPage,
 		sort: nextProps.sort,
+		filter: nextProps.filter,
 	};
 
 	let isEqualA = ObjectUtils.fastDeepEqual(a,b);
@@ -778,10 +780,12 @@ function areEqual(prevProps, nextProps) {
 	let a = {
 		location: prevProps.location,
 		match: prevProps.match,
+		permanentFilter: prevProps.permanentFilter
 	};
 	let b = {
 		location: nextProps.location,
 		match: nextProps.match,
+		permanentFilter: nextProps.permanentFilter
 	};
 
 	let isEqualA = ObjectUtils.isEqual(a,b);
