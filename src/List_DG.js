@@ -362,6 +362,8 @@ const List_DG = props => {
 	const { conf } = configFactory;
 	let confDefaults = {};
 
+	// if(typeof console === 'object') { console.log('LIST ',resource.name, resource); }
+
 	  // if(typeof console === 'object') { console.log('LIST props %o configFactory %o',props,configFactory); }
 	// const [sort, setSort] = useState({});
 	// const [filter, setFilter] = useState(permanentFilter);
