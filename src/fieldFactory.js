@@ -1,14 +1,14 @@
 import {
-  BooleanField,
+  // BooleanField,
   ChipField,
-  DateField,
-  EmailField,
-  NumberField,
+  // DateField,
+  // EmailField,
+  // NumberField,
   ReferenceField,
   ReferenceArrayField,
   SingleFieldList,
-  TextField,
-  UrlField,
+  // TextField,
+  // UrlField,
   FunctionField
 }                             from 'react-admin';
 import React                  from 'react';

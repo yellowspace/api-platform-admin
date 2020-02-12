@@ -156,7 +156,11 @@ const GridEditfields = (props) => {
 
 								if ( checkGridCol( fieldIdx, idx, field ) ) {
 									// if(typeof console === 'object') { console.log('SHOW field',field); }
-									let f = fieldFactory( field, {
+
+									let nf = {...field};
+									nf.InlineEditorField = false;
+
+									let f = fieldFactory( nf, {
 										api,
 										resource,
 									} );

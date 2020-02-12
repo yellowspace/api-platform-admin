@@ -101,12 +101,27 @@ const Show_MVT = props => {
         />}
         {renderFields === 'direct' && addIdField && <TextField disabled source="id" />}
         {renderFields === 'direct' && addIdField && <TextField type="hidden" source="id" label={null} />}
-        {renderFields === 'direct' && showfields.map(field =>
-            fieldFactory(field, {
-              api,
-              resource,
-            }),
-        )}
+        {renderFields === 'direct' && showfields.map(field => {
+
+          let f = {...field};
+
+          if(!f.fieldProps) {
+            f.fieldProps = {};
+          }
+
+          if(typeof f.fieldProps.addLabel === 'undefined') {
+            f.fieldProps.addLabel = true;
+          }
+
+          f.InlineEditorField = false;
+
+          // if(typeof console === 'object') { console.log('field',field,f); }
+
+          return fieldFactory(f, {
+            api,
+            resource,
+          });
+        })}
 
       </SimpleShowLayout>
     </BaseShow>
