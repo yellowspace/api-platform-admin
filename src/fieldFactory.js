@@ -32,13 +32,23 @@ export const isFieldSortable = (field, resource) => {
   // if(typeof console === 'object') { console.log('isFieldSortable',field, field.isSortable, resource); }
   if(field.isSortable === true) return true;
 
+  if(typeof resource.parameters !== 'object') {
+    return false;
+  }
+
   return (
-    resource.parameters.filter(parameter => parameter.variable === field.name)
-      .length > 0 &&
-    resource.parameters.filter(
-      parameter => parameter.variable === `order[${field.name}]`,
-    ).length > 0
+      resource.parameters.filter(
+          parameter => parameter.variable === `order[${field.name}]`,
+      ).length > 0
   );
+
+  // return (
+  //   resource.parameters.filter(parameter => parameter.variable === field.name)
+  //     .length > 0 &&
+  //   resource.parameters.filter(
+  //     parameter => parameter.variable === `order[${field.name}]`,
+  //   ).length > 0
+  // );
 };
 
 export default (field, options) => {
