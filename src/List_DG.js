@@ -199,6 +199,7 @@ function LocalList( props ) {
 		api,
 		listFieldFilter,
 		fieldFactory,
+		groupBy,
 
 		...rest
 	} = props;
@@ -223,10 +224,11 @@ function LocalList( props ) {
 
 	const memoFieldFactory = memoize(
 		(field,api,resource) => {
-
+			// if(typeof console === 'object') { console.log('memoFieldFactory',field,api,resource); }
 			return fieldFactory( field, {
 				api,
 				resource,
+				fieldFactory,
 			} );
 		}
 	);
@@ -248,6 +250,7 @@ function LocalList( props ) {
 				getSort={getSort}
 				rowClick={getRowClick()}
 				gridOptimized={gridOptimized}
+				groupBy={groupBy}
 			>
 				{addIdField && (
 					<TextField
@@ -360,6 +363,7 @@ const List_DG = props => {
 		//addIdField = false === hasIdentifier(fields),
 	} = resolveProps(props);
 
+	// addIdField = true;
 	const { permanentFilter, initialValues, ...rest } = props;
 	const { conf } = configFactory;
 	let confDefaults = {};
@@ -416,6 +420,19 @@ const List_DG = props => {
 		}
 	);
 
+	const getGroupBy = memoize(
+		(conf) => {
+			// const { conf } = configFactory;
+			// if(typeof console === 'object') { console.log('getGroupBy',conf); }
+			if(conf && typeof conf.getGridGroupByColumns === 'function') {
+				let groupBy = conf.getGridGroupByColumns(conf);
+				if(groupBy) {
+					return groupBy;
+				}
+			}
+		}
+	);
+
 	let { perPage, ...editProps} = props;
 	let listFields = fields;
 	if(conf) {
@@ -425,34 +442,6 @@ const List_DG = props => {
 		editProps.hasEdit = hasEdit;
 		editProps.hasShow = hasShow;
 	}
-
-	const manipulateField = memoize(
-		(field) => {
-
-			if(
-				field.fieldProps
-				&& field.fieldProps.cellAndHeaderClassName
-			) {
-				// if(typeof console === 'object') { console.log('MEMO manipulateField',field,typeof field.fieldProps.headerClassName); }
-
-				field.fieldProps.cellClassName = field.fieldProps.cellAndHeaderClassName;
-				field.fieldProps.headerClassName = field.fieldProps.cellAndHeaderClassName;
-			}
-
-
-			return field;
-		}
-	);
-
-	const memoFieldFactory = memoize(
-		(field,api,resource) => {
-
-			return fieldFactory( field, {
-				api,
-				resource,
-			} );
-		}
-	);
 
 	const getRowClick = () => {
 		// edit, show, expand, function
@@ -501,74 +490,8 @@ const List_DG = props => {
 				resourceObj={resource}
 				listFieldFilter={listFieldFilter}
 				fieldFactory={fieldFactory}
+				groupBy={getGroupBy(conf)}
 			/>
-
-			{1 === 2 && <BaseList
-				{...rest}
-				{...confDefaults}
-				sort={getSort(conf)}
-				filter={filter}
-				filterDefaultValues={filterDefaultValues}
-				pagination={<React.Fragment />}
-				actions={<TagListActions />}
-				filters={<ListFilter options={{parameterFactory, parameters, configFactory}} />}
-				bulkActionButtons={false}
-				className="mtv__list"
-				classes={{
-					content:'mtv__list--content',
-					main: 'mtv__list--main',
-					root: 'mtv__list--root',
-					// toolbar:'mtv__list--toolbar',
-					// actions: 'mtv__list--toolbar--actions',
-				}}
-			>
-				<DataGridWrapper
-					conf={conf}
-					isRowSelectable={true}
-					getSort={getSort}
-					rowClick={getRowClick()}
-					gridOptimized={true}
-					// setSort={setSort}
-					// optimized={true}
-					// rowClick={}
-					// expand={<Component />}
-					// isRowSelectable=={ record => record.id > 300 }
-
-					// hasBulkActions={true}
-					// paginationComponent={true}
-					// toolbar={true}
-					// toolbarComponent={true}
-				>
-					{addIdField && (
-						<TextField
-							source="id"
-							sortable={isFieldSortable({name: 'id'}, resource)}
-						/>
-					)}
-					{listFields
-						.filter(field => !listFieldFilter || listFieldFilter(resource, field))
-						.map(field => {
-							field = manipulateField(field);
-							return memoFieldFactory(field,api,resource);
-
-							// return fieldFactory( field, {
-							// 	api,
-							// 	resource,
-							// } );
-						})}
-					{hasShow && <ShowButton
-						label={null}
-						width={80}
-						// cellClassName={styles.w60}
-					/>}
-					{hasEdit && <EditButton
-						// cellClassName={styles.w60}
-						// basePath="/project"
-						label={null}
-						width={80}
-					/>}
-				</DataGridWrapper>
-			</BaseList>}
 			{(configFactory.options.createType === 'drawer' || configFactory.options.createType === 'modal' )&&<Route
 				path={props.basePath + '/create'}
 			>

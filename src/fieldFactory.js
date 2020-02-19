@@ -74,6 +74,7 @@ export default (field, options) => {
             schemaRange={field.range}
             sortable={isFieldSortable(field, options.resource)}
             {...props}
+
         />
     );
   }
