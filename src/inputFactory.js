@@ -24,6 +24,7 @@ import MVTSelectField      from '../../common/components/react-admin/form/fields
 import MVTDateTimeInput    from '../../common/components/react-admin/form/fields/MVTDateTimeInput';
 import MUIColorPicker      from '../../common/components/react-admin/form/fields/MUIColorPicker';
 import AutocompleteInput from '../../common/components/react-admin/form/fields/MUIAutocompleteDownshift';
+import MVTPasswordInputField from "../../common/components/react-admin/form/fields/MVTPasswordInputField";
 // import { isFieldSortable } from './fieldFactory';
 
 let useStyles = makeStyles(function (theme) {
@@ -84,6 +85,20 @@ export default (field, options) => {
             resettable={props.multiline ? false : true}
             clearAlwaysVisible={true}
             className={styles.resetIconFix}
+
+
+            key={field.name} source={field.name} {...props}
+        />
+    );
+  }
+
+  if (field.MVTPasswordInputField) {
+    return (
+        <MVTPasswordInputField
+            fullWidth={true}
+            // resettable={props.multiline ? false : true}
+            // clearAlwaysVisible={true}
+            // className={styles.resetIconFix}
 
 
             key={field.name} source={field.name} {...props}
