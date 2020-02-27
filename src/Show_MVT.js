@@ -4,17 +4,16 @@ import {Show as BaseShow, SimpleShowLayout, TextField} from 'react-admin';
 import PropTypes                                       from 'prop-types';
 import React                                           from 'react';
 import ApiPlatformUtils                                from './utils/ApiPlatformUtils';
-import authProvider                                    from '../../src/admin-store/authProvider';
-import DumpForm                                        from '../../common/components/react-admin/form/fields/DumpForm';
+// import authProvider                                    from '../../src/admin-store/authProvider';
+// import DumpForm                                        from '../../common/components/react-admin/form/fields/DumpForm';
 import GridEditfields                                  from './components/GridEditfields';
-import Edit_MVT                                        from './Edit_MVT';
 import CustomShowToolbar                             from './components/CustomShowToolbar';
 
-const hasIdentifier = fields => {
-  return (
-    undefined !== fields.find(({id}) => 'http://schema.org/identifier' === id)
-  );
-};
+// const hasIdentifier = fields => {
+//   return (
+//     undefined !== fields.find(({id}) => 'http://schema.org/identifier' === id)
+//   );
+// };
 
 // const resolveProps = props => {
 //   const {options} = props;
