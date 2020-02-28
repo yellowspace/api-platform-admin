@@ -57,6 +57,27 @@ class Api {
 		return lf;
 	}
 
+	static sanitizeShowFieldOptions(field) {
+
+		let f = {...field};
+
+		if(!f.fieldProps) {
+			f.fieldProps = {};
+		}
+
+		if(typeof f.fieldProps.addLabel === 'undefined') {
+			f.fieldProps.addLabel = true;
+		}
+
+		if(typeof f.fieldProps.header !== 'undefined') {
+			f.fieldProps.label = f.fieldProps.header;
+		}
+
+		f.InlineEditorField = false;
+		// if(typeof console === 'object') { console.log('sanitizeShowField',f); }
+
+		return f;
+	}
 
 	static _hasEdit(hasEdit,configFactoryOptions) {
 		// if(typeof console === 'object') { console.log('_hasEdit',_hasEdit,configFactoryOptions); }
