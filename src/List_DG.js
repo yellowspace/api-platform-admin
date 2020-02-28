@@ -61,6 +61,8 @@ const TagListActions = ( props ) => {
 
 	// if(typeof console === 'object') { console.log('TagListActions.basePath,rest',basePath,props); }
 
+	let showExportButton = false;
+
 	return (
 	   <TopToolbar
 	    className="mtv__list--actiontoolbar"
@@ -92,13 +94,13 @@ const TagListActions = ( props ) => {
 			   basePath={basePath}
 			   label={null}
 		   />
-		   <ExportButton
+		   {showExportButton &&<ExportButton
 			   disabled={total === 0}
 			   resource={resource}
 			   sort={currentSort}
 			   filter={filterValues}
 			   exporter={exporter}
-		   />
+		   />}
 		   {/* Add your custom actions */}
 		   {/*<Button color="primary" onClick={customAction}>Custom Action</Button>*/}
 	   </TopToolbar>

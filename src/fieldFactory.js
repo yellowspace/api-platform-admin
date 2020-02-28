@@ -18,6 +18,7 @@ import MVTReferenceField      from '../../common/components/react-admin/grid/fie
 import MVTReferenceArrayField from '../../common/components/react-admin/grid/fields/MVTReferenceArrayField';
 import { makeStyles }         from '@material-ui/core';
 import InlineEditorField      from '../../common/components/react-admin/form/fields/InlineEditorField';
+import ReferenceFieldEditor from "../../common/components/react-admin/form/editors/ReferenceFieldEditor";
 // import EmptyComponent        from '../../common/components/common/EmptyComponent';
 
 
@@ -31,6 +32,7 @@ var referenceStyles = makeStyles(function (theme) { return ({
 export const isFieldSortable = (field, resource) => {
   // if(typeof console === 'object') { console.log('isFieldSortable',field, field.isSortable, resource); }
   if(field.isSortable === true) return true;
+  // if(field.isSortable) return true;
 
   if(typeof resource.parameters !== 'object') {
     return false;
@@ -128,6 +130,22 @@ export default (field, options) => {
     }
 
     const referenceNameField = getReferenceNameField(field.reference);
+
+    if(field.ReferenceFieldEditor) {
+      return (
+          <ReferenceFieldEditor
+              childSource={getReferenceNameField(field.reference)}
+              basePath={field.reference.name}
+              source={field.name}
+              reference={field.reference}
+              maxCardinality={field.maxCardinality}
+              key={field.name}
+              sortable={isFieldSortable(field, options.resource)}
+              {...props}
+              allowEmpty
+          />
+      );
+    }
 
     if(field.MVTReferenceArrayField) {
       return (

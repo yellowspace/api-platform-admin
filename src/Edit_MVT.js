@@ -94,7 +94,7 @@ const LocalForm = props => {
 
     };
 
-
+    // if(typeof console === 'object') { console.log('EDIT_MVT',editields); }
 
       if(formSettings.tabbedForm) {
           return (
@@ -223,6 +223,15 @@ const Edit_MVT = props => {
     validateForm = configFactory.conf.validateForm;
     formSettings = configFactory.conf.getFormSettings();
   }
+
+
+    /**
+     * tabbedForm needs to be rebuild by our own
+     * 1. it depends on routing, which is difficult
+     * 2. it is very slow...
+     */
+    formSettings.tabbedForm = false;
+
 
 
   // if(typeof console === 'object') { console.log('formProps',formProps,editields); }

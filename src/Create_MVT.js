@@ -36,9 +36,17 @@ const LocalForm = props => {
     ...rest
   } = props;
 
-  const [ initialRecord, setInitialRecord ] = useState( initialValues );
+  const getInitialValues = () => {
+      let rd = record;
+      let iv = initialValues;
+      if(!rd) rd = {};
+      if(!iv) iv = {};
+      return Object.assign({}, rd, iv);
+  };
 
-  // if(typeof console === 'object') { console.log('propso',props); }
+  const [ initialRecord, setInitialRecord ] = useState( getInitialValues() );
+
+  // if(typeof console === 'object') { console.log('create.props',props); }
 
   let onBeforeFormRender = null;
   if ( configFactory && configFactory.conf ) {
@@ -187,6 +195,13 @@ const Create_MVT = props => {
     validateForm = configFactory.conf.validateForm;
     formSettings = configFactory.conf.getCreateFormSettings();
   }
+
+    /**
+     * tabbedForm needs to be rebuild by our own
+     * 1. it depends on routing, which is difficult
+     * 2. it is very slow...
+     */
+    formSettings.tabbedForm = false;
 
   let {
     formProps,
