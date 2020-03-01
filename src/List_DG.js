@@ -8,11 +8,11 @@ import {
 	RefreshButton,
 	ExportButton,
 	Button as RaButton,
-	BulkDeleteButton,
+	BulkDeleteWithConfirmButton as BulkDeleteButton, useRedirect,
 } from 'react-admin';
 
 import PropTypes                      from 'prop-types';
-import React from 'react';
+import React, { useCallback } from 'react';
 import ListFilter                     from './ListFilter';
 import {isFieldSortable}              from './fieldFactory';
 import { makeStyles }   from '@material-ui/core';
@@ -31,7 +31,8 @@ import MuiModalEditor         from '../../common/components/react-admin/form/Mui
 import MuiModalCreator        from '../../common/components/react-admin/form/MuiModalCreator';
 import MuiDrawerShow          from '../../common/components/react-admin/form/MuiDrawerShow';
 import MuiModalShow           from '../../common/components/react-admin/form/MuiModalShow';
-
+import { useDispatch } from 'react-redux';
+import { refreshView } from 'ra-core';
 
 let useStyles = makeStyles(function () {
 	return ({
@@ -251,7 +252,7 @@ function LocalList( props ) {
 				isRowSelectable={isRowSelectable}
 				getSort={getSort}
 				rowClick={getRowClick()}
-				gridOptimized={gridOptimized}
+				// gridOptimized={gridOptimized}
 				groupBy={groupBy}
 			>
 				{addIdField && (
@@ -300,6 +301,8 @@ function areEqualD(prevProps, nextProps) {
 	// 	if(typeof console === 'object') { console.log('isNOTEqualAll',prevProps, nextProps); }
 	// }
 
+	// return false;
+
 	let a = {
 		// match: prevProps.match,
 		basePath: prevProps.basePath,
@@ -340,10 +343,6 @@ const LocalListMemo = React.memo(LocalList,areEqualD);
 
 const List_DG = props => {
 
-	const handleClose = () => {
-		History.push( props.basePath);
-	};
-
 	// let addIdField = false;
 	// let rowClick = 'toggleSelection';
 
@@ -370,7 +369,34 @@ const List_DG = props => {
 	const { conf } = configFactory;
 	let confDefaults = {};
 
-	// if(typeof console === 'object') { console.log('LIST ',resource.name, resource); }
+	const redirectTo = useRedirect();
+	const dispatch = useDispatch();
+
+	const handleRefresh = useCallback(
+		event => {
+			if(event) {
+				event.preventDefault();
+			}
+
+			dispatch(refreshView());
+
+			// if (typeof onClick === 'function') {
+			// 	onClick(event);
+			// }
+		},
+		[dispatch]
+	);
+
+	const handleCreateSave = (basePath, id, data) => {
+		redirectTo( 'list', basePath, id, data );
+		handleRefresh();
+	};
+
+	const handleClose = () => {
+		History.push( props.basePath );
+	};
+
+	// if(typeof console === 'object') { console.log('LIST ',resource.name, resource, props); }
 
 	  // if(typeof console === 'object') { console.log('LIST props %o configFactory %o',props,configFactory); }
 	// const [sort, setSort] = useState({});
@@ -499,11 +525,9 @@ const List_DG = props => {
 			>
 				{({ match }) => {
 
-
 					if(!match) {
 						return null;
 					}
-
 
 					if(configFactory.options.createType === 'modal') {
 						return (
@@ -519,6 +543,9 @@ const List_DG = props => {
 								closeButton={true}
 								disableBackdropClick={true}
 								handleEditorClose={handleClose}
+								redirect={(redirect,id,record) => {
+									handleCreateSave(redirect,id,record);
+								}}
 								{...editProps}
 							/>
 						);
@@ -529,14 +556,9 @@ const List_DG = props => {
 							isOpen={!!match}
 							{...editProps}
 							handleEditorClose={handleClose}
-							// initialValues={initialValues}
-							// options={props.options}
-							// location={props.location}
-							// redirect={(redirect,id,record) => {
-							// 	// if(typeof console === 'object') { console.log('FORM redirect',redirect,id,record); }
-							// 	handleEditorSave(redirect,id,record);
-							// }}
-
+							redirect={(redirect,id,record) => {
+								handleCreateSave(redirect,id,record);
+							}}
 						/>
 					);
 				}}
@@ -701,6 +723,8 @@ function areEqual(prevProps, nextProps) {
 	// 	if(typeof console === 'object') { console.log('isNOTEqualAll',prevProps, nextProps); }
 	//
 	// }
+
+	// return false;
 
 	let a = {
 		location: prevProps.location,
