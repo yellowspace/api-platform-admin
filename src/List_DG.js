@@ -252,7 +252,7 @@ function LocalList( props ) {
 				isRowSelectable={isRowSelectable}
 				getSort={getSort}
 				rowClick={getRowClick()}
-				// gridOptimized={gridOptimized}
+				gridOptimized={gridOptimized}
 				groupBy={groupBy}
 			>
 				{addIdField && (
