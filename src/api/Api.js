@@ -79,6 +79,20 @@ class Api {
 		return f;
 	}
 
+	static sanitizeInputFieldOptions(field) {
+
+		let f = {...field};
+
+		if(!f.inputProps) {
+			f.inputProps = {};
+		}
+
+		f.inputProps.autoFocus = false;
+		// if(typeof console === 'object') { console.log('sanitizeShowField',f); }
+
+		return f;
+	}
+
 	static _hasEdit(hasEdit,configFactoryOptions) {
 		// if(typeof console === 'object') { console.log('_hasEdit',_hasEdit,configFactoryOptions); }
 
