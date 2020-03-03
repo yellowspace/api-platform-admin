@@ -79,7 +79,7 @@ class Api {
 		return f;
 	}
 
-	static sanitizeInputFieldOptions(field) {
+	static sanitizeInputFieldOptions(field,o = {}) {
 
 		let f = {...field};
 
@@ -88,8 +88,24 @@ class Api {
 		}
 
 		f.inputProps.autoFocus = false;
-		// if(typeof console === 'object') { console.log('sanitizeShowField',f); }
+		// if(typeof console === 'object') { console.log('sanitizeInputFieldOptions',f); }
 
+		if(o.removeLabel && typeof f.inputProps.label !== 'undefined') {
+			// if(typeof console === 'object') { console.log('sanitizeInputFieldOptions.removeLabel',f.name,f,o); }
+			f.inputProps.label = false;
+		}
+
+		if(o.removeResettable) {
+			if(typeof f.inputProps.resettable !== 'undefined') {
+				// if(typeof console === 'object') { console.log('sanitizeInputFieldOptions.resettable',f.name,f,o); }
+				delete(f.inputProps.resettable);
+			}
+			if(typeof f.inputProps.clearAlwaysVisible !== 'undefined') {
+				delete(f.inputProps.clearAlwaysVisible);
+			}
+		}
+
+		// if(typeof console === 'object') { console.log('sanitizeInputFieldOptions',f.name,f,o); }
 		return f;
 	}
 

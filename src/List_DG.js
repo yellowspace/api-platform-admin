@@ -520,7 +520,7 @@ const List_DG = props => {
 				fieldFactory={fieldFactory}
 				groupBy={getGroupBy(conf)}
 			/>
-			{(configFactory.options.createType === 'drawer' || configFactory.options.createType === 'modal' )&&<Route
+			{1=== 1 && (configFactory.options.createType === 'drawer' || configFactory.options.createType === 'modal' )&&<Route
 				path={props.basePath + '/create'}
 			>
 				{({ match }) => {
@@ -563,7 +563,7 @@ const List_DG = props => {
 					);
 				}}
 			</Route>}
-			{(configFactory.options.editType === 'drawer' || configFactory.options.editType === 'modal') && <Route
+			{1=== 1 && (configFactory.options.editType === 'drawer' || configFactory.options.editType === 'modal') && <Route
 				path={props.basePath + '/:id'}
 			>
 				{({ match, location }) => {
@@ -617,7 +617,7 @@ const List_DG = props => {
 					/>);
 				}}
 			</Route>}
-			{(configFactory.options.showType === 'drawer' || configFactory.options.showType === 'modal') && <Route
+			{1=== 1 && (configFactory.options.showType === 'drawer' || configFactory.options.showType === 'modal') && <Route
 				path={props.basePath + '/:id/show'}
 			>
 				{({ match }) => {
