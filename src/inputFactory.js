@@ -335,112 +335,113 @@ export default (field, options) => {
     );
   }
 
-  switch (field.range) {
-    // case'local:color_picker':
-    //   return (
-    //       <MUIColorPicker
-    //           fullWidth={true}
-    //           resettable={props.multiline ? false : true}
-    //           clearAlwaysVisible={true}
-    //           className={styles.resetIconFix}
-    //
-    //
-    //           key={field.name} source={field.name} {...props}
-    //       />
-    //   );
+  return (
+      <MVTInputField
+          // fullWidth={true}
+          // resettable={props.multiline ? false : true}
+          // clearAlwaysVisible={true}
+          // className={styles.resetIconFix}
 
-    case 'http://www.w3.org/2001/XMLSchema#array':
-      return (
-        <ArrayInput key={field.name} source={field.name} {...props}>
-          <SimpleFormIterator>
-            <TextInput />
-          </SimpleFormIterator>
-        </ArrayInput>
-      );
-
-    case 'http://www.w3.org/2001/XMLSchema#integer':
-      return (
-          <NumberInput
-              fullWidth={true}
-
-              key={field.name}
-              source={field.name}
-              {...props}
-          />
-      );
-
-    case 'http://www.w3.org/2001/XMLSchema#decimal':
-      return (
-        <NumberInput
-          fullWidth={true}
-          key={field.name}
-          source={field.name}
-          step="0.1"
-          {...props}
-        />
-      );
-
-    case 'http://www.w3.org/2001/XMLSchema#boolean':
-      return <BooleanInput
-          // color="primary"
-
+          range={field.range}
           key={field.name}
           source={field.name}
           {...props}
-      />;
-
-    case 'http://www.w3.org/2001/XMLSchema#date':
-    // case 'http://www.w3.org/2001/XMLSchema#dateTime':
-
-      return <DateInput
-          fullWidth={true}
-          key={field.name} source={field.name} {...props}
-      />;
-
-
-    case 'http://www.w3.org/2001/XMLSchema#dateTime':
-      return <MVTDateTimeInput
-          fullWidth={true}
-          key={field.name}
-          source={field.name}
-          settings={{
-            fieldType: 'datetime'
-          }}
-
-          {...props}
-          // variant="outlined"
-      />;
-
-
-    case 'http://www.w3.org/2001/XMLSchema#dateTime':
-      return <DateTimeInput
-          fullWidth={true}
-          key={field.name}
-          source={field.name}
-          normalizeData={(d) => {
-            if(typeof console === 'object') { console.log('normalizeDatanormalizeDatanormalizeDatanormalizeData',d); }
-            return d;
-          }}
-          {...props}
-      />;
-
-    default:
-      return <TextInput
-          fullWidth={true}
-          resettable={props.multiline ? false : true}
-          clearAlwaysVisible={true}
-          className={styles.resetIconFix}
-
-          key={field.name} source={field.name} {...props}
-
-          // options={{
-          //   variant: 'outlined'
-          // }}
-          // variant="outlined"
-          // defaultValue="Success"
-          // onChange={(a) => {
-          //   if(typeof console === 'object') { console.log('HELLOOOO',a); }
-          // }}
-      />;
-  }
+      />
+  );
+  //
+  // switch (field.range) {
+  //   case 'http://www.w3.org/2001/XMLSchema#array':
+  //     return (
+  //       <ArrayInput key={field.name} source={field.name} {...props}>
+  //         <SimpleFormIterator>
+  //           <TextInput />
+  //         </SimpleFormIterator>
+  //       </ArrayInput>
+  //     );
+  //
+  //   case 'http://www.w3.org/2001/XMLSchema#integer':
+  //     return (
+  //         <NumberInput
+  //             fullWidth={true}
+  //
+  //             key={field.name}
+  //             source={field.name}
+  //             {...props}
+  //         />
+  //     );
+  //
+  //   case 'http://www.w3.org/2001/XMLSchema#decimal':
+  //     return (
+  //       <NumberInput
+  //         fullWidth={true}
+  //         key={field.name}
+  //         source={field.name}
+  //         step="0.1"
+  //         {...props}
+  //       />
+  //     );
+  //
+  //   case 'http://www.w3.org/2001/XMLSchema#boolean':
+  //     return <BooleanInput
+  //         // color="primary"
+  //
+  //         key={field.name}
+  //         source={field.name}
+  //         {...props}
+  //     />;
+  //
+  //   case 'http://www.w3.org/2001/XMLSchema#date':
+  //   // case 'http://www.w3.org/2001/XMLSchema#dateTime':
+  //
+  //     return <DateInput
+  //         fullWidth={true}
+  //         key={field.name} source={field.name} {...props}
+  //     />;
+  //
+  //
+  //   case 'http://www.w3.org/2001/XMLSchema#dateTime':
+  //     return <MVTDateTimeInput
+  //         fullWidth={true}
+  //         key={field.name}
+  //         source={field.name}
+  //         settings={{
+  //           fieldType: 'datetime'
+  //         }}
+  //
+  //         {...props}
+  //         // variant="outlined"
+  //     />;
+  //
+  //
+  //   case 'http://www.w3.org/2001/XMLSchema#dateTime':
+  //     return <DateTimeInput
+  //         fullWidth={true}
+  //         key={field.name}
+  //         source={field.name}
+  //         normalizeData={(d) => {
+  //           if(typeof console === 'object') { console.log('normalizeDatanormalizeDatanormalizeDatanormalizeData',d); }
+  //           return d;
+  //         }}
+  //         {...props}
+  //     />;
+  //
+  //   default:
+  //     return <TextInput
+  //         fullWidth={true}
+  //         resettable={props.multiline ? false : true}
+  //         clearAlwaysVisible={true}
+  //         className={styles.resetIconFix}
+  //
+  //         key={field.name} source={field.name} {...props}
+  //
+  //         // options={{
+  //         //   variant: 'outlined'
+  //         // }}
+  //         // variant="outlined"
+  //         // defaultValue="Success"
+  //         // onChange={(a) => {
+  //         //   if(typeof console === 'object') { console.log('HELLOOOO',a); }
+  //         // }}
+  //     />;
+  // }
 };
