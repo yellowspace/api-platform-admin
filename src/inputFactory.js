@@ -53,6 +53,9 @@ var useAutocompleteSugestionArrayInputStyles = makeStyles({
   },
 });
 
+
+
+
 export default (field, options) => {
   // let props = {};
   //
@@ -117,9 +120,12 @@ export default (field, options) => {
 
 
   if (field.MVTSelectField) {
+
     return (
         <MVTSelectField
-            key={field.name} source={field.name} {...props}
+            key={field.name}
+            source={field.name}
+            {...props}
         />
     );
   }
