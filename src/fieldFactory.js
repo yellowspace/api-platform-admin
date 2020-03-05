@@ -67,7 +67,7 @@ export default (field, options) => {
   if(field.InlineEditorField) {
     return (
         <InlineEditorField
-            field={field}
+            // field={field}
 
             key={field.name}
             options={options}

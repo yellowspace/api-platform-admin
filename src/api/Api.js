@@ -21,11 +21,15 @@ class Api {
 
 	static mapFields(listFields,fields,reOrder=true) {
 		let lf = [];
+		// let listFields = ObjectUtils.clonelDeep(lFs);
+		// let listFields = ObjectUtils.clone(lFs);
+		// let listFields = lFs;
 
 		listFields.forEach((f) => {
 			let name = f.name;
 			if(fields[name]) {
 				// lf.push(Object.assign(f,fields[name]));
+				// if(typeof console === 'object') { console.log('mapFields.f,fields[name]',f,fields[name]); }
 				lf.push(ObjectUtils.merge(f,fields[name]));
 			} else if(fields[name] !== null) {
 				lf.push(f);
@@ -61,6 +65,10 @@ class Api {
 
 		let f = {...field};
 
+		if(field.fieldProps) {
+			f.fieldProps = {...field.fieldProps};
+		}
+
 		if(!f.fieldProps) {
 			f.fieldProps = {};
 		}
@@ -79,6 +87,10 @@ class Api {
 	static sanitizeInputFieldOptions(field,o = {}) {
 
 		let f = {...field};
+		// let f = ObjectUtils.cloneDeep(field);
+		if(field.inputProps) {
+			f.inputProps = {...field.inputProps};
+		}
 
 		if(!f.inputProps) {
 			f.inputProps = {};

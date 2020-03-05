@@ -16,6 +16,7 @@ import DumpForm                       from '../../common/components/react-admin/
 import ApiPlatformUtils               from './utils/ApiPlatformUtils';
 import authProvider                   from '../../src/admin-store/authProvider';
 import { makeStyles }                 from '@material-ui/core/styles';
+import ObjectUtils from "../../common/utils/ObjectUtils";
 
 /**
  * see @link node_modules/ra-ui-materialui/esm/form/SimpleForm.js
@@ -215,6 +216,9 @@ const Edit_MVT = props => {
 
 
   let editields = fields;
+  // let editields = ObjectUtils.clone(fields);
+  // let editields = ObjectUtils.cloneDeep(fields);
+  // if(typeof console === 'object') { console.log('editields,fields',editields===fields,editields,fields); }
   let validateForm = () => {};
   let formSettings = {};
 

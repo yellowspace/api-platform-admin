@@ -21,7 +21,7 @@ import MVTInputField       from '../../common/components/react-admin/form/fields
 import MVTReferenceInput   from '../../common/components/react-admin/form/fields/MVTReferenceInput';
 import MVTReferenceArrayInput   from '../../common/components/react-admin/form/fields/MVTReferenceArrayInput';
 import MVTSelectField      from '../../common/components/react-admin/form/fields/MVTSelectField';
-import MVTDateTimeInput    from '../../common/components/react-admin/form/fields/MVTDateTimeInput';
+// import MVTDateTimeInput    from '../../common/components/react-admin/form/fields/MVTDateTimeInput';
 import MUIColorPicker      from '../../common/components/react-admin/form/fields/MUIColorPicker';
 import AutocompleteInput from '../../common/components/react-admin/form/fields/MUIAutocompleteDownshift';
 import MVTPasswordInputField from "../../common/components/react-admin/form/fields/MVTPasswordInputField";
@@ -54,7 +54,16 @@ var useAutocompleteSugestionArrayInputStyles = makeStyles({
 });
 
 export default (field, options) => {
+  // let props = {};
+  //
+  // if(field.inlineEditorProps) {
+  //   props = {...field.inlineEditorProps};
+  // } else {
+  //   props = {...field.inputProps};
+  // }
+
   const props = {...field.inputProps};
+
   let styles = useStyles();
 
   // if(typeof console === 'object') { console.log('field %o, options %o',field, options,props); }

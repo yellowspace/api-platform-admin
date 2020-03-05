@@ -236,6 +236,16 @@ function LocalList( props ) {
 		}
 	);
 
+	// const getFieldFactory = (field,api,resource) => {
+	// 		// if(typeof console === 'object') { console.log('memoFieldFactory',field,api,resource); }
+	// 		return fieldFactory( field, {
+	// 			api,
+	// 			resource,
+	// 			fieldFactory,
+	// 		} );
+	// 	};
+
+
 	const getRowClick = () => {
 		// edit, show, expand, function
 		return 'toggleSelection';
@@ -265,6 +275,7 @@ function LocalList( props ) {
 					.filter(field => !listFieldFilter || listFieldFilter(resourceObj, field))
 					.map(field => {
 						field = manipulateField(field);
+						// return getFieldFactory(field,api,resourceObj);
 						return memoFieldFactory(field,api,resourceObj);
 					})}
 				{hasShow && <ShowButton
@@ -463,6 +474,9 @@ const List_DG = props => {
 
 	let { perPage, ...editProps} = props;
 	let listFields = fields;
+	// let listFields = ObjectUtils.clone(fields);
+	// let listFields = ObjectUtils.cloneDeep(fields);
+
 	if(conf) {
 		listFields = conf.getGridColumns(listFields);
 		hasEdit = conf._hasEdit(hasEdit,configFactory.options);
@@ -470,6 +484,9 @@ const List_DG = props => {
 		editProps.hasEdit = hasEdit;
 		editProps.hasShow = hasShow;
 	}
+
+	// if(typeof console === 'object') { console.log('editields,fields',listFields===fields,listFields,fields); }
+
 
 	const getRowClick = () => {
 		// edit, show, expand, function
