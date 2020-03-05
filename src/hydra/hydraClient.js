@@ -7,6 +7,7 @@ import {
   GET_MANY_REFERENCE,
   GET_ONE,
   UPDATE,
+  UPDATE_MANY,
 }                    from 'react-admin';
 import isPlainObject from 'lodash.isplainobject';
 // import { isArray } from 'lodash';
@@ -316,7 +317,7 @@ export default ({entrypoint, resources = []}, httpClient = fetchHydra) => {
     const collectionUrl = new URL(`${entrypoint}/${resource}`, entrypointUrl);
     const itemUrl = new URL(params.id, entrypointUrl);
 
-    // if(1===1 && debug && typeof console === 'object') { console.log('convertReactAdminRequestToHydraRequest',type, resource, params); }
+    // if(1===1 && debug && typeof console === 'object') { console.log('convertReactAdminRequestToHydraRequest',entrypoint,entrypointUrl,type, resource, params); }
 
     switch (type) {
       case CREATE:
@@ -440,6 +441,7 @@ export default ({entrypoint, resources = []}, httpClient = fetchHydra) => {
         });
 
       case UPDATE:
+        // if(typeof console === 'object') { console.log('UPDATE.itemUrl',itemUrl,entrypointUrl); }
         return transformReactAdminDataToRequestBody(resource, params.data).then(
           body => ({
             options: {
@@ -449,6 +451,101 @@ export default ({entrypoint, resources = []}, httpClient = fetchHydra) => {
             url: itemUrl,
           }),
         );
+
+      // case UPDATE_MANY:
+      //
+      //   let pu  = [];
+      //
+      //   params.ids.forEach(id => {
+      //     let itUrl = new URL(id, entrypointUrl);
+      //     if(typeof console === 'object') { console.log('Id',id,entrypointUrl,itUrl); }
+      //     let p = new Promise((resolve, reject) => {
+      //       resolve(transformReactAdminDataToRequestBody(resource, params.data).then(
+      //           body => ({
+      //             options: {
+      //               body,
+      //               method: 'PUT',
+      //             },
+      //             url: itemUrl,
+      //           }),
+      //       )
+      //     )});
+      //
+      //     pu.push(p);
+      //
+      //   });
+      //
+      //   return Promise.all(pu)
+      //       .then(values => {
+      //         console.log(values);
+      //       });
+
+        // transformReactAdminDataToRequestBody(resource, params.data).then(
+        //     body => ({
+        //       options: {
+        //         body,
+        //         method: 'PUT',
+        //       },
+        //       url: itemUrl,
+        //     }),
+        // );
+
+        // params.ids.map(id => {
+        //   let itUrl = new URL(id, entrypointUrl);
+        //   if(typeof console === 'object') { console.log('Id',id,entrypointUrl,itUrl); }
+        // });
+
+        // return transformReactAdminDataToRequestBody(resource, params.data).then(
+        //     body => {
+        //       return Promise.all(params.ids.map(id => {
+        //         let itUrl = new URL(id, entrypointUrl);
+        //         if (typeof console === 'object') {
+        //           console.log('Id', id, entrypointUrl, itUrl);
+        //         }
+        //             return ({
+        //               options: {
+        //                 body,
+        //                 method: 'PUT',
+        //               },
+        //               url: itUrl,
+        //             });
+        //       } )
+        //       ).then(responses => () => {
+        //         if(typeof console === 'object') { console.log('responses',responses); }
+        //       })
+        //     });
+
+
+
+
+      //   if(typeof console === 'object') { console.log('UPDATE_MANY.itemUrl',itemUrl,entrypointUrl); }
+      //   return transformReactAdminDataToRequestBody(resource, params.data).then(
+      //       body => {
+      //         if(typeof console === 'object') { console.log('UPDATE_MANY',resource,params,body); }
+      //           return Promise.all(
+      //               params.ids.map(id => {
+      //                 let itUrl = new URL(id, entrypointUrl);
+      //                 if(typeof console === 'object') { console.log('Id',id,entrypointUrl,itUrl); }
+      //                     return ({
+      //                       options: {
+      //                         body,
+      //                         method: 'PUT',
+      //                       },
+      //                       url: itUrl,
+      //                     });
+      //               })
+      //               // fetchApi(UPDATE, resource, params)),
+      //           ).then(responses => () => {
+      //             if(typeof console === 'object') { console.log('responses',responses); }
+      //           });
+      //
+      //         // return true;
+      //     }
+      //   );
+
+      //   return Promise.all(
+      //       params.ids.map(id => fetchApi(DELETE, resource, {id})),
+      //   ).then(responses => ({data: []}));
 
       default:
         throw new Error(`Unsupported fetch action type ${type}`);

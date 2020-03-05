@@ -12,7 +12,7 @@ import {
 } from 'react-admin';
 
 import PropTypes                      from 'prop-types';
-import React, { useCallback } from 'react';
+import React, {cloneElement, isValidElement, useCallback} from 'react';
 import ListFilter                     from './ListFilter';
 import {isFieldSortable}              from './fieldFactory';
 import { makeStyles }   from '@material-ui/core';
@@ -114,7 +114,8 @@ const BulkActionButtons = props => {
 		basePath,
 		selectedIds,
 		resource,
-		onSelect
+		onSelect,
+		conf
 	} = props;
 
 	if(1===2 && typeof console === 'object') { console.log('BulkActionButtons',props,basePath,
@@ -141,6 +142,20 @@ const BulkActionButtons = props => {
 				}}>
 				<Clear fontSize="small" />
 			</RaButton>
+			}
+			{conf && selectedIds && selectedIds.length > 0 && conf.getListBulkActions().map((action) => {
+
+				if(!isValidElement(action)) {
+					return null;
+				}
+
+				return cloneElement(action, {
+					basePath:basePath,
+					selectedIds:selectedIds,
+					resource:resource,
+					conf: conf,
+				});
+			})
 			}
 		</React.Fragment>
 	);
@@ -508,7 +523,7 @@ const List_DG = props => {
 				filter={filter}
 				filterDefaultValues={filterDefaultValues}
 				pagination={<React.Fragment />}
-				actions={<TagListActions />}
+				actions={<TagListActions conf={conf} />}
 				filters={<ListFilter options={{parameterFactory, parameters, configFactory}} />}
 				bulkActionButtons={false}
 				className="mtv__list"
