@@ -102,25 +102,7 @@ const Show_MVT = props => {
         {renderFields === 'direct' && addIdField && <TextField type="hidden" source="id" label={null} />}
         {renderFields === 'direct' && showfields.map(field => {
 
-          // let f = {...field};
-
           let f = conf.sanitizeShowFieldOptions(field);
-
-          // if(!f.fieldProps) {
-          //   f.fieldProps = {};
-          // }
-          //
-          // if(typeof f.fieldProps.addLabel === 'undefined') {
-          //   f.fieldProps.addLabel = true;
-          // }
-          //
-          // if(typeof f.fieldProps.header !== 'undefined') {
-          //   f.fieldProps.label = f.fieldProps.header;
-          // }
-          //
-          // f.InlineEditorField = false;
-
-          // if(typeof console === 'object') { console.log('field',field,f); }
 
           return fieldFactory(f, {
             api,

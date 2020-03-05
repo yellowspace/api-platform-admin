@@ -54,10 +54,10 @@ let useStyles = makeStyles(function (theme) {
  */
 const GridEditfields = (props) => {
 
-	// if(typeof console === 'object') { console.log('GridEditfields',props); }
+	if(typeof console === 'object') { console.log('GridEditfields',props); }
 
 	const classes = useStyles();
-	const {api} = props;
+	const {api,options} = props;
 	const {inputFactory,addIdInput,editields} = props;
 	const {fieldFactory,addIdField,showfields} = props;
 	const {formTabIdx} = props;
@@ -156,9 +156,15 @@ const GridEditfields = (props) => {
 
 								if ( checkGridCol( fieldIdx, idx, field ) ) {
 									// if(typeof console === 'object') { console.log('SHOW field',field); }
+									let nf;
 
-									let nf = {...field};
-									nf.InlineEditorField = false;
+									if(options && options.configFactory && options.configFactory.conf) {
+										nf = options.configFactory.conf.sanitizeShowFieldOptions(field);
+									} else {
+										nf = {...field};
+										// nf.fieldProps.addLabel = true;
+										nf.InlineEditorField = false;
+									}
 
 									let f = fieldFactory( nf, {
 										api,

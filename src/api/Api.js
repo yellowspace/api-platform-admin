@@ -69,11 +69,8 @@ class Api {
 			f.fieldProps.addLabel = true;
 		}
 
-		if(typeof f.fieldProps.header !== 'undefined') {
-			f.fieldProps.label = f.fieldProps.header;
-		}
-
 		f.InlineEditorField = false;
+
 		// if(typeof console === 'object') { console.log('sanitizeShowField',f); }
 
 		return f;
