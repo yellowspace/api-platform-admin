@@ -54,7 +54,7 @@ let useStyles = makeStyles(function (theme) {
  */
 const GridEditfields = (props) => {
 
-	if(typeof console === 'object') { console.log('GridEditfields',props); }
+	// if(typeof console === 'object') { console.log('GridEditfields',props); }
 
 	const classes = useStyles();
 	const {api,options} = props;

@@ -96,6 +96,25 @@ export default (field, options) => {
   if (null !== field.reference && field.reference !== undefined) {
     // if(typeof console === 'object') { console.log('fieldFactory.field.reference',field,field.reference); }
     let refStyles = referenceStyles();
+    const referenceNameField = getReferenceNameField(field.reference);
+
+    if(field.ReferenceFieldEditor) {
+      return (
+          <ReferenceFieldEditor
+              childSource={getReferenceNameField(field.reference)}
+              basePath={field.reference.name}
+              source={field.name}
+              reference={field.reference}
+              maxCardinality={field.maxCardinality}
+              key={field.name}
+              sortable={isFieldSortable(field, options.resource)}
+              {...props}
+              allowEmpty
+          />
+      );
+    }
+
+
     if(field.MVTReferenceField) {
       return (
           <MVTReferenceField
@@ -126,24 +145,6 @@ export default (field, options) => {
           allowEmpty>
           <ChipField source={getReferenceNameField(field.reference)} />
         </ReferenceField>
-      );
-    }
-
-    const referenceNameField = getReferenceNameField(field.reference);
-
-    if(field.ReferenceFieldEditor) {
-      return (
-          <ReferenceFieldEditor
-              childSource={getReferenceNameField(field.reference)}
-              basePath={field.reference.name}
-              source={field.name}
-              reference={field.reference}
-              maxCardinality={field.maxCardinality}
-              key={field.name}
-              sortable={isFieldSortable(field, options.resource)}
-              {...props}
-              allowEmpty
-          />
       );
     }
 
