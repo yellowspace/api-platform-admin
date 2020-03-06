@@ -441,14 +441,20 @@ export default ({entrypoint, resources = []}, httpClient = fetchHydra) => {
         });
 
       case UPDATE:
-        // if(typeof console === 'object') { console.log('UPDATE.itemUrl',itemUrl,entrypointUrl); }
+        // if(typeof console === 'object') { console.log('UPDATE.itemUrl',itemUrl,entrypointUrl, params); }
+        let updateUrl = itemUrl;
+        if(params.data && params.data['@action']) {
+          updateUrl = itemUrl +'/' + params.data['@action'];
+          delete(params.data['@action']);
+        }
+
         return transformReactAdminDataToRequestBody(resource, params.data).then(
           body => ({
             options: {
               body,
               method: 'PUT',
             },
-            url: itemUrl,
+            url: updateUrl,
           }),
         );
 
@@ -599,7 +605,7 @@ export default ({entrypoint, resources = []}, httpClient = fetchHydra) => {
               return fetchApi(UPDATE, resource, {id:id, data: params.data});
             }),
         ).then(responses => {
-          if(typeof console === 'object') { console.log('responses',responses); }
+          // if(typeof console === 'object') { console.log('responses',responses); }
           return {data: []};
 
         });

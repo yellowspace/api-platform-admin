@@ -143,7 +143,7 @@ const BulkActionButtons = props => {
 				<Clear fontSize="small" />
 			</RaButton>
 			}
-			{conf && selectedIds && selectedIds.length > 0 && conf.getListBulkActions().map((action) => {
+			{conf && selectedIds && selectedIds.length > 0 && conf.getGridBulkActions().map((action) => {
 
 				if(!isValidElement(action)) {
 					return null;
@@ -222,6 +222,8 @@ function LocalList( props ) {
 		...rest
 	} = props;
 
+	// if(typeof console === 'object') { console.log('LocalList.props',props); }
+
 	const manipulateField = memoize(
 		(field) => {
 
@@ -288,6 +290,19 @@ function LocalList( props ) {
 						// return getFieldFactory(field,api,resourceObj);
 						return memoFieldFactory(field,api,resourceObj);
 					})}
+
+				{conf && conf.getGridRowActions().map((action) => {
+
+					if(!isValidElement(action)) {
+						return null;
+					}
+
+					return cloneElement(action, {
+						// basePath:basePath,
+						// resource:resource,
+						conf: conf,
+					});
+				})}
 				{hasShow && <ShowButton
 					label={null}
 					width={80}
