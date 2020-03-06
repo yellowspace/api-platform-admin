@@ -445,8 +445,9 @@ export default ({entrypoint, resources = []}, httpClient = fetchHydra) => {
         let updateUrl = itemUrl;
         if(params.data && params.data['@action']) {
           updateUrl = itemUrl +'/' + params.data['@action'];
-          delete(params.data['@action']);
+          // delete(params.data['@action']);
         }
+        // if(typeof console === 'object') { console.log('UPDATE.itemUrl 2',itemUrl,entrypointUrl, params); }
 
         return transformReactAdminDataToRequestBody(resource, params.data).then(
           body => ({
@@ -598,14 +599,14 @@ export default ({entrypoint, resources = []}, httpClient = fetchHydra) => {
         ).then(responses => ({data: []}));
 
       case UPDATE_MANY:
-
+        // if(typeof console === 'object') { console.log('fetchApi,UPDATE_MANY',type, resource, params); }
         return Promise.all(
             params.ids.map(id => {
-              // if(typeof console === 'object') { console.log('fetchApi.id?',type, resource, params, id); }
+              // if(typeof console === 'object') { console.log('fetchApi.UPDATE_MANY DO?',type, resource, params, id); }
               return fetchApi(UPDATE, resource, {id:id, data: params.data});
             }),
         ).then(responses => {
-          // if(typeof console === 'object') { console.log('responses',responses); }
+          if(typeof console === 'object') { console.log('responses',responses); }
           return {data: []};
 
         });
