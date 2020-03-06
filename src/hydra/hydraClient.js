@@ -452,101 +452,6 @@ export default ({entrypoint, resources = []}, httpClient = fetchHydra) => {
           }),
         );
 
-      // case UPDATE_MANY:
-      //
-      //   let pu  = [];
-      //
-      //   params.ids.forEach(id => {
-      //     let itUrl = new URL(id, entrypointUrl);
-      //     if(typeof console === 'object') { console.log('Id',id,entrypointUrl,itUrl); }
-      //     let p = new Promise((resolve, reject) => {
-      //       resolve(transformReactAdminDataToRequestBody(resource, params.data).then(
-      //           body => ({
-      //             options: {
-      //               body,
-      //               method: 'PUT',
-      //             },
-      //             url: itemUrl,
-      //           }),
-      //       )
-      //     )});
-      //
-      //     pu.push(p);
-      //
-      //   });
-      //
-      //   return Promise.all(pu)
-      //       .then(values => {
-      //         console.log(values);
-      //       });
-
-        // transformReactAdminDataToRequestBody(resource, params.data).then(
-        //     body => ({
-        //       options: {
-        //         body,
-        //         method: 'PUT',
-        //       },
-        //       url: itemUrl,
-        //     }),
-        // );
-
-        // params.ids.map(id => {
-        //   let itUrl = new URL(id, entrypointUrl);
-        //   if(typeof console === 'object') { console.log('Id',id,entrypointUrl,itUrl); }
-        // });
-
-        // return transformReactAdminDataToRequestBody(resource, params.data).then(
-        //     body => {
-        //       return Promise.all(params.ids.map(id => {
-        //         let itUrl = new URL(id, entrypointUrl);
-        //         if (typeof console === 'object') {
-        //           console.log('Id', id, entrypointUrl, itUrl);
-        //         }
-        //             return ({
-        //               options: {
-        //                 body,
-        //                 method: 'PUT',
-        //               },
-        //               url: itUrl,
-        //             });
-        //       } )
-        //       ).then(responses => () => {
-        //         if(typeof console === 'object') { console.log('responses',responses); }
-        //       })
-        //     });
-
-
-
-
-      //   if(typeof console === 'object') { console.log('UPDATE_MANY.itemUrl',itemUrl,entrypointUrl); }
-      //   return transformReactAdminDataToRequestBody(resource, params.data).then(
-      //       body => {
-      //         if(typeof console === 'object') { console.log('UPDATE_MANY',resource,params,body); }
-      //           return Promise.all(
-      //               params.ids.map(id => {
-      //                 let itUrl = new URL(id, entrypointUrl);
-      //                 if(typeof console === 'object') { console.log('Id',id,entrypointUrl,itUrl); }
-      //                     return ({
-      //                       options: {
-      //                         body,
-      //                         method: 'PUT',
-      //                       },
-      //                       url: itUrl,
-      //                     });
-      //               })
-      //               // fetchApi(UPDATE, resource, params)),
-      //           ).then(responses => () => {
-      //             if(typeof console === 'object') { console.log('responses',responses); }
-      //           });
-      //
-      //         // return true;
-      //     }
-      //   );
-
-      //   return Promise.all(
-      //       params.ids.map(id => fetchApi(DELETE, resource, {id})),
-      //   ).then(responses => ({data: []}));
-
       default:
         throw new Error(`Unsupported fetch action type ${type}`);
     }
@@ -685,6 +590,19 @@ export default ({entrypoint, resources = []}, httpClient = fetchHydra) => {
         return Promise.all(
           params.ids.map(id => fetchApi(DELETE, resource, {id})),
         ).then(responses => ({data: []}));
+
+      case UPDATE_MANY:
+
+        return Promise.all(
+            params.ids.map(id => {
+              // if(typeof console === 'object') { console.log('fetchApi.id?',type, resource, params, id); }
+              return fetchApi(UPDATE, resource, {id:id, data: params.data});
+            }),
+        ).then(responses => {
+          if(typeof console === 'object') { console.log('responses',responses); }
+          return {data: []};
+
+        });
 
       default:
         return convertReactAdminRequestToHydraRequest(type, resource, params)

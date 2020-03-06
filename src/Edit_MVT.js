@@ -236,7 +236,19 @@ const Edit_MVT = props => {
      */
     formSettings.tabbedForm = false;
 
+    const getRenderFields = () => {
 
+        // if(typeof console === 'object') { console.log('editields',editields,editields.length,renderFields); }
+        if(editields && editields.length === 1 && renderFields === 'editfields') {
+            return 'direct';
+        }
+
+        if(formSettings.renderFields) {
+            return formSettings.renderFields;
+        }
+
+        return renderFields;
+    };
 
   // if(typeof console === 'object') { console.log('formProps',formProps,editields); }
   if(typeof toolbar === 'undefined') {
@@ -261,7 +273,7 @@ const Edit_MVT = props => {
               {...formProps}
 
               formSettings={formSettings}
-              renderFields={renderFields}
+              renderFields={getRenderFields()}
               addIdInput={addIdInput}
               editields={editields}
               inputFactory={inputFactory}

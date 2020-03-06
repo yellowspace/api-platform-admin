@@ -215,6 +215,20 @@ const Create_MVT = props => {
     toolbar = <CustomCreatorToolbar options={props.options} />
   }
 
+    const getRenderFields = () => {
+
+        // if(typeof console === 'object') { console.log('editields',editields,editields.length,renderFields); }
+        if(editields && editields.length === 1 && renderFields === 'editfields') {
+            return 'direct';
+        }
+
+        if(formSettings.renderFields) {
+           return formSettings.renderFields;
+        }
+
+        return renderFields;
+    };
+
   return (
     <BaseCreate
         {...rest}
@@ -232,7 +246,7 @@ const Create_MVT = props => {
           {...formProps}
 
           formSettings={formSettings}
-          renderFields={renderFields}
+          renderFields={getRenderFields()}
           addIdInput={addIdInput}
           editields={editields}
           inputFactory={inputFactory}
