@@ -261,11 +261,6 @@ function LocalList( props ) {
 	// 	};
 
 
-	const getRowClick = () => {
-		// edit, show, expand, function
-		return 'toggleSelection';
-	};
-
 	return (
 		<BaseList
 			{...rest}
@@ -276,7 +271,7 @@ function LocalList( props ) {
 				conf={conf}
 				isRowSelectable={isRowSelectable}
 				getSort={getSort}
-				rowClick={getRowClick()}
+				rowClick={rowClick}
 				gridOptimized={gridOptimized}
 				groupBy={groupBy}
 			>
@@ -389,6 +384,8 @@ const List_DG = props => {
 		},
 		//addIdField = false === hasIdentifier(fields),
 	} = resolveProps(props);
+
+	// if(typeof console === 'object') { console.log('List_DG.props',props); }
 
 	// addIdField = true;
 	const { permanentFilter, initialValues, ...rest } = props;
@@ -504,7 +501,11 @@ const List_DG = props => {
 
 
 	const getRowClick = () => {
-		// edit, show, expand, function
+		// edit, show, expand, toggleSelection, function
+		if(typeof rowClick === 'undefined') {
+			return 'toggleSelection';
+		}
+
 		return rowClick;
 	};
 
