@@ -447,7 +447,7 @@ export default ({entrypoint, resources = []}, httpClient = fetchHydra) => {
           updateUrl = itemUrl +'/' + params.data['@action'];
           // delete(params.data['@action']);
         }
-        // if(typeof console === 'object') { console.log('UPDATE.itemUrl 2',itemUrl,entrypointUrl, params); }
+        // if(typeof console === 'object') { console.log('UPDATE.itemUrl 2',itemUrl, updateUrl, resource, params); }
 
         return transformReactAdminDataToRequestBody(resource, params.data).then(
           body => ({

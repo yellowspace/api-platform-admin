@@ -218,6 +218,8 @@ function LocalList( props ) {
 		listFieldFilter,
 		fieldFactory,
 		groupBy,
+		parentHeight,
+		fullheight,
 
 		...rest
 	} = props;
@@ -276,6 +278,8 @@ function LocalList( props ) {
 				rowClick={rowClick}
 				gridOptimized={gridOptimized}
 				groupBy={groupBy}
+				parentHeight={parentHeight}
+				fullheight={fullheight}
 			>
 				{addIdField && (
 					<TextField
@@ -742,9 +746,13 @@ List_DG.defaultProps = {
 	perPage: 50, // Default value in API Platform
 	addIdField: false,
 	rowClick: 'toggleSelection',
+	parentHeight: 0,
+	fullheight: false,
 };
 
 List_DG.propTypes = {
+	fullheight:PropTypes.bool,
+	parentHeight:PropTypes.number,
 	addIdField: PropTypes.bool,
 	rowClick: PropTypes.any,
 	options: PropTypes.shape({
