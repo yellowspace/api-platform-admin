@@ -270,6 +270,8 @@ function LocalList( props ) {
 			{...rest}
 			hasEdit={hasEdit}
 			hasShow={hasShow}
+			// version={version}
+			// debounce={5000}
 		>
 			<DataGridWrapper
 				conf={conf}
@@ -533,7 +535,7 @@ const List_DG = props => {
 	// if(typeof console === 'object') { console.log('BaseList',rest,confDefaults); }
 
 	const { filter, filterDefaultValues } = getFilterValues(permanentFilter, conf);
-
+	// if(typeof console === 'object') { console.log(' filter, filterDefaultValues', filter, filterDefaultValues); }
 	return (
 		<React.Fragment>
 			<LocalListMemo

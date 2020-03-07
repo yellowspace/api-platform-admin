@@ -433,11 +433,18 @@ export default ({entrypoint, resources = []}, httpClient = fetchHydra) => {
           });
         }
 
+        let getOneUrl = itemUrl;
+        if(params.data && params.data['@action']) {
+          getOneUrl = itemUrl +'/' + params.data['@action'];
+          // delete(params.data['@action']);
+        }
+
         // if(typeof console === 'object') { console.log('itemUrl',params,itemUrl,collectionUrl); }
+        // if(typeof console === 'object') { console.log('GETONE.itemUrl',itemUrl, getOneUrl, resource, params); }
 
         return Promise.resolve({
           options: {},
-          url: itemUrl,
+          url: getOneUrl,
         });
 
       case UPDATE:
