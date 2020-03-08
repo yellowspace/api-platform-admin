@@ -536,6 +536,9 @@ const List_DG = props => {
 
 	const { filter, filterDefaultValues } = getFilterValues(permanentFilter, conf);
 	// if(typeof console === 'object') { console.log(' filter, filterDefaultValues', filter, filterDefaultValues); }
+
+
+
 	return (
 		<React.Fragment>
 			<LocalListMemo
