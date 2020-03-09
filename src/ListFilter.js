@@ -39,6 +39,16 @@ const ListFilter = props => {
               clearAlwaysVisible: true,
               resettable: true,
               fullWidth: true,
+            //   onChange: (e) => {
+            //     if(typeof console === 'object') { console.log('onChange',e); }
+            //     e.preventDefault();
+            //     // return false;
+            //   },
+            // onKeyUp: (e) => {
+            //   if(typeof console === 'object') { console.log('onKeyDown',e); }
+            //   // e.preventDefault();
+            //   // return false;
+            // }
             } );
 
           f.push(d);
