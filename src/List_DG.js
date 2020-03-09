@@ -368,13 +368,14 @@ function areEqualD(prevProps, nextProps) {
 	};
 
 	let isEqualA = ObjectUtils.fastDeepEqual(a,b);
+	// let isEqualA = ObjectUtils.isEqual(a,b);
 	if(isEqualA) {
 		// if(typeof console === 'object') { console.log('LocalListMemo.areEqual',prevProps, nextProps); }
 		// if(typeof console === 'object') { console.log('this.props.isEqualA',isEqualA,a,b); }
 		return true;
 	} else {
 		// if(typeof console === 'object') { console.log('this.props.NOT isEqualA',isEqualA,a,b); }
-		// if(typeof console === 'object') { console.log('isEqualA',prevProps, nextProps); }
+		// if(typeof console === 'object') { console.log('LocalListMemo NOT EQUAL',prevProps, nextProps); }
 	}
 
 	/*
@@ -544,7 +545,7 @@ const List_DG = props => {
 	const { filter, filterDefaultValues } = getFilterValues(permanentFilter, conf);
 	// if(typeof console === 'object') { console.log(' filter, filterDefaultValues', filter, filterDefaultValues); }
 
-
+	// if(typeof console === 'object') { console.log('LIST.rest',rest); }
 
 	return (
 		<React.Fragment>
