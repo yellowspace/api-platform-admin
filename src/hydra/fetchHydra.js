@@ -35,6 +35,7 @@ export default (url, options = {}) => {
           base: getDocumentationUrlFromHeaders(data.response.headers),
         })
         .then(json => {
+          // if(typeof console === 'object') { console.log('error',json); }
           return Promise.reject(
             new HttpError(
               json[0]['http://www.w3.org/ns/hydra/core#description'][0][
