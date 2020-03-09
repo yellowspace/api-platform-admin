@@ -23,9 +23,10 @@ let useStyles = makeStyles(function (theme) {
 		{
 			root: {
 				// flexGrow: 1,
-				margin: '10px 0 0 10px',
+				// margin: '10px 0 0 10px',
 				justify: 'flex-start',
 				justifyContent: 'space-between',
+				margin: 0,
 			},
 			rowroot: {
 				// flexGrow: 1,
@@ -135,9 +136,6 @@ const GridEditfields = (props) => {
 				container
 				spacing={2}
 				direction="row"
-				style={{
-					margin: 0
-				}}
 				className={classes.root}
 			>
 

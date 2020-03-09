@@ -46,6 +46,11 @@ let useStyles = makeStyles(function () {
 	});
 });
 
+const dialogContentStyle={
+	width: '90vh',
+	maxWidth: '800px',
+};
+
 const TagListActions = ( props ) => {
 
 	let {
@@ -225,24 +230,24 @@ function LocalList( props ) {
 	} = props;
 
 	// if(typeof console === 'object') { console.log('LocalList.props',props); }
-
-	const manipulateField = memoize(
-		(field) => {
-
-			if(
-				field.fieldProps
-				&& field.fieldProps.cellAndHeaderClassName
-			) {
-				// if(typeof console === 'object') { console.log('MEMO manipulateField',field,typeof field.fieldProps.headerClassName); }
-
-				field.fieldProps.cellClassName = field.fieldProps.cellAndHeaderClassName;
-				field.fieldProps.headerClassName = field.fieldProps.cellAndHeaderClassName;
-			}
-
-
-			return field;
-		}
-	);
+	//
+	// const manipulateField = memoize(
+	// 	(field) => {
+	//
+	// 		if(
+	// 			field.fieldProps
+	// 			&& field.fieldProps.cellAndHeaderClassName
+	// 		) {
+	// 			// if(typeof console === 'object') { console.log('MEMO manipulateField',field,typeof field.fieldProps.headerClassName); }
+	//
+	// 			field.fieldProps.cellClassName = field.fieldProps.cellAndHeaderClassName;
+	// 			field.fieldProps.headerClassName = field.fieldProps.cellAndHeaderClassName;
+	// 		}
+	//
+	//
+	// 		return field;
+	// 	}
+	// );
 
 	const memoFieldFactory = memoize(
 		(field,api,resource) => {
@@ -292,7 +297,7 @@ function LocalList( props ) {
 				{listFields
 					.filter(field => !listFieldFilter || listFieldFilter(resourceObj, field))
 					.map(field => {
-						field = manipulateField(field);
+						// field = manipulateField(field);
 						// return getFieldFactory(field,api,resourceObj);
 						return memoFieldFactory(field,api,resourceObj);
 					})}
@@ -318,6 +323,8 @@ function LocalList( props ) {
 					cellClassName={styles.w60}
 					label={null}
 					width={80}
+					disableRipple={true}
+					disableFocusRipple={true}
 				/>}
 			</DataGridWrapper>
 		</BaseList>
@@ -592,10 +599,7 @@ const List_DG = props => {
 								isOpen={!!match}
 								contentWidth="90vh"
 								maxWidth={false}
-								dialogContentStyle={{
-									width: '90vh',
-									maxWidth: '800px',
-								}}
+								dialogContentStyle={dialogContentStyle}
 								title={resource.title}
 								closeButton={true}
 								disableBackdropClick={true}
@@ -644,10 +648,7 @@ const List_DG = props => {
 							<MuiModalEditor
 								contentWidth="90vh"
 								maxWidth={false}
-								dialogContentStyle={{
-									width   : '90vh',
-									maxWidth: '800px',
-								}}
+								dialogContentStyle={dialogContentStyle}
 								title={resource.title}
 								closeButton={true}
 								disableBackdropClick={true}
@@ -697,10 +698,7 @@ const List_DG = props => {
 							<MuiModalShow
 								contentWidth="90vh"
 								maxWidth={false}
-								dialogContentStyle={{
-									width   : '90vh',
-									maxWidth: '800px',
-								}}
+								dialogContentStyle={dialogContentStyle}
 								title={resource.title}
 								closeButton={true}
 								disableBackdropClick={true}
