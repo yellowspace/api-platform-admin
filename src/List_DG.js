@@ -461,7 +461,7 @@ const List_DG = props => {
 			// filters={<PostFilter />} // <-- always on
 			// filterDefaultValues={{ is_published: true }}
 			// confDefaults.filter = <TextInput label="Search" source="q" alwaysOn />;
-
+			// if(typeof console === 'object') { console.log('permanentFilter',permanentFilter); }
 			// const { permanentFilter } = props;
 			let filter = permanentFilter,
 				filterDefaultValues = {};
