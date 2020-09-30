@@ -515,6 +515,7 @@ const List_DG = props => {
 
 	let { perPage, ...editProps} = props;
 	let listFields = fields;
+	if(typeof console === 'object') { console.log('listFields',listFields); }
 	// let listFields = ObjectUtils.clone(fields);
 	// let listFields = ObjectUtils.cloneDeep(fields);
 
@@ -530,8 +531,18 @@ const List_DG = props => {
 
 
 	const getRowClick = () => {
+		if(typeof console === 'object') { console.log('rowClick',rowClick); }
 		// edit, show, expand, toggleSelection, function
 		if(typeof rowClick === 'undefined') {
+
+			if(hasShow) {
+				return 'show';
+			}
+
+			if(hasEdit) {
+				return 'edit';
+			}
+
 			return 'toggleSelection';
 		}
 
@@ -749,7 +760,7 @@ const List_DG = props => {
 List_DG.defaultProps = {
 	perPage: 50, // Default value in API Platform
 	addIdField: false,
-	rowClick: 'toggleSelection',
+	// rowClick: 'toggleSelection',
 	parentHeight: 0,
 	fullheight: false,
 };
