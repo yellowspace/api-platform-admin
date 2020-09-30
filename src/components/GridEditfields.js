@@ -11,6 +11,7 @@ import {
 import classnames from 'classnames';
 import { FontAwesomeIcon }            from '@fortawesome/react-fontawesome';
 import { faProjectDiagram }           from '@fortawesome/free-solid-svg-icons';
+import ObjectUtils from "../../../common/utils/ObjectUtils";
 // import Labeled from '../input/Labeled';
 // import { withTranslate } from 'react-admin';
 // import { connect } from 'react-redux';
@@ -67,6 +68,18 @@ const GridEditfields = (props) => {
 
 	// if(typeof console === 'object') { console.log('props',props); }
 	let gridCols = [{},{}];
+	if(props && typeof props.formSettings === 'object' && props.formSettings.gridColumns) {
+		// props.formSettings.gridColumns
+		if(ObjectUtils.isArray(props.formSettings.gridColumns)) {
+			gridCols = props.formSettings.gridColumns;
+		} else if(typeof props.formSettings.gridColumns === 'number') {
+			gridCols = [];
+			for(let cidx=0;cidx < props.formSettings.gridColumns;cidx++) {
+				gridCols.push({});
+			}
+		}
+		// if(typeof console === 'object') { console.log('gridCols',gridCols); }
+	}
 	// let gridCollength = gridCols.length;
 	let fieldLength = 0;
 	if(editields && editields.length) {
@@ -140,12 +153,14 @@ const GridEditfields = (props) => {
 			>
 
 				{gridCols.map((col, idx) => {
+
+					// if(typeof console === 'object') { console.log('gridCols',col,idx); }
+
 					return (
 						<Grid
 							key={'col'+idx}
 							item
 							className={classes.item}
-
 							{...col}
 							xs
 						>

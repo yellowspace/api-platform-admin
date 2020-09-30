@@ -515,7 +515,7 @@ const List_DG = props => {
 
 	let { perPage, ...editProps} = props;
 	let listFields = fields;
-	if(typeof console === 'object') { console.log('listFields',listFields); }
+	// if(typeof console === 'object') { console.log('listFields',listFields); }
 	// let listFields = ObjectUtils.clone(fields);
 	// let listFields = ObjectUtils.cloneDeep(fields);
 
@@ -531,7 +531,6 @@ const List_DG = props => {
 
 
 	const getRowClick = () => {
-		if(typeof console === 'object') { console.log('rowClick',rowClick); }
 		// edit, show, expand, toggleSelection, function
 		if(typeof rowClick === 'undefined') {
 
