@@ -525,17 +525,26 @@ export default ({entrypoint, resources = []}, httpClient = fetchHydra) => {
         response,); }
 
     let getSubresources = false;
+    let cache = true;
 
     switch (type) {
       case GET_LIST:
       case GET_MANY_REFERENCE:
         // TODO: support other prefixes than "hydra:"
           // added by chris send appParams (in progress here)
+
+
+
          if(response.json && response.json['hydra:view'] && response.json['hydra:view']['@id']) {
            let hydraView = decodeURIComponent(response.json['hydra:view']['@id']);
            // getSubresources = hydraView.indexOf('getSubresources') > 0 ? true : false;
            if(hydraView.indexOf('groups[]=related:read') > 0) {
              getSubresources = true;
+           }
+
+           if(hydraView.indexOf('noCache') > 0) {
+             cache = false;
+             // if(typeof console === 'object') { console.log('NNOOOOOcachecachecachecachecache',cache); }
            }
          }
         // changed by chris, added getSubresources to keep getSubresources in array
@@ -544,7 +553,7 @@ export default ({entrypoint, resources = []}, httpClient = fetchHydra) => {
           //   transformJsonLdDocumentToReactAdminDocument,
           // ),
             response.json['hydra:member'].map((d) => {
-              return transformJsonLdDocumentToReactAdminDocument(d,true,true, getSubresources);
+              return transformJsonLdDocumentToReactAdminDocument(d,true,cache, getSubresources);
             }),
         )
           .then(data =>

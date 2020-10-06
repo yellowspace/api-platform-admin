@@ -160,7 +160,6 @@ const LocalForm = props => {
               {...simpleFormRest}
               record={initialRecord}
           >
-            {isDeveloper && <DumpForm />}
             {renderFields === 'editfields' && <GridEditfields
                 {...rest}
                 // record={initalRecord}
@@ -178,6 +177,7 @@ const LocalForm = props => {
                   resource,
                 }),
             )}
+            {isDeveloper && <DumpForm />}
           </SimpleForm>
       );
 };
