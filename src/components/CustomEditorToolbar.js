@@ -1,4 +1,4 @@
-import React          from 'react';
+import React, {cloneElement, isValidElement} from 'react';
 import PropTypes      from 'prop-types';
 import SaveButton     from '../../../common/components/react-admin/form/actions/SaveButton';
 // import RA_SaveButton  from '../../../common/components/react-admin/form/actions/RA_SaveButton';
@@ -24,14 +24,18 @@ const useStyles = makeStyles({
 const CustomEditorToolbar = props => {
 
 	// if(typeof console === 'object') { console.log('CustomToolbar.props',props); }
+	let { record, basePath, options, resource } = props;
 
-	let { options } = props;
 	options = options || {};
 
 	let cloneButton = (typeof options.cloneButton !== 'undefined') ? options.cloneButton : true;
 	let deleteButton = (typeof options.deleteButton !== 'undefined') ? options.deleteButton : true;
 
 	// if(typeof console === 'object') { console.log('CustomToolbar.props',props,cloneButton,deleteButton); }
+	let conf;
+	if(options && options.configFactory && options.configFactory.conf) {
+		conf = options.configFactory.conf;
+	}
 
 	return (
 		<Toolbar
@@ -43,6 +47,20 @@ const CustomEditorToolbar = props => {
 			{/*<RA_SaveButton undoable={false} />*/}
 			{deleteButton &&<DeleteButton undoable={false} label={null} />}
 			{cloneButton && <CloneButton undoable="" label={null} />}
+			{conf && conf.getEditActions(record).map((action) => {
+
+				if(!isValidElement(action)) {
+					return null;
+				}
+
+				return cloneElement(action, {
+					basePath: basePath,
+					resource: resource,
+					data: record,
+					conf: conf,
+				});
+			})
+			}
 		</Toolbar>
 	)
 };
